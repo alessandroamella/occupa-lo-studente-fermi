@@ -1,11 +1,13 @@
 {
-  "name": "occupa-lo-studente-backend",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "Amella & Pavlik",
-  "license": "ISC"
+    "name": "occupa-lo-studente-backend",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "dev": "nodemon",
+        "build": "rimraf ./build && tsc",
+        "start": "npm run build && node build/index.js"
+    },
+    "author": "Amella & Pavlik",
+    "license": "ISC"
 }
