@@ -1,0 +1,13 @@
+{
+    "trailingComma": "none",
+    "tabWidth": 4,
+    "semi": true,
+    "singleQuote": false,
+    "jsxSingleQuote": true,
+    "arrowParens": "avoid",
+    "htmlWhitespaceSensitivity": "ignore",
+    "endOfLine": "lf",
+    "importOrder": ["^@core/(.*)$", "^@server/(.*)$", "^@ui/(.*)$", "^[./]"],
+    "importOrderSeparation": true,
+    "importOrderSortSpecifiers": true
+}

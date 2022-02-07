@@ -1,1 +1,1 @@
-"# occupa-lo-studente-fermi" 
+# occupa-lo-studente-fermi
