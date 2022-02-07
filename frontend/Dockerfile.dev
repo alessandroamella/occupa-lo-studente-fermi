@@ -1,0 +1,23 @@
+FROM node:16
+
+# set working directory
+WORKDIR /app
+
+# add `/app/node_modules/.bin` to $PATH
+# ENV PATH /app/node_modules/.bin:$PATH
+
+# install app dependencies
+
+# DEBUG: incluso nel container, i pacchetti sono già presenti
+# COPY package*.json ./
+# COPY yarn.lock ./
+
+# RUN yarn
+
+# add app
+COPY . .
+
+EXPOSE 3000
+
+# start app
+CMD ["yarn", "start"]
