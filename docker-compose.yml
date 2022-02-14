@@ -50,6 +50,8 @@ services:
             # DEBUG viene usata la NODE_ENV development
             - NODE_ENV=development
     frontend:
+        depends_on:
+            - backend
         build:
             context: ./frontend
             # DEBUG usa Dockerfile di debug
