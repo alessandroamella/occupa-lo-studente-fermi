@@ -82,6 +82,7 @@ export const logger = createLogger({
 });
 
 export class LoggerStream {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     write(message: string, encoding?: string) {
         logger.info(message);
     }

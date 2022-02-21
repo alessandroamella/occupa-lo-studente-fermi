@@ -19,6 +19,7 @@ import { JobApplicationClass } from "./JobApplication";
  *          - agency
  *          - title
  *          - description
+ *          - status
  *          - jobApplications
  *        properties:
  *          agency:

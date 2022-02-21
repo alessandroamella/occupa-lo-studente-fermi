@@ -18,18 +18,26 @@ import { EmployerClass } from "./Employer";
  *          - description
  *          - address
  *          - vatCode
+ *          - employer
  *        properties:
  *          name:
  *            type: string
+ *            minLength: 1
+ *            maxLength: 100
  *            description: Name of the agency
  *          description:
  *            type: string
+ *            minLength: 16
+ *            maxLength: 1000
  *            description: Exhaustive description of the agency
  *          address:
  *            type: string
- *            description: Address of the agency
+ *            minLength: 3
+ *            description: Address of the agency, should be validated
  *          vatCode:
  *            type: string
+ *            minLength: 2
+ *            maxLength: 32
  *            description: VAT Code of the agency
  *            example: 02201090368
  *          logoUrl:
@@ -53,6 +61,9 @@ export class AgencyClass {
 
     @prop({ required: true, minlength: 2, maxlength: 32 })
     public vatCode!: string;
+
+    @prop({ required: false })
+    public logoUrl?: string;
 
     @prop({ required: true, ref: "Employer" })
     public employer: Ref<EmployerClass>;

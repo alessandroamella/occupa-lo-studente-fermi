@@ -14,6 +14,10 @@ if (process.env.NODE_ENV !== "production") {
     );
 }
 
+// Parse body
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
 const PORT = Number(process.env.PORT) || 5000;
 const IP = process.env.IP || "0.0.0.0";
 app.listen(PORT, IP, () => {
