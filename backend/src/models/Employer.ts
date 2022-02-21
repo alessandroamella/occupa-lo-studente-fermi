@@ -20,6 +20,7 @@ import { AgencyClass } from "./Agency";
  *          - fiscalNumber
  *          - email
  *          - mobilePhone
+ *          - agency
  *        properties:
  *          firstName:
  *            type: string

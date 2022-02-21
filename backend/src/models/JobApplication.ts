@@ -18,9 +18,7 @@ import { StudentClass } from "./Student";
  *        required:
  *          - fromStudent
  *          - forJobOffer
- *          - fiscalNumber
- *          - email
- *          - mobilePhone
+ *          - description
  *        properties:
  *          fromStudent:
  *            type: string
@@ -28,9 +26,13 @@ import { StudentClass } from "./Student";
  *          forJobOffer:
  *            type: string
  *            description: ObjectId of the JobOffer
- *          fiscalNumber:
+ *          status:
  *            type: string
- *            description: Fiscal number
+ *            enum:
+ *              - open
+ *              - accepted
+ *              - rejected
+ *            description: Description of this job offer
  *          description:
  *            type: string
  *            description: Long description of the student's job application
@@ -45,6 +47,9 @@ export class JobApplicationClass {
 
     @prop({ required: true, ref: "JobOffer" })
     public forJobOffer!: Ref<JobOfferClass>;
+
+    @prop({ required: true, enum: ["open", "accepted", "rejected"] })
+    public status!: string;
 
     @prop({ required: true, minlength: 30 })
     public description!: string;

@@ -4,7 +4,6 @@ import {
     prop,
     Ref
 } from "@typegoose/typegoose";
-import { AgencyClass } from "./Agency";
 import { JobApplicationClass } from "./JobApplication";
 
 /**
