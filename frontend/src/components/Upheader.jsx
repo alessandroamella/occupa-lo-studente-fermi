@@ -1,6 +1,6 @@
 import React from "react";
-import { Header, Button, Menu, Grommet } from "grommet";
-import { Home } from "grommet-icons";
+import { Box, Header, Button, Menu, Grommet } from "grommet";
+import { Home, FormDown, User } from "grommet-icons";
 
 const customTheme = {
     global: {
@@ -37,15 +37,48 @@ const Upheader = () => {
         <Grommet theme={customTheme}>
             <Header background='bluscuro'>
                 <Button icon={<Home />} hoverIndicator />
-                <Menu
-                    align='start'
-                    label='Area'
-                    items={[
-                        { label: "Studenti", onClick: () => {} },
-                        { label: "Azienda", onClick: () => {} }
-                    ]}
-                />
-                <Menu label='Log in' items={[{ label: "logout" }]} />
+                <Box align='End'>
+                    <Box align='margin-start' pad='small'>
+                        <Menu
+                            plain
+                            open
+                            dropProps={{
+                                align: { top: "bottom", left: "left" },
+                                elevation: "xlarge"
+                            }}
+                            label='Area'
+                            items={[
+                                { label: "Studenti", onClick: () => {} },
+                                { label: "Aziende", onClick: () => {} }
+                            ]}
+                        />
+                    </Box>
+                    <Box align='end' pad='small'>
+                        <Menu
+                            plain
+                            open
+                            items={[
+                                {
+                                    label: <Box alignSelf='center'>Accedi</Box>,
+                                    onClick: () => {}
+                                },
+                                {
+                                    label: (
+                                        <Box alignSelf='center'>Registrati</Box>
+                                    ),
+                                    onClick: () => {}
+                                }
+                            ]}
+                        >
+                            <Box direction='row' gap='small' pad='medium'>
+                                <FormDown />
+                                <Box pad='small'>
+                                    <User size='medium' />
+                                </Box>
+                            </Box>
+                        </Menu>
+                    </Box>
+                </Box>
             </Header>
         </Grommet>
     );
