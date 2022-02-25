@@ -8,7 +8,7 @@
         "plugin:@typescript-eslint/recommended"
     ],
     "parserOptions": {
-        "project": "./tsconfig.json"
+        "project": "./backend/tsconfig.json"
     },
     "rules": {
         "no-console": 2,

@@ -1,7 +1,11 @@
-import { logger } from "@shared";
-import swaggerUi from "swagger-ui-express";
-import express from "express";
+import { LoggerStream, logger } from "@shared";
 import { specs as swaggerSpecs } from "config/swagger";
+import express from "express";
+import morgan from "morgan";
+import swaggerUi from "swagger-ui-express";
+
+import "./config";
+import apiRoutes from "./routes";
 
 const app = express();
 
@@ -14,9 +18,15 @@ if (process.env.NODE_ENV !== "production") {
     );
 }
 
+// Log requests
+app.use(morgan("dev", { stream: new LoggerStream() }));
+
 // Parse body
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+// API Routes
+app.use("/api", apiRoutes);
 
 const PORT = Number(process.env.PORT) || 5000;
 const IP = process.env.IP || "0.0.0.0";

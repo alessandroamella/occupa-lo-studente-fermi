@@ -4,6 +4,6 @@ import showRoute from "./show";
 
 const router = Router();
 
-router.get("/", showRoute);
+router.use("/", showRoute);
 
 export default router;

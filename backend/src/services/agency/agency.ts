@@ -7,6 +7,7 @@ class AgencyService {
         _id: string
     ): Promise<DocumentType<AgencyClass> | null> {
         try {
+            logger.debug("Find agency with _id " + _id);
             return await Agency.findOne({ _id }).exec();
         } catch (err) {
             logger.error(err);
@@ -14,17 +15,22 @@ class AgencyService {
         }
     }
 
-    public static async create(newAgency: DocumentType<any>) {
+    public static async create(newAgency: DocumentType<AgencyClass>) {
         try {
-            return await Agency.create(newAgency).exec();
+            logger.debug("Create agency with name " + newAgency.name);
+            return await Agency.create(newAgency);
         } catch (err) {
             logger.error(err);
             return null;
         }
     }
 
-    public static async update(_id: string, newAgency: DocumentType<any>) {
+    public static async update(
+        _id: string,
+        newAgency: DocumentType<AgencyClass>
+    ) {
         try {
+            logger.debug("Update agency with _id " + _id);
             return await Agency.updateOne({ _id }, newAgency).exec();
         } catch (err) {
             logger.error(err);

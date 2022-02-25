@@ -1,14 +1,18 @@
 import { logger } from "@shared";
+import { join } from "path";
+import { cwd } from "process";
 import swaggerJsdoc from "swagger-jsdoc";
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { version, description } = require(join(cwd(), "./package.json"));
 
 export const options = {
     definition: {
         openapi: "3.0.0",
         info: {
             title: "Occupa lo studente",
-            version: "1.0.0",
-            description:
-                "Progetto SSH occupa lo studente di Alessandro Amella e Yaroslav Pavlik"
+            version,
+            description
         },
         servers: [
             {

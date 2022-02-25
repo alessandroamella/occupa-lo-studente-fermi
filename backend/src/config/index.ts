@@ -1,2 +1,3 @@
-import "./dotenv";
+import "./_dotenv";
+import "./db";
 import "./swagger";

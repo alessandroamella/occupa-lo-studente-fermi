@@ -15,9 +15,6 @@ services:
     mongodb:
         image: mongo:latest
         restart: always
-        environment:
-            MONGO_INITDB_ROOT_USERNAME: root
-            MONGO_INITDB_ROOT_PASSWORD: fermi
         networks:
             - backend
         ports:
@@ -49,6 +46,7 @@ services:
             # - REDIS_URL=redis://redis
             # DEBUG viene usata la NODE_ENV development
             - NODE_ENV=development
+            - MONGODB_URI=mongodb://mongodb:27017/occupa-lo-studente
     frontend:
         depends_on:
             - backend

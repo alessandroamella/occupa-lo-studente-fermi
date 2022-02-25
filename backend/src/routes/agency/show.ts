@@ -30,6 +30,12 @@ import AgencyService from "services/agency/agency";
  *          application/json:
  *            schema:
  *              $ref: '#/components/schemas/ResErr'
+ *      '404':
+ *        description: Agency not found
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/ResErr'
  *      '500':
  *        description: Server error
  *        content:
@@ -48,7 +54,12 @@ router.get("/:id", param("id").isMongoId(), async (req, res) => {
             .json({ err: "Invalid agency ObjectId" } as ResErr);
     }
 
-    res.json(await AgencyService.show(req.params?.id as string));
+    const agency = await AgencyService.show(req.params?.id as string);
+    if (!agency) {
+        return res.status(404).json({ err: "Agency not found" } as ResErr);
+    }
+
+    res.json(agency);
 });
 
 export default router;
