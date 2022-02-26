@@ -1,6 +1,10 @@
 import { LoggerStream, logger } from "@shared";
+import { DocumentType } from "@typegoose/typegoose";
 import { specs as swaggerSpecs } from "config/swagger";
 import express from "express";
+import PopulateReq from "middlewares/populateReq";
+import { AgencyClass } from "models/Agency";
+import { StudentClass } from "models/Student";
 import morgan from "morgan";
 import swaggerUi from "swagger-ui-express";
 
@@ -8,6 +12,17 @@ import "./config";
 import apiRoutes from "./routes";
 
 const app = express();
+
+// Extend Express object
+declare global {
+    // eslint-disable-next-line @typescript-eslint/no-namespace
+    namespace Express {
+        interface Request {
+            student: DocumentType<StudentClass> | null;
+            agency: DocumentType<AgencyClass> | null;
+        }
+    }
+}
 
 // Swagger
 if (process.env.NODE_ENV !== "production") {
@@ -24,6 +39,10 @@ app.use(morgan("dev", { stream: new LoggerStream() }));
 // Parse body
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+// Custom middlewares
+app.use(PopulateReq.populateAgency);
+app.use(PopulateReq.populateStudent);
 
 // API Routes
 app.use("/api", apiRoutes);

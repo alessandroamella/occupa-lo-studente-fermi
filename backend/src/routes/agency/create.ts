@@ -1,5 +1,5 @@
 import { Request, Response, Router } from "express";
-import { checkSchema, param, validationResult } from "express-validator";
+import { checkSchema, validationResult } from "express-validator";
 import { ResErr } from "routes/ResErr";
 import AgencyService from "services/agency/agency";
 
