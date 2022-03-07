@@ -1,6 +1,8 @@
-import React from "react";
+import React, { Component } from "react";
 import { Box, Header, Button, Menu, Grommet } from "grommet";
-import { Home, FormDown, User } from "grommet-icons";
+import { BladesVertical, FormDown, User } from "grommet-icons";
+import ReactRoundedImage from "react-rounded-image";
+import Fermi from "frontend/public/apple-icon-144x144.png";
 
 const customTheme = {
     global: {
@@ -35,51 +37,56 @@ const customTheme = {
 const Upheader = () => {
     return (
         <Grommet theme={customTheme}>
-            <Header background='bluscuro'>
-                <Button icon={<Home />} hoverIndicator />
-                <Box align='End'>
-                    <Box align='margin-start' pad='small'>
-                        <Menu
-                            plain
-                            open
-                            dropProps={{
-                                align: { top: "bottom", left: "left" },
-                                elevation: "xlarge"
-                            }}
-                            label='Area'
-                            items={[
-                                { label: "Studenti", onClick: () => {} },
-                                { label: "Aziende", onClick: () => {} }
-                            ]}
-                        />
-                    </Box>
-                    <Box align='end' pad='small'>
-                        <Menu
-                            plain
-                            open
-                            items={[
-                                {
-                                    label: <Box alignSelf='center'>Accedi</Box>,
-                                    onClick: () => {}
-                                },
-                                {
-                                    label: (
-                                        <Box alignSelf='center'>Registrati</Box>
-                                    ),
-                                    onClick: () => {}
-                                }
-                            ]}
-                        >
-                            <Box direction='row' gap='small' pad='medium'>
-                                <FormDown />
-                                <Box pad='small'>
-                                    <User size='medium' />
-                                </Box>
-                            </Box>
-                        </Menu>
-                    </Box>
+            <Box
+                direction='row'
+                align='center'
+                pad='small'
+                gap='small'
+                background='bluscuro'
+            >
+                <Box direction='row' align='center' margin={{ start: "large" }}>
+                    <ReactRoundedImage image={Fermi} />
                 </Box>
-            </Header>
+                <Box direction='row' align='center' margin={{ start: "large" }}>
+                    <Menu
+                        dropProps={{
+                            align: { top: "bottom", left: "left" },
+                            elevation: "xlarge"
+                        }}
+                        label='Area'
+                        items={[
+                            { label: "Studenti", onClick: () => {} },
+                            { label: "Ditta", onClick: () => {} }
+                        ]}
+                    />
+                </Box>
+                <Box direction='row' align='start' pad={{ start: "large" }}>
+                    <Menu
+                        dropProps={{
+                            align: { top: "bottom", left: "left" },
+                            elevation: "xlarge"
+                        }}
+                        label='Area'
+                        items={[
+                            { label: "Studenti", onClick: () => {} },
+                            { label: "Ditta", onClick: () => {} }
+                        ]}
+                    />
+                </Box>
+                <Box direction='row' align='center' margin={{ start: "large" }}>
+                    <Menu
+                        dropProps={{
+                            align: { top: "bottom", left: "left" },
+                            elevation: "xlarge"
+                        }}
+                        label='Area'
+                        items={[
+                            { label: "Studenti", onClick: () => {} },
+                            { label: "Ditta", onClick: () => {} }
+                        ]}
+                    />
+                </Box>
+            </Box>
         </Grommet>
     );
 };
