@@ -1,8 +1,6 @@
-import React, { Component } from "react";
-import { Box, Header, Button, Menu, Grommet } from "grommet";
+import React from "react";
+import { Box, Header, Button, Menu, Grommet, Image } from "grommet";
 import { BladesVertical, FormDown, User } from "grommet-icons";
-import ReactRoundedImage from "react-rounded-image";
-import Fermi from "frontend/public/apple-icon-144x144.png";
 
 const customTheme = {
     global: {
@@ -44,9 +42,25 @@ const Upheader = () => {
                 gap='small'
                 background='bluscuro'
             >
-                <Box direction='row' align='center' margin={{ start: "large" }}>
-                    <ReactRoundedImage image={Fermi} />
-                </Box>
+                <Button
+                    onClick={() => {
+                        "https://www.fermi-mo.edu.it/";
+                    }}
+                >
+                    <Box
+                        background='bluscuro'
+                        direction='row'
+                        align='center'
+                        margin={{ start: "small" }}
+                        height='small'
+                        width='small'
+                    >
+                        <Image
+                            fit='contain'
+                            src='https://ssh.edu.it/images/logos/fermi.png'
+                        />
+                    </Box>
+                </Button>
                 <Box direction='row' align='center' margin={{ start: "large" }}>
                     <Menu
                         dropProps={{
