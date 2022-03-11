@@ -13,6 +13,6 @@
  *            description: Google auth URL
  */
 
-export default interface GoogleAuthUrl {
+export interface GoogleAuthUrl {
     url: string;
 }

@@ -55,5 +55,4 @@ export class JobApplicationClass {
     public description!: string;
 }
 
-const JobApplication = getModelForClass(JobApplicationClass);
-export default JobApplication;
+export const JobApplication = getModelForClass(JobApplicationClass);

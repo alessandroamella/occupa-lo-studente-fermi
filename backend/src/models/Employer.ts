@@ -64,5 +64,4 @@ export class EmployerClass {
     public agency!: Ref<AgencyClass>;
 }
 
-const Employer = getModelForClass(EmployerClass);
-export default Employer;
+export const Employer = getModelForClass(EmployerClass);

@@ -23,6 +23,9 @@ services:
             - 27017:27017
         volumes:
             - mongodb_data:/data/db
+        logging:
+            # Sopprimi output
+            driver: "none"
     backend:
         depends_on:
             - mongodb
@@ -50,6 +53,13 @@ services:
             - AUTH_COOKIE_NAME=token
             # DEBUG viene usato un secret semplice
             - JWT_SECRET=fermi
+            # DEBUG viene usato un secret semplice
+            - COOKIE_SECRET=fermi
+            # DEBUG viene usata pagina di localhost
+            - SIGNUP_URL=http://localhost:3000/signup
+            - LAST_PAGE_URL_COOKIE_NAME=lastpage
+            - TEMP_AUTH_DATA_COOKIE_NAME=tempauthdata
+            - EMAIL_SUFFIX=fermi.mo.it
     frontend:
         depends_on:
             - backend

@@ -8,7 +8,7 @@
     "arrowParens": "avoid",
     "htmlWhitespaceSensitivity": "ignore",
     "endOfLine": "lf",
-    "importOrder": ["^@core/(.*)$", "^@server/(.*)$", "^@ui/(.*)$", "^[./]"],
+    "importOrder": ["@config[/(.*)]*$", "^@.*[/(.*)]*$", "^[./]"],
     "importOrderSeparation": true,
     "importOrderSortSpecifiers": true
 }

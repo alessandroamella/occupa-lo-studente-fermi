@@ -1,9 +1,8 @@
-import { NextFunction, Request, RequestHandler, Response } from "express";
-import { Schema, body, validationResult } from "express-validator";
-import Employer from "models/Employer";
-import { ResErr } from "routes/ResErr";
+import { Schema } from "express-validator";
 
-const validatorSchema: Schema = {
+import { Employer } from "@models";
+
+export const validatorSchema: Schema = {
     name: {
         in: "body",
         errorMessage: "Invalid agency name",

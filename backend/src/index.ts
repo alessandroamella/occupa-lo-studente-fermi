@@ -1,17 +1,17 @@
-import { DocumentType } from "@typegoose/typegoose";
-import express from "express";
+import cookieParser from "cookie-parser";
+import express, { Express } from "express";
 import morgan from "morgan";
 import swaggerUi from "swagger-ui-express";
 
-import { envs, loadConfig } from "./config";
-import { specs as swaggerSpecs } from "./config/swagger";
-import PopulateReq from "./middlewares/populateReq";
-import { AgencyClass } from "./models/Agency";
-import { StudentClass } from "./models/Student";
-import apiRoutes from "./routes";
-import { LoggerStream, logger } from "./shared";
+import { Envs, loadConfig, specs as swaggerSpecs } from "@config";
 
-const app = express();
+import { PopulateReq } from "@middlewares";
+import { AgencyClass, StudentClass } from "@models";
+import apiRoutes from "@routes";
+import { LoggerStream, logger } from "@shared";
+import { DocumentType } from "@typegoose/typegoose";
+
+const app: Express = express();
 
 // Extend Express object
 declare global {
@@ -25,7 +25,7 @@ declare global {
 }
 
 // Swagger
-if (envs.NODE_ENV !== "production") {
+if (Envs.env.NODE_ENV !== "production") {
     app.use(
         "/api-docs",
         swaggerUi.serve,
@@ -39,6 +39,9 @@ app.use(morgan("dev", { stream: new LoggerStream() }));
 // Parse body
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+// Parse cookies
+app.use(cookieParser(Envs.env.COOKIE_SECRET));
 
 // Custom middlewares
 app.use(PopulateReq.populateAgency);

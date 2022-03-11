@@ -12,6 +12,7 @@
     },
     "devDependencies": {
         "@trivago/prettier-plugin-sort-imports": "^3.2.0",
+        "@types/cookie-parser": "^1.4.2",
         "@types/express": "^4.17.13",
         "@types/jsonwebtoken": "^8.5.8",
         "@types/mongoose": "5.10.5",
@@ -32,11 +33,15 @@
     "license": "ISC",
     "dependencies": {
         "@typegoose/typegoose": "^9.6.2",
+        "codice-fiscale-js": "^2.3.15",
+        "cookie-parser": "^1.4.6",
         "dotenv": "^16.0.0",
         "express": "^4.17.2",
         "express-validator": "^6.14.0",
         "googleapis": "^95.0.0",
         "jsonwebtoken": "^8.5.1",
+        "libphonenumber-js": "^1.9.49",
+        "moment": "^2.29.1",
         "mongoose": "^6.2.0",
         "morgan": "^1.10.0",
         "swagger-jsdoc": "^6.1.0",

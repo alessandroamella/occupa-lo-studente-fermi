@@ -1,8 +1,8 @@
+import { Agency, AgencyClass } from "@models";
 import { logger } from "@shared";
 import { DocumentType } from "@typegoose/typegoose";
-import Agency, { AgencyClass } from "models/Agency";
 
-class AgencyService {
+export class AgencyService {
     public static async show(
         _id: string
     ): Promise<DocumentType<AgencyClass> | null> {
@@ -38,5 +38,3 @@ class AgencyService {
         }
     }
 }
-
-export default AgencyService;

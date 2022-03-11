@@ -1,18 +1,19 @@
-import { envs } from "@config";
+import { NextFunction, Request, Response } from "express";
+import jwt from "jsonwebtoken";
+
+import { Envs } from "@config";
+
+import { Agency, AgencyClass, Student, StudentClass } from "@models";
 import { logger } from "@shared";
 import { ReturnModelType, mongoose } from "@typegoose/typegoose";
 import { BeAnObject, DocumentType } from "@typegoose/typegoose/lib/types";
-import { NextFunction, Request, Response } from "express";
-import jwt from "jsonwebtoken";
-import Agency, { AgencyClass } from "models/Agency";
-import Student, { StudentClass } from "models/Student";
 
 interface UserWithId {
     student?: string;
     agency?: string;
 }
 
-const { AUTH_COOKIE_NAME, JWT_SECRET } = envs;
+const { AUTH_COOKIE_NAME, JWT_SECRET } = Envs.env;
 
 // enum _PossibleFields {
 //     STUDENT = "student",
@@ -20,7 +21,7 @@ const { AUTH_COOKIE_NAME, JWT_SECRET } = envs;
 // }
 type _PossibleFields = "student" | "agency";
 
-class PopulateReq {
+export class PopulateReq {
     public static async populateStudent(
         req: Request,
         res: Response,
@@ -90,5 +91,3 @@ class PopulateReq {
         }
     }
 }
-
-export default PopulateReq;

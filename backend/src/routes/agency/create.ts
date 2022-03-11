@@ -1,9 +1,10 @@
 import { Request, Response, Router } from "express";
 import { checkSchema, validationResult } from "express-validator";
-import { ResErr } from "routes/ResErr";
-import AgencyService from "services/agency/agency";
 
-import validatorSchema from "./validatorSchema";
+import { ResErr } from "@routes";
+import { AgencyService } from "@services";
+
+import { validatorSchema } from "./validatorSchema";
 
 /**
  * @openapi

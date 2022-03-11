@@ -54,5 +54,4 @@ export class JobOfferClass {
     public jobApplications!: Ref<JobApplicationClass>[];
 }
 
-const JobOffer = getModelForClass(JobOfferClass);
-export default JobOffer;
+export const JobOffer = getModelForClass(JobOfferClass);

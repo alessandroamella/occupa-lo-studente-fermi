@@ -1,6 +1,7 @@
-import { logger } from "@shared";
 import dotenv from "dotenv";
 import process from "process";
+
+import { logger } from "@shared";
 
 dotenv.config();
 
@@ -11,33 +12,45 @@ export const requiredEnvs = [
     "NODE_ENV",
     "GOOGLE_CLIENT_ID",
     "GOOGLE_CLIENT_SECRET",
-    "GOOGLE_REDIRECT_URL"
+    "GOOGLE_REDIRECT_URL",
+    "COOKIE_SECRET",
+    "LAST_PAGE_URL_COOKIE_NAME",
+    "TEMP_AUTH_DATA_COOKIE_NAME",
+    "SIGNUP_URL",
+    "EMAIL_SUFFIX"
 ] as const;
 
 type EnvName = typeof requiredEnvs[number];
-type Envs = {
+type EnvsType = {
     [envName in EnvName]: string;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const envs: Envs = {} as any;
+export class Envs {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    public static env: EnvsType = {} as any;
 
-export function loadEnvs() {
-    const missingEnvs: string[] = [];
-    for (const env of requiredEnvs) {
-        if (typeof process.env[env] !== "string") {
-            logger.debug(`Env "${env}" doesn't exist`);
-            missingEnvs.push(env);
-        } else {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (envs as any)[env] = process.env[env];
-            logger.debug(`Env "${env}" loaded`);
+    private static _staticConstructor = (() => {
+        logger.info("Loading envs...");
+
+        const missingEnvs: string[] = [];
+        for (const env of requiredEnvs) {
+            if (typeof process.env[env] !== "string") {
+                logger.debug(`Env "${env}" doesn't exist`);
+                missingEnvs.push(env);
+            } else {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                logger.debug(`Env "${env}" loaded`);
+                Envs.env[env] = process.env[env] as string;
+            }
         }
-    }
 
-    if (missingEnvs.length > 0) {
-        logger.error(`Missing required envs: "${missingEnvs.join('", "')}"`);
-        process.exit(1);
-    }
+        if (missingEnvs.length > 0) {
+            logger.error(
+                `Missing required envs: "${missingEnvs.join('", "')}"`
+            );
+            process.exit(1);
+        }
+
+        logger.info("Envs loaded");
+    })();
 }
-export default envs;
