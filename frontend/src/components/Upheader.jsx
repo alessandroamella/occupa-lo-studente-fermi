@@ -1,6 +1,6 @@
 import React from "react";
-import { Box, Header, Button, Menu, Grommet } from "grommet";
-import { Home, FormDown, User } from "grommet-icons";
+import { Box, Header, Button, Menu, Grommet, Image } from "grommet";
+import { BladesVertical, FormDown, User } from "grommet-icons";
 
 const customTheme = {
     global: {
@@ -35,51 +35,72 @@ const customTheme = {
 const Upheader = () => {
     return (
         <Grommet theme={customTheme}>
-            <Header background='bluscuro'>
-                <Button icon={<Home />} hoverIndicator />
-                <Box align='End'>
-                    <Box align='margin-start' pad='small'>
-                        <Menu
-                            plain
-                            open
-                            dropProps={{
-                                align: { top: "bottom", left: "left" },
-                                elevation: "xlarge"
-                            }}
-                            label='Area'
-                            items={[
-                                { label: "Studenti", onClick: () => {} },
-                                { label: "Aziende", onClick: () => {} }
-                            ]}
+            <Box
+                direction='row'
+                align='center'
+                pad='small'
+                gap='small'
+                background='bluscuro'
+            >
+                <Button
+                    onClick={() => {
+                        "https://www.fermi-mo.edu.it/";
+                    }}
+                >
+                    <Box
+                        background='bluscuro'
+                        direction='row'
+                        align='center'
+                        margin={{ start: "small" }}
+                        height='small'
+                        width='small'
+                    >
+                        <Image
+                            fit='contain'
+                            src='https://ssh.edu.it/images/logos/fermi.png'
                         />
                     </Box>
-                    <Box align='end' pad='small'>
-                        <Menu
-                            plain
-                            open
-                            items={[
-                                {
-                                    label: <Box alignSelf='center'>Accedi</Box>,
-                                    onClick: () => {}
-                                },
-                                {
-                                    label: (
-                                        <Box alignSelf='center'>Registrati</Box>
-                                    ),
-                                    onClick: () => {}
-                                }
-                            ]}
-                        >
-                            <Box direction='row' gap='small' pad='medium'>
-                                <FormDown />
-                                <Box pad='small'>
-                                    <User size='medium' />
-                                </Box>
-                            </Box>
-                        </Menu>
-                    </Box>
+                </Button>
+                <Box direction='row' align='center' margin={{ start: "large" }}>
+                    <Menu
+                        dropProps={{
+                            align: { top: "bottom", left: "left" },
+                            elevation: "xlarge"
+                        }}
+                        label='Area'
+                        items={[
+                            { label: "Studenti", onClick: () => {} },
+                            { label: "Ditta", onClick: () => {} }
+                        ]}
+                    />
                 </Box>
-            </Header>
+                <Box direction='row' align='start' pad={{ start: "large" }}>
+                    <Menu
+                        dropProps={{
+                            align: { top: "bottom", left: "left" },
+                            elevation: "xlarge"
+                        }}
+                        label='Area'
+                        items={[
+                            { label: "Studenti", onClick: () => {} },
+                            { label: "Ditta", onClick: () => {} }
+                        ]}
+                    />
+                </Box>
+                <Box direction='row' align='center' margin={{ start: "large" }}>
+                    <Menu
+                        dropProps={{
+                            align: { top: "bottom", left: "left" },
+                            elevation: "xlarge"
+                        }}
+                        label='Area'
+                        items={[
+                            { label: "Studenti", onClick: () => {} },
+                            { label: "Ditta", onClick: () => {} }
+                        ]}
+                    />
+                </Box>
+            </Box>
         </Grommet>
     );
 };
