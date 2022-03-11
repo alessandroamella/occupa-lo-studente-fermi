@@ -20,3 +20,9 @@ Per il frontend viene usato React, che permette di avere uno stato interno senza
 
 L'intera applicazione viene Dockerizzata in modo da poter essere facilmente utilizzabile ovunque.
 Vengono creati 3 container: il backend, il frontend, e l'immagine di MongoDB
+
+## Note
+
+Alcune variabili d'ambiente usate nel backend sono segrete, come le credenziali per Google OAuth.
+
+Per impostarle, bisogna creare un file `.env` all'interno della cartella `backend` e dichiararle lì nel formato `ENV=valore`.

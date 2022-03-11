@@ -1,3 +1,4 @@
+import { envs } from "@config";
 import { logger } from "@shared";
 import { ReturnModelType, mongoose } from "@typegoose/typegoose";
 import { BeAnObject, DocumentType } from "@typegoose/typegoose/lib/types";
@@ -11,15 +12,7 @@ interface UserWithId {
     agency?: string;
 }
 
-const { AUTH_COOKIE_NAME, JWT_SECRET } = process.env;
-
-if (!AUTH_COOKIE_NAME) {
-    logger.error("Missing AUTH_COOKIE_NAME env");
-    process.exit(1);
-} else if (!JWT_SECRET) {
-    logger.error("Missing JWT_SECRET env");
-    process.exit(1);
-}
+const { AUTH_COOKIE_NAME, JWT_SECRET } = envs;
 
 // enum _PossibleFields {
 //     STUDENT = "student",

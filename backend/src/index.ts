@@ -1,15 +1,15 @@
-import { LoggerStream, logger } from "@shared";
 import { DocumentType } from "@typegoose/typegoose";
-import { specs as swaggerSpecs } from "config/swagger";
 import express from "express";
-import PopulateReq from "middlewares/populateReq";
-import { AgencyClass } from "models/Agency";
-import { StudentClass } from "models/Student";
 import morgan from "morgan";
 import swaggerUi from "swagger-ui-express";
 
-import "./config";
+import { envs, loadConfig } from "./config";
+import { specs as swaggerSpecs } from "./config/swagger";
+import PopulateReq from "./middlewares/populateReq";
+import { AgencyClass } from "./models/Agency";
+import { StudentClass } from "./models/Student";
 import apiRoutes from "./routes";
+import { LoggerStream, logger } from "./shared";
 
 const app = express();
 
@@ -25,7 +25,7 @@ declare global {
 }
 
 // Swagger
-if (process.env.NODE_ENV !== "production") {
+if (envs.NODE_ENV !== "production") {
     app.use(
         "/api-docs",
         swaggerUi.serve,
@@ -49,6 +49,10 @@ app.use("/api", apiRoutes);
 
 const PORT = Number(process.env.PORT) || 5000;
 const IP = process.env.IP || "0.0.0.0";
+
+loadConfig().then(() => {
+    logger.info("Config finished loading");
+});
 app.listen(PORT, IP, () => {
     logger.info(`Server started at ${IP}:${PORT}`);
 });
