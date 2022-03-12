@@ -12,14 +12,13 @@ export class isStudentLoggedIn {
         res: Response,
         next: NextFunction
     ) {
+        if (req.student) return next();
         try {
-            const c = req.signedCookies[Envs.env.TEMP_AUTH_DATA_COOKIE_NAME];
-            if (req.student) next();
-            else if (
-                c &&
-                (await GoogleAuthService.parseTempAuthDataCookie(c))
-            ) {
-                res.redirect(Envs.env.SIGNUP_URL);
+            const tempData = await GoogleAuthService.parseTempAuthDataCookie(
+                req.signedCookies[Envs.env.TEMP_AUTH_DATA_COOKIE_NAME]
+            );
+            if (tempData) {
+                return GoogleAuthService.getRedirectUrlFromTempData(tempData);
             }
         } catch (err) {
             logger.debug("Error while parsing temp auth data cookie");

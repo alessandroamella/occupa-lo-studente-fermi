@@ -14,20 +14,20 @@ export const studentValidatorSchema: Schema = {
     //         errorMessage: "googleId must be string"
     //     }
     // },
-    // firstName: {
-    //     in: "body",
-    //     errorMessage: "Invalid first name",
-    //     isString: {
-    //         errorMessage: "firstName must be string"
-    //     }
-    // },
-    // lastName: {
-    //     in: "body",
-    //     errorMessage: "Invalid last name",
-    //     isString: {
-    //         errorMessage: "lastName must be string"
-    //     }
-    // },
+    firstName: {
+        in: "body",
+        errorMessage: "Invalid first name",
+        isString: {
+            errorMessage: "firstName must be string"
+        }
+    },
+    lastName: {
+        in: "body",
+        errorMessage: "Invalid first name",
+        isString: {
+            errorMessage: "lastName must be string"
+        }
+    },
     fiscalNumber: {
         in: "body",
         errorMessage: "Invalid fiscal number",

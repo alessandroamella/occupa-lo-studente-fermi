@@ -1,9 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
+import { StudentAuthCookieManager } from "routes/student/auth/StudentAuthCookieManager";
 
 import { Envs } from "@config";
 
-import { Agency, AgencyClass, Student, StudentClass } from "@models";
+import { Agency, AgencyClass, StudentClass } from "@models";
 import { logger } from "@shared";
 import { ReturnModelType, mongoose } from "@typegoose/typegoose";
 import { BeAnObject, DocumentType } from "@typegoose/typegoose/lib/types";
@@ -27,9 +28,25 @@ export class PopulateReq {
         res: Response,
         next: NextFunction
     ) {
-        return await PopulateReq._populateFields("student", Student, req, next);
+        let student;
+        try {
+            student = await StudentAuthCookieManager.loadStudentAuthCookie(
+                req,
+                res
+            );
+        } catch (err) {
+            logger.error("Error while loading student auth cookie");
+            logger.error(err);
+            return next();
+        }
+        if (!student) return PopulateReq._nullReq("student", req, next);
+
+        logger.debug("populateReqStudent successful");
+        req.student = student;
+        return next();
     }
 
+    // DEBUG - To refactor!!
     public static async populateAgency(
         req: Request,
         res: Response,
@@ -43,7 +60,7 @@ export class PopulateReq {
         req: Request,
         next: NextFunction
     ) {
-        logger.debug("populateReqUser failed");
+        logger.debug("populateReq failed");
 
         req[field] = null;
         return next();

@@ -50,6 +50,7 @@ services:
             # DEBUG viene usata la NODE_ENV development
             - NODE_ENV=development
             - MONGODB_URI=mongodb://mongodb:27017/occupa-lo-studente
+            - AUTH_COOKIE_DURATION_DAYS=14
             - AUTH_COOKIE_NAME=token
             # DEBUG viene usato un secret semplice
             - JWT_SECRET=fermi

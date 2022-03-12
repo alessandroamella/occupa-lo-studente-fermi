@@ -1,7 +1,13 @@
-import React from "react";
+import Middle from "./Middle";
+import { Outlet } from "react-router-dom";
 
-const Homepage = () => {
-    return <div>worka</div>;
-};
+function Homepage() {
+    return (
+        <div>
+            <Middle />
+            <Outlet />
+        </div>
+    );
+}
 
 export default Homepage;

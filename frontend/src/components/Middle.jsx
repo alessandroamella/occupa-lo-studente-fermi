@@ -1,5 +1,5 @@
 import React from "react";
-import { Main, Heading, Paragraph, grommet, Grommet } from "grommet";
+import { Main, Heading, Paragraph, Grommet } from "grommet";
 const customTheme = {
     global: {
         colors: {
@@ -32,8 +32,8 @@ const customTheme = {
 
 const Middle = () => {
     return (
-        <Grommet theme={customTheme} background=''>
-            <Main pad='large'>
+        <Grommet theme={customTheme} background="">
+            <Main pad="large">
                 <Heading>Something</Heading>
                 <Paragraph>Something about something</Paragraph>
             </Main>

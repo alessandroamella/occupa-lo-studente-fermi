@@ -1,6 +1,6 @@
 import React from "react";
-import { Box, Header, Button, Menu, Grommet, Image } from "grommet";
-import { BladesVertical, FormDown, User } from "grommet-icons";
+import { Box, Button, Menu, Grommet, Image } from "grommet";
+import GoogleLogin from "./GoogleLogin";
 
 const customTheme = {
     global: {
@@ -32,15 +32,15 @@ const customTheme = {
     }
 };
 
-const Upheader = () => {
+const Upheader = ({ loginLoaded, student, logout }) => {
     return (
         <Grommet theme={customTheme}>
             <Box
-                direction='row'
-                align='center'
-                pad='small'
-                gap='small'
-                background='bluscuro'
+                direction="row"
+                align="center"
+                pad="small"
+                gap="small"
+                background="bluscuro"
             >
                 <Button
                     onClick={() => {
@@ -48,57 +48,90 @@ const Upheader = () => {
                     }}
                 >
                     <Box
-                        background='bluscuro'
-                        direction='row'
-                        align='center'
+                        background="bluscuro"
+                        direction="row"
+                        align="center"
                         margin={{ start: "small" }}
-                        height='small'
-                        width='small'
+                        height="small"
+                        width="small"
                     >
                         <Image
-                            fit='contain'
-                            src='https://ssh.edu.it/images/logos/fermi.png'
+                            fit="contain"
+                            src="https://ssh.edu.it/images/logos/fermi.png"
                         />
                     </Box>
                 </Button>
-                <Box direction='row' align='center' margin={{ start: "large" }}>
+                <Box direction="row" align="center" margin={{ start: "large" }}>
                     <Menu
                         dropProps={{
                             align: { top: "bottom", left: "left" },
                             elevation: "xlarge"
                         }}
-                        label='Area'
+                        label="Area"
                         items={[
                             { label: "Studenti", onClick: () => {} },
                             { label: "Ditta", onClick: () => {} }
                         ]}
                     />
                 </Box>
-                <Box direction='row' align='start' pad={{ start: "large" }}>
+                <Box direction="row" align="start" pad={{ start: "large" }}>
                     <Menu
                         dropProps={{
                             align: { top: "bottom", left: "left" },
                             elevation: "xlarge"
                         }}
-                        label='Area'
+                        label="Area"
                         items={[
                             { label: "Studenti", onClick: () => {} },
                             { label: "Ditta", onClick: () => {} }
                         ]}
                     />
                 </Box>
-                <Box direction='row' align='center' margin={{ start: "large" }}>
+                <Box direction="row" align="center" margin={{ start: "large" }}>
                     <Menu
                         dropProps={{
                             align: { top: "bottom", left: "left" },
                             elevation: "xlarge"
                         }}
-                        label='Area'
+                        label="Area"
                         items={[
                             { label: "Studenti", onClick: () => {} },
                             { label: "Ditta", onClick: () => {} }
                         ]}
                     />
+                </Box>
+                <Box
+                    // direction="row"
+                    basis="full"
+                    align="end"
+                    margin={{ start: "large" }}
+                    pad={{ right: "3rem" }}
+                >
+                    {loginLoaded ? (
+                        student ? (
+                            <Menu
+                                dropProps={{
+                                    align: { top: "bottom", left: "left" },
+                                    elevation: "xlarge"
+                                }}
+                                label={student.firstName}
+                                items={[
+                                    {
+                                        label: "Profilo",
+                                        onClick: () =>
+                                            alert(
+                                                "Yaro studiati React Router e fai una pagina profilo studente"
+                                            )
+                                    },
+                                    { label: "Logout", onClick: logout }
+                                ]}
+                            />
+                        ) : (
+                            <GoogleLogin />
+                        )
+                    ) : (
+                        <p>Caricamento...</p>
+                    )}
                 </Box>
             </Box>
         </Grommet>

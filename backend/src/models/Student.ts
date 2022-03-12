@@ -32,7 +32,7 @@ import { JobApplicationClass } from "./JobApplication";
  *            description: Name
  *          lastName:
  *            type: string
- *            description: Family name
+ *            description: Surname
  *          fiscalNumber:
  *            type: string
  *            description: Fiscal number
@@ -111,4 +111,5 @@ export interface CreateStudentData {
     email: string;
     pictureURL: string;
     phoneNumber: string;
+    spidVerified?: boolean;
 } 

@@ -6,6 +6,8 @@ import { ResErr } from "@routes";
 import { GoogleAuthService, StudentAuthService } from "@services";
 import { logger } from "@shared";
 
+import { StudentAuthCookieManager } from "./StudentAuthCookieManager";
+
 const router = Router();
 
 /**
@@ -34,12 +36,19 @@ const router = Router();
 router.get("/", async (req, res) => {
     const auth = await GoogleAuthService.createConnection(); // this is from previous step
     const url = await GoogleAuthService.getConnectionUrl(auth);
+
+    logger.debug("Creating Google auth URL");
+
     // Save last visited page on a 5-minute cookie to redirect the user to its original URL
-    res.cookie(Envs.env.LAST_PAGE_URL_COOKIE_NAME, req.originalUrl, {
-        httpOnly: true,
-        maxAge: 5 * 60 * 1000,
-        signed: true
-    });
+    res.cookie(
+        Envs.env.LAST_PAGE_URL_COOKIE_NAME,
+        req.query.redirectTo || req.originalUrl,
+        {
+            httpOnly: true,
+            maxAge: 5 * 60 * 1000,
+            signed: true
+        }
+    );
     // res.redirect(url);
     res.json({ url });
 });
@@ -70,8 +79,11 @@ router.get("/", async (req, res) => {
  */
 
 router.get("/complete", async (req, res) => {
+    logger.debug("Received Google completed authentication");
+
     const { code } = req.query;
     if (typeof code !== "string") {
+        logger.debug('Invalid Google auth "code" query param');
         return res
             .status(400)
             .json({ err: "Invalid code query param" } as ResErr);
@@ -79,11 +91,18 @@ router.get("/complete", async (req, res) => {
 
     try {
         const params = await GoogleAuthService.getGoogleAccountFromCode(code);
+        logger.debug("Loaded Google account data from Google authentication");
 
         if (!params.id) throw new Error("Google account has no ID param");
 
-        const s = await StudentAuthService.findStudent({ googleId: params.id });
-        if (!s) {
+        const student = await StudentAuthService.findStudent({
+            googleId: params.id
+        });
+
+        if (!student) {
+            logger.debug(
+                "Student with given googleId doesn't exist, creating one"
+            );
             const tempDataCookie =
                 await GoogleAuthService.createTempAuthDataCookie(params);
             // One week cookie with temp data
@@ -92,12 +111,11 @@ router.get("/complete", async (req, res) => {
                 signed: true,
                 maxAge: 7 * 24 * 60 * 60 * 1000
             });
-            return res.redirect(Envs.env.SIGNUP_URL);
+            logger.debug("Redirecting student to signup URL");
+            return res.redirect(
+                GoogleAuthService.getRedirectUrlFromTempData(params)
+            );
         }
-
-        // DEBUG
-        // eslint-disable-next-line no-console
-        console.log(params);
 
         // Load last visited page cookie
         const lastPageCookie =
@@ -105,6 +123,17 @@ router.get("/complete", async (req, res) => {
         if (lastPageCookie) {
             res.clearCookie(lastPageCookie, { httpOnly: true, signed: true });
         }
+
+        if (!req.signedCookies[Envs.env.AUTH_COOKIE_NAME]) {
+            logger.debug("Student auth cookie was not saved, now saving it");
+            await StudentAuthCookieManager.saveStudentAuthCookie(res, student);
+        }
+
+        logger.debug(
+            `Redirecting student to last visited page (${
+                lastPageCookie || "/"
+            })`
+        );
 
         res.redirect(lastPageCookie || "/");
     } catch (err) {

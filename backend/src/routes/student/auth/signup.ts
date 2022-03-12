@@ -10,6 +10,7 @@ import { logger } from "@shared";
 import { mongoose } from "@typegoose/typegoose";
 
 import studentValidatorSchema from "../validatorSchema";
+import { StudentAuthCookieManager } from "./StudentAuthCookieManager";
 
 const router = Router();
 
@@ -58,6 +59,13 @@ router.post(
     "/",
     checkSchema(studentValidatorSchema),
     async (req: Request, res: Response) => {
+        logger.debug("/signup passed student schema verification");
+
+        if (req.student) {
+            logger.debug("Student is already logged in");
+            return res.json(req.student.toObject());
+        }
+
         const tempDataCookie =
             req.signedCookies[Envs.env.TEMP_AUTH_DATA_COOKIE_NAME];
         if (!tempDataCookie) {
@@ -66,6 +74,13 @@ router.post(
                 .json({ err: "No Google temp data cookie" } as ResErr);
         }
 
+        // Clear temp data cookie
+        res.clearCookie(Envs.env.TEMP_AUTH_DATA_COOKIE_NAME, {
+            httpOnly: true,
+            signed: true
+        });
+
+        // Load Google data from cookie
         let googleTempData: oauth2_v2.Schema$Userinfo;
 
         try {
@@ -77,11 +92,12 @@ router.post(
             logger.error(err);
             return res
                 .status(500)
-                .json({ err: "Error while loading Google data" });
+                .json({ err: "Error while loading Google data" } as ResErr);
         }
 
-        const { email, family_name, given_name, hd, id, picture } =
-            googleTempData;
+        const { email, hd, id, picture } = googleTempData;
+
+        logger.debug(`Loaded temp data cookie, email is "${email}"`);
 
         if (!hd || !Envs.env.EMAIL_SUFFIX.includes(hd)) {
             return res.status(400).json({
@@ -89,18 +105,49 @@ router.post(
             } as ResErr);
         }
 
+        try {
+            // user already exists, just login
+            const existingStudent = await StudentAuthService.findStudent({
+                email
+            });
+            if (existingStudent) {
+                logger.debug("Student already exists, logging in");
+                await StudentAuthCookieManager.saveStudentAuthCookie(
+                    res,
+                    existingStudent
+                );
+
+                return res.json(existingStudent.toObject());
+            }
+        } catch (err) {
+            logger.error("Error while finding student in StudentAuthService");
+            logger.error(err);
+            return res
+                .status(500)
+                .json({ err: "Error while loading database" } as ResErr);
+        }
+
         let student;
+
+        const {
+            firstName,
+            lastName,
+            fiscalNumber,
+            phoneNumber,
+            curriculumLink
+        } = req.body;
 
         try {
             student = await StudentAuthService.createStudent({
                 email: email as string,
-                firstName: given_name as string,
-                lastName: family_name as string,
-                fiscalNumber: req.body.fiscalNumber,
+                firstName,
+                lastName,
+                fiscalNumber,
                 googleId: id as string,
-                phoneNumber: req.body.phoneNumber,
+                phoneNumber,
                 pictureURL: picture as string,
-                curriculumLink: req.body.curriculumLink
+                curriculumLink,
+                spidVerified: false
             });
         } catch (err) {
             if (err instanceof mongoose.Error.ValidationError) {
@@ -115,6 +162,10 @@ router.post(
                 .status(500)
                 .json({ err: "Error while creating student" } as ResErr);
         }
+
+        logger.debug(`New student "${firstName} ${lastName}" saved in DB`);
+
+        await StudentAuthCookieManager.saveStudentAuthCookie(res, student);
 
         res.json(student.toObject());
     }

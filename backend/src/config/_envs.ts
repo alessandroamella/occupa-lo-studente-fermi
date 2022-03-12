@@ -8,6 +8,7 @@ dotenv.config();
 export const requiredEnvs = [
     "MONGODB_URI",
     "AUTH_COOKIE_NAME",
+    "AUTH_COOKIE_DURATION_DAYS",
     "JWT_SECRET",
     "NODE_ENV",
     "GOOGLE_CLIENT_ID",
@@ -29,7 +30,7 @@ export class Envs {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     public static env: EnvsType = {} as any;
 
-    private static _staticConstructor = (() => {
+    public static _loadEnvs = () => {
         logger.info("Loading envs...");
 
         const missingEnvs: string[] = [];
@@ -52,5 +53,7 @@ export class Envs {
         }
 
         logger.info("Envs loaded");
-    })();
+    };
+
+    private static _staticConstructor = Envs._loadEnvs();
 }

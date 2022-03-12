@@ -99,4 +99,14 @@ export class GoogleAuthService {
         });
         // return jwt.(tempData, Envs.env.JWT_SECRET);
     }
+
+    public static getRedirectUrlFromTempData(
+        tempData: oauth2_v2.Schema$Userinfo
+    ) {
+        const url = new URL(Envs.env.SIGNUP_URL);
+        for (const [key, entry] of Object.entries(tempData)) {
+            url.searchParams.append(key, entry);
+        }
+        return url.toString();
+    }
 }
