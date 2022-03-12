@@ -1,11 +1,12 @@
 import Upheader from "./components/Upheader";
 import axios from "axios";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 function App() {
     const [student, setStudent] = useState(null);
     const [loginLoaded, setLoginLoaded] = useState(false);
+    const { state } = useLocation();
 
     async function logout() {
         setLoginLoaded(false);
@@ -36,8 +37,16 @@ function App() {
                 setLoginLoaded(true);
             }
         }
-        fetchStudent();
-    }, []);
+        if (!state?.student) return fetchStudent();
+        console.log("state.student", state.student);
+        setStudent(state.student);
+        setLoginLoaded(true);
+
+        // Clear state
+        window.history.replaceState(null, "");
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [JSON.stringify(state)]);
 
     return (
         <div className="App">

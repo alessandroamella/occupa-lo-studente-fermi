@@ -1,6 +1,7 @@
 import React from "react";
 import { Box, Button, Menu, Grommet, Image } from "grommet";
 import GoogleLogin from "./GoogleLogin";
+import { useNavigate } from "react-router-dom";
 
 const customTheme = {
     global: {
@@ -33,6 +34,7 @@ const customTheme = {
 };
 
 const Upheader = ({ loginLoaded, student, logout }) => {
+    const navigate = useNavigate();
     return (
         <Grommet theme={customTheme}>
             <Box
@@ -54,10 +56,12 @@ const Upheader = ({ loginLoaded, student, logout }) => {
                         margin={{ start: "small" }}
                         height="small"
                         width="small"
+                        onClick={() => navigate("/")}
                     >
                         <Image
                             fit="contain"
                             src="https://ssh.edu.it/images/logos/fermi.png"
+                            alt="Fermi logo"
                         />
                     </Box>
                 </Button>

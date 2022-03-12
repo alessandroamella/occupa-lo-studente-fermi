@@ -1,10 +1,11 @@
 import React, { useEffect } from "react";
 import { Box, Form, TextInput, FormField, Button } from "grommet";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const StudentSignup = () => {
     const [searchParams] = useSearchParams();
+    let navigate = useNavigate();
 
     const email = searchParams.get("email");
     const [firstName, lastName] = email
@@ -31,8 +32,9 @@ const StudentSignup = () => {
                 value
             );
             console.log(data);
+            navigate("/", { state: { student: data } });
             // DEBUG
-            alert(JSON.stringify(data));
+            // alert(JSON.stringify(data));
         } catch (err) {
             // DEBUG
             alert("Errore: " + err?.response?.data?.err);
