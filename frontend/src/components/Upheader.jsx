@@ -42,18 +42,22 @@ const Upheader = ({ loginLoaded, student, logout }) => {
     return (
         <>
             <Navbar bg="dark" variant="dark">
-                <Container>
+                <Container className="justify-content-Start">
                     <Navbar.Brand href="#home">
                         <img
                             alt=""
                             src="https://ssh.edu.it/images/logos/fermi.png"
-                            className="d-inline-block align-top w-"
+                            className="d-inline-block w-14"
                         />{" "}
-                        React Bootstrap
+                        Occupa lo studente
                     </Navbar.Brand>
                 </Container>
             </Navbar>
-
+            <Container bg="dark" variant="dark">
+                <div>
+                    <p>Stai cercando lavoro?</p>
+                </div>
+            </Container>
             <Grommet theme={customTheme}>
                 <Box
                     direction="row"

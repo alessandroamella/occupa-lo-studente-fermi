@@ -50,7 +50,7 @@ function App() {
     }, [JSON.stringify(state)]);
 
     return (
-        <div className="App">
+        <div className="App" >
             <Upheader
                 loginLoaded={loginLoaded}
                 student={student}
