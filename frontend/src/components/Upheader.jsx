@@ -2,6 +2,10 @@ import React from "react";
 import { Box, Button, Menu, Grommet, Image } from "grommet";
 import GoogleLogin from "./GoogleLogin";
 import { useNavigate } from "react-router-dom";
+import Navbar from "react-bootstrap/Navbar";
+import Nav from "react-bootstrap/Nav";
+import NavDropdown from "react-bootstrap/NavDropdown";
+import Container from "react-bootstrap/Container";
 
 const customTheme = {
     global: {
@@ -36,109 +40,132 @@ const customTheme = {
 const Upheader = ({ loginLoaded, student, logout }) => {
     const navigate = useNavigate();
     return (
-        <Grommet theme={customTheme}>
-            <Box
-                direction="row"
-                align="center"
-                pad="small"
-                gap="small"
-                background="bluscuro"
-            >
-                <Button
-                    onClick={() => {
-                        "https://www.fermi-mo.edu.it/";
-                    }}
+        <>
+            <Navbar bg="dark" variant="dark">
+                <Container>
+                    <Navbar.Brand href="#home">
+                        <img
+                            alt=""
+                            src="https://ssh.edu.it/images/logos/fermi.png"
+                            className="d-inline-block align-top w-"
+                        />{" "}
+                        React Bootstrap
+                    </Navbar.Brand>
+                </Container>
+            </Navbar>
+
+            <Grommet theme={customTheme}>
+                <Box
+                    direction="row"
+                    align="center"
+                    pad="small"
+                    gap="small"
+                    background="bluscuro"
                 >
+                    <Button
+                        onClick={() => {
+                            "https://www.fermi-mo.edu.it/";
+                        }}
+                    >
+                        <Box
+                            background="bluscuro"
+                            direction="row"
+                            align="center"
+                            margin={{ start: "small" }}
+                            height="small"
+                            width="small"
+                            onClick={() => navigate("/")}
+                        >
+                            <Image
+                                fit="contain"
+                                src="https://ssh.edu.it/images/logos/fermi.png"
+                                alt="Fermi logo"
+                            />
+                        </Box>
+                    </Button>
                     <Box
-                        background="bluscuro"
                         direction="row"
                         align="center"
-                        margin={{ start: "small" }}
-                        height="small"
-                        width="small"
-                        onClick={() => navigate("/")}
+                        margin={{ start: "large" }}
                     >
-                        <Image
-                            fit="contain"
-                            src="https://ssh.edu.it/images/logos/fermi.png"
-                            alt="Fermi logo"
+                        <Menu
+                            dropProps={{
+                                align: { top: "bottom", left: "left" },
+                                elevation: "xlarge"
+                            }}
+                            label="Area"
+                            items={[
+                                { label: "Studenti", onClick: () => {} },
+                                { label: "Ditta", onClick: () => {} }
+                            ]}
                         />
                     </Box>
-                </Button>
-                <Box direction="row" align="center" margin={{ start: "large" }}>
-                    <Menu
-                        dropProps={{
-                            align: { top: "bottom", left: "left" },
-                            elevation: "xlarge"
-                        }}
-                        label="Area"
-                        items={[
-                            { label: "Studenti", onClick: () => {} },
-                            { label: "Ditta", onClick: () => {} }
-                        ]}
-                    />
-                </Box>
-                <Box direction="row" align="start" pad={{ start: "large" }}>
-                    <Menu
-                        dropProps={{
-                            align: { top: "bottom", left: "left" },
-                            elevation: "xlarge"
-                        }}
-                        label="Area"
-                        items={[
-                            { label: "Studenti", onClick: () => {} },
-                            { label: "Ditta", onClick: () => {} }
-                        ]}
-                    />
-                </Box>
-                <Box direction="row" align="center" margin={{ start: "large" }}>
-                    <Menu
-                        dropProps={{
-                            align: { top: "bottom", left: "left" },
-                            elevation: "xlarge"
-                        }}
-                        label="Area"
-                        items={[
-                            { label: "Studenti", onClick: () => {} },
-                            { label: "Ditta", onClick: () => {} }
-                        ]}
-                    />
-                </Box>
-                <Box
-                    // direction="row"
-                    basis="full"
-                    align="end"
-                    margin={{ start: "large" }}
-                    pad={{ right: "3rem" }}
-                >
-                    {loginLoaded ? (
-                        student ? (
-                            <Menu
-                                dropProps={{
-                                    align: { top: "bottom", left: "left" },
-                                    elevation: "xlarge"
-                                }}
-                                label={student.firstName}
-                                items={[
-                                    {
-                                        label: "Profilo",
-                                        onClick: () =>
-                                            alert(
-                                                "Yaro studiati React Router e fai una pagina profilo studente"
-                                            )
-                                    },
-                                    { label: "Logout", onClick: logout }
-                                ]}
-                            />
+                    <Box direction="row" align="start" pad={{ start: "large" }}>
+                        <Menu
+                            dropProps={{
+                                align: { top: "bottom", left: "left" },
+                                elevation: "xlarge"
+                            }}
+                            label="Area"
+                            items={[
+                                { label: "Studenti", onClick: () => {} },
+                                { label: "Ditta", onClick: () => {} }
+                            ]}
+                        />
+                    </Box>
+                    <Box
+                        direction="row"
+                        align="center"
+                        margin={{ start: "large" }}
+                    >
+                        <Menu
+                            dropProps={{
+                                align: { top: "bottom", left: "left" },
+                                elevation: "xlarge"
+                            }}
+                            label="Area"
+                            items={[
+                                { label: "Studenti", onClick: () => {} },
+                                { label: "Ditta", onClick: () => {} }
+                            ]}
+                        />
+                    </Box>
+                    <Box
+                        // direction="row"
+                        basis="full"
+                        align="end"
+                        margin={{ start: "large" }}
+                        pad={{ right: "3rem" }}
+                    >
+                        {loginLoaded ? (
+                            student ? (
+                                <Menu
+                                    dropProps={{
+                                        align: { top: "bottom", left: "left" },
+                                        elevation: "xlarge"
+                                    }}
+                                    label={student.firstName}
+                                    items={[
+                                        {
+                                            label: "Profilo",
+                                            onClick: () =>
+                                                alert(
+                                                    "Yaro studiati React Router e fai una pagina profilo studente"
+                                                )
+                                        },
+                                        { label: "Logout", onClick: logout }
+                                    ]}
+                                />
+                            ) : (
+                                <GoogleLogin />
+                            )
                         ) : (
-                            <GoogleLogin />
-                        )
-                    ) : (
-                        <p>Caricamento...</p>
-                    )}
+                            <p>Caricamento...</p>
+                        )}
+                    </Box>
                 </Box>
-            </Box>
-        </Grommet>
+            </Grommet>
+        </>
     );
 };
 

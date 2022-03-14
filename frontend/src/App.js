@@ -1,4 +1,5 @@
 import Upheader from "./components/Upheader";
+import Test from "./components/Test";
 import axios from "axios";
 import { Outlet, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -56,6 +57,7 @@ function App() {
                 logout={logout}
             />
             <Outlet />
+            <Test></Test>
         </div>
     );
 }
