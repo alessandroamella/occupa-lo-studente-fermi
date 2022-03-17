@@ -41,7 +41,8 @@ export class GoogleAuthService {
             access_type: "offline",
             prompt: "consent",
             include_granted_scopes: true,
-            scope: GoogleAuthService.defaultScope
+            scope: GoogleAuthService.defaultScope,
+            hd: "fermi.mo.it"
         });
     }
 
