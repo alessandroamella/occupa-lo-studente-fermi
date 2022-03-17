@@ -1,5 +1,6 @@
+import CodiceFiscale from "codice-fiscale-js";
 import { Request, Response, Router } from "express";
-import { checkSchema } from "express-validator";
+import { checkSchema, validationResult } from "express-validator";
 import { oauth2_v2 } from "googleapis";
 
 import { Envs } from "@config";
@@ -64,6 +65,23 @@ router.post(
         if (req.student) {
             logger.debug("Student is already logged in");
             return res.json(req.student.toObject());
+        }
+
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            logger.debug("/signup validation error:");
+            logger.debug(
+                errors
+                    .array()
+                    .map(e => e.msg)
+                    .join(", ")
+            );
+            return res.status(400).json({
+                err: errors
+                    .array()
+                    .map(e => e.msg)
+                    .join(", ")
+            } as ResErr);
         }
 
         const tempDataCookie =
@@ -136,6 +154,30 @@ router.post(
             phoneNumber,
             curriculumLink
         } = req.body;
+
+        const cf = new CodiceFiscale(fiscalNumber);
+        logger.debug(`Cf name: "${cf.name}", surname: "${cf.surname}"`);
+        if (
+            !cf.name
+                .toLowerCase()
+                .split("")
+                .every(c => (firstName as string).toLowerCase().includes(c))
+        ) {
+            logger.debug("Fiscal number doesn't correspond to name");
+            return res.status(400).json({
+                err: "Fiscal number doesn't correspond to name"
+            } as ResErr);
+        } else if (
+            !cf.surname
+                .toLowerCase()
+                .split("")
+                .every(c => (lastName as string).toLowerCase().includes(c))
+        ) {
+            logger.debug("Fiscal number doesn't correspond to surname");
+            return res.status(400).json({
+                err: "Fiscal number doesn't correspond to name"
+            } as ResErr);
+        }
 
         try {
             student = await StudentAuthService.createStudent({

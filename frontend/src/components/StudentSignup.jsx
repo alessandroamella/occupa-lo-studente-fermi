@@ -99,6 +99,7 @@ const StudentSignup = () => {
                     htmlFor="fiscalNumber-input"
                     label="Codice fiscale"
                     disabled={disabled}
+                    pattern="^[a-zA-Z]{6}[0-9]{2}[a-zA-Z][0-9]{2}[a-zA-Z][0-9]{3}[a-zA-Z]$"
                     required
                 >
                     <TextInput

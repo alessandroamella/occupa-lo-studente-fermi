@@ -3,6 +3,8 @@ import { Schema } from "express-validator";
 import { isValidPhoneNumber } from "libphonenumber-js";
 import moment from "moment";
 
+import { logger } from "@shared";
+
 // import { Envs } from "@config";
 
 // Don't validate data given by Google
@@ -35,15 +37,17 @@ export const studentValidatorSchema: Schema = {
             errorMessage: "fiscalNumber must be string"
         },
         custom: {
-            errorMessage: "Invalid fiscal number",
+            // errorMessage: "Invalid fiscal number",
             options: value => {
                 if (!CodiceFiscale.check(value)) {
-                    throw new Error("Invalid fiscal code");
+                    logger.debug("Student fiscal number is invalid");
+                    throw new Error("Invalid fiscal number");
                 }
 
                 const cf = new CodiceFiscale(value);
                 // only 16 year olds and older
                 if (moment().diff(moment(cf.birthday), "years") < 16) {
+                    logger.debug("Student is not old enough (< 16)");
                     throw new Error("Student must be at least 16");
                 }
                 return true;
