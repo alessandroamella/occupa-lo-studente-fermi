@@ -17,7 +17,6 @@ const router = Router();
  *    summary: Gets Google URL for authentication
  *    tags:
  *      - student
- *      - auth
  *    responses:
  *      '200':
  *        description: Auth URL
@@ -60,7 +59,6 @@ router.get("/", async (req, res) => {
  *    summary: Google authentication redirect URL
  *    tags:
  *      - student
- *      - auth
  *    responses:
  *      '302':
  *        description: Auth successful, redirect to main page or signup
@@ -89,10 +87,29 @@ router.get("/complete", async (req, res) => {
             .json({ err: "Invalid code query param" } as ResErr);
     }
 
-    try {
-        const params = await GoogleAuthService.getGoogleAccountFromCode(code);
-        logger.debug("Loaded Google account data from Google authentication");
+    let params;
 
+    try {
+        params = await GoogleAuthService.getGoogleAccountFromCode(code);
+        logger.debug("Loaded Google account data from Google authentication");
+    } catch (err) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        if (
+            typeof err === "object" &&
+            (err as any)?.response?.data?.error === "invalid_grant"
+        ) {
+            logger.debug("Invalid Google /complete code");
+            return res.status(400).json({ err: "Invalid auth code" });
+        }
+        logger.error("Google auth /complete error");
+        logger.error(err);
+
+        return res.status(500).json({
+            err: "Error while loading Google account information"
+        } as ResErr);
+    }
+
+    try {
         if (!params.id) throw new Error("Google account has no ID param");
 
         const student = await StudentAuthService.findStudent({

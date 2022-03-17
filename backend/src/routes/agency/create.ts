@@ -47,9 +47,12 @@ router.post(
     async (req: Request, res: Response) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res
-                .status(400)
-                .json({ err: "Invalid agency ObjectId" } as ResErr);
+            return res.status(400).json({
+                err: errors
+                    .array()
+                    .map(e => e.msg)
+                    .join(", ")
+            } as ResErr);
         }
 
         res.json(await AgencyService.create(req.body));

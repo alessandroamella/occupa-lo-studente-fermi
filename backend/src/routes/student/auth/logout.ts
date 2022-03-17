@@ -11,7 +11,6 @@ import { logger } from "@shared";
  *    summary: Logout student if logged in
  *    tags:
  *      - student
- *      - auth
  *    responses:
  *      '200':
  *        description: Always returns 200, even if not logged in

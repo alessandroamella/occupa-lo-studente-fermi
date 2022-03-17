@@ -33,7 +33,6 @@ const router = Router();
  *          schema:
  *            $ref: '#/components/schemas/Student'
  *    tags:
- *      - auth
  *      - student
  *    responses:
  *      '200':
