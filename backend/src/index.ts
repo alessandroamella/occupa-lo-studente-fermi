@@ -1,5 +1,6 @@
 import cookieParser from "cookie-parser";
 import express, { Express } from "express";
+import handleMalformedJsonBody from "middlewares/handleMalformedJsonBody";
 import morgan from "morgan";
 import swaggerUi from "swagger-ui-express";
 
@@ -46,6 +47,8 @@ app.use(cookieParser(Envs.env.COOKIE_SECRET));
 // Custom middlewares
 app.use(PopulateReq.populateAgency);
 app.use(PopulateReq.populateStudent);
+// Custom middleware to handle malformed JSON bodies
+app.use(handleMalformedJsonBody);
 
 // API Routes
 app.use("/api", apiRoutes);

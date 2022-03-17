@@ -1,8 +1,12 @@
 import {
     getModelForClass,
     modelOptions,
-    prop
+    prop,
+    Ref
 } from "@typegoose/typegoose";
+import IsEmail from "isemail";
+import { isValidPhoneNumber } from "libphonenumber-js";
+import { JobOfferClass } from "./JobOffer";
 
 /**
  * @openapi
@@ -17,14 +21,16 @@ import {
  *          - responsibleFiscalNumber
  *          - email
  *          - phoneNumber
- *          - description
- *          - address
+ *          - agencyName
+ *          - agencyDescription
+ *          - agencyAddress
  *          - vatCode
- *          - employer
+ *          - jobOffers
  *        properties:
  *          responsibleFirstName:
  *            type: string
  *            minLength: 1
+ *            maxLength: 100
  *            description: Name of the agency's responsible
  *          responsibleLastName:
  *            type: string
@@ -34,6 +40,7 @@ import {
  *          responsibleFiscalNumber:
  *            type: string
  *            minLength: 1
+ *            maxLength: 100
  *            description: Fiscal number of the agency's responsible
  *          email:
  *            type: string
@@ -45,6 +52,11 @@ import {
  *            minLength: 1
  *            maxLength: 100
  *            description: Phone number that students can contact
+ *          agencyName:
+ *            type: string
+ *            minLength: 1
+ *            maxLength: 100
+ *            description: Name of the agency
  *          agencyDescription:
  *            type: string
  *            minLength: 16
@@ -53,7 +65,7 @@ import {
  *          agencyAddress:
  *            type: string
  *            minLength: 3
- *            description: Address of the agency, should be validated
+ *            description: Address of the agency, should be selected using a visual map and validated
  *          vatCode:
  *            type: string
  *            minLength: 2
@@ -63,26 +75,28 @@ import {
  *          logoUrl:
  *            type: string
  *            description: URL of the agency's logo
- *          employer:
- *            type: string
- *            description: ObjectId of the Employer that owns this agency
+ *          jobOffers:
+ *            type: array
+ *            description: ObjectIds of the job offers for this agency
+ *            items:
+ *              type: string
  */
 
 @modelOptions({ schemaOptions: { collection: "Agency", timestamps: true } })
 export class AgencyClass {
-    @prop({ required: true, minlength: 1 })
+    @prop({ required: true, minlength: 1, maxlength: 100 })
     public responsibleFirstName!: string;
 
-    @prop({ required: true, minlength: 1 })
+    @prop({ required: true, minlength: 1, maxlength: 100 })
     public responsibleLastName!: string;
 
-    @prop({ required: true, minlength: 1 })
+    @prop({ required: true, minlength: 1, maxlength: 100 })
     public responsibleFiscalNumber!: string;
 
-    @prop({ required: true })
+    @prop({ required: true, validate: [IsEmail.validate, "Invalid email"] })
     public email!: string;
 
-    @prop({ required: true })
+    @prop({ required: true, validate: [(v: string) => isValidPhoneNumber(v, "IT"), "Invalid phone number"] })
     public phoneNumber!: string;
 
     @prop({ required: true, minlength: 1, maxlength: 100 })
@@ -99,6 +113,9 @@ export class AgencyClass {
 
     @prop({ required: false })
     public logoUrl?: string;
+    
+    @prop({ required: true, ref: "JobOffer" })
+    public jobOffers!: Ref<JobOfferClass>[];
 }
 
 export const Agency = getModelForClass(AgencyClass);

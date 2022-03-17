@@ -4,6 +4,8 @@ import {
     prop,
     Ref
 } from "@typegoose/typegoose";
+import IsEmail from "isemail";
+import { isValidPhoneNumber } from "libphonenumber-js";
 import { JobApplicationClass } from "./JobApplication";
 
 /**
@@ -76,16 +78,16 @@ export class StudentClass {
     @prop({ required: false })
     public curriculumLink?: string;
 
-    @prop({ required: true })
+    @prop({ required: true, validate: [IsEmail.validate, "Invalid email"] })
     public email!: string;
     
     @prop({ required: true })
     public pictureURL!: string;
 
-    @prop({ required: true })
+    @prop({ required: true, validate: [(v: string) => isValidPhoneNumber(v, "IT"), "Invalid phone number"] })
     public phoneNumber!: string;
 
-    @prop({ required: true })
+    @prop({ required: true, default: false })
     public spidVerified!: boolean;
 
     @prop({ required: true, ref: "JobApplication", default: [] })

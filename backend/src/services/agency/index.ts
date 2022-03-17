@@ -1,40 +1,29 @@
+import { FilterQuery } from "mongoose";
+
 import { Agency, AgencyClass } from "@models";
 import { logger } from "@shared";
 import { DocumentType } from "@typegoose/typegoose";
 
 export class AgencyService {
-    public static async show(
-        _id: string
+    public static async find(
+        fields: FilterQuery<DocumentType<AgencyClass> | null>,
+        skip = 0,
+        limit = 100
     ): Promise<DocumentType<AgencyClass> | null> {
-        try {
-            logger.debug("Find agency with _id " + _id);
-            return await Agency.findOne({ _id }).exec();
-        } catch (err) {
-            logger.error(err);
-            return null;
-        }
+        logger.debug("Finding agency...");
+        return await Agency.findOne(fields).skip(skip).limit(limit).exec();
     }
 
     public static async create(newAgency: DocumentType<AgencyClass>) {
-        try {
-            logger.debug("Create agency with name " + newAgency.name);
-            return await Agency.create(newAgency);
-        } catch (err) {
-            logger.error(err);
-            return null;
-        }
+        logger.debug("Create agency with name " + newAgency.agencyName);
+        return await Agency.create(newAgency);
     }
 
     public static async update(
         _id: string,
         newAgency: DocumentType<AgencyClass>
     ) {
-        try {
-            logger.debug("Update agency with _id " + _id);
-            return await Agency.updateOne({ _id }, newAgency).exec();
-        } catch (err) {
-            logger.error(err);
-            return null;
-        }
+        logger.debug("Update agency with _id " + _id);
+        return await Agency.updateOne({ _id }, newAgency).exec();
     }
 }

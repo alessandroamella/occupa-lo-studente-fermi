@@ -55,7 +55,7 @@ router.get("/:id", param("id").isMongoId(), async (req, res) => {
             .json({ err: "Invalid agency ObjectId" } as ResErr);
     }
 
-    const agency = await AgencyService.show(req.params?.id as string);
+    const agency = await AgencyService.find({ _id: req.params?.id as string });
     if (!agency) {
         return res.status(404).json({ err: "Agency not found" } as ResErr);
     }
