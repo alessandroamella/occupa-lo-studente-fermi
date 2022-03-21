@@ -27,7 +27,6 @@ const StudentSignup = () => {
   // ["firstName", "lastName", "email", "fiscalNumber", "phoneNumber"]
   const [firstName, setFirstName] = useState(firstNameFromEmail);
   const [lastName, setLastName] = useState(lastNameFromEmail);
-  const [email, setEmail] = useState(emailParam);
   const [fiscalNumber, setFiscalNumber] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [fieldOfStudy, setFieldOfStudy] = useState("it");
@@ -48,7 +47,6 @@ const StudentSignup = () => {
     console.log({
       firstName,
       lastName,
-      email,
       fiscalNumber,
       phoneNumber
     });
@@ -58,7 +56,6 @@ const StudentSignup = () => {
       const res = await axios.post("/api/student/auth/signup", {
         firstName,
         lastName,
-        email,
         fiscalNumber,
         phoneNumber,
         fieldOfStudy
