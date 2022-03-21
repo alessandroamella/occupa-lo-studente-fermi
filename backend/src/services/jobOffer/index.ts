@@ -86,9 +86,7 @@ export class JobOfferService {
             `Updated jobOffer ${jobOffer.agency._id} with removed jobOffer ${jobOffer._id}`
         );
 
-        await jobOffer.logger.debug(
-            `Deleting job offer with _id ${jobOffer._id}...`
-        );
+        await logger.debug(`Deleting job offer with _id ${jobOffer._id}...`);
         await jobOffer.deleteOne();
     }
 }

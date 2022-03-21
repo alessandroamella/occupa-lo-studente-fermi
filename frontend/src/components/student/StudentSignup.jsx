@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-// import { Box, Form, TextInput, FormField, Button } from "grommet";
+import { Box, Form, TextInput, FormField, Button } from "grommet";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
+// import Button from "react-bootstrap/Button";
+// import Form from "react-bootstrap/Form";
 
 import axios from "axios";
 
@@ -10,21 +10,28 @@ const StudentSignup = () => {
   const [searchParams] = useSearchParams();
   let navigate = useNavigate();
 
-  const emailParam = searchParams.get("email");
-  const [firstNameFromEmail, lastNameFromEmail] = emailParam
+  const email = searchParams.get("email");
+  const [firstName, lastName] = email
     .split("@")[0]
     .split(".")
     .map(capitalizeFirstLetter)
     .slice(0, 2);
 
-  // ["firstName", "lastName", "email", "fiscalNumber", "phoneNumber"]
-  const [firstName, setFirstName] = useState(firstNameFromEmail);
-  const [lastName, setLastName] = useState(lastNameFromEmail);
-  const [email, setEmail] = useState(emailParam);
-  const [fiscalNumber, setFiscalNumber] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
+  // const emailParam = searchParams.get("email");
+  // const [firstNameFromEmail, lastNameFromEmail] = emailParam
+  //   .split("@")[0]
+  //   .split(".")
+  //   .map(capitalizeFirstLetter)
+  //   .slice(0, 2);
 
-  // const [value, setValue] = React.useState({ firstName, lastName, email });
+  // ["firstName", "lastName", "email", "fiscalNumber", "phoneNumber"]
+  // const [firstName, setFirstName] = useState(firstNameFromEmail);
+  // const [lastName, setLastName] = useState(lastNameFromEmail);
+  // const [email, setEmail] = useState(emailParam);
+  // const [fiscalNumber, setFiscalNumber] = useState("");
+  // const [phoneNumber, setPhoneNumber] = useState("");
+
+  const [value, setValue] = React.useState({ firstName, lastName, email });
   const [disabled, setDisabled] = React.useState(true);
 
   function capitalizeFirstLetter(string) {
@@ -37,13 +44,17 @@ const StudentSignup = () => {
   async function submitForm() {
     setDisabled(true);
     try {
-      const { data } = await axios.post("/api/student/auth/signup", {
-        firstName,
-        lastName,
-        email,
-        fiscalNumber,
-        phoneNumber
-      });
+      const { data } = await axios.post(
+        "/api/student/auth/signup",
+        value
+        // {
+        //   firstName,
+        //   lastName,
+        //   email,
+        //   fiscalNumber,
+        //   phoneNumber
+        // }
+      );
       console.log(data);
       navigate("/", { state: { student: data } });
       // DEBUG
@@ -58,7 +69,7 @@ const StudentSignup = () => {
 
   return (
     <div>
-      <Form>
+      {/* <Form>
         <FormField
           name="firstName"
           htmlFor="firstName-input"
@@ -96,7 +107,7 @@ const StudentSignup = () => {
         <Button variant="primary" type="submit">
           Submit
         </Button>
-      </Form>
+      </Form> */}
 
       <Box pad="large">
         <h1>Registrazione</h1>
