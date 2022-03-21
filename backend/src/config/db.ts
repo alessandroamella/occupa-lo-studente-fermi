@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 
-import { logger } from "@shared";
+import { Envs } from "@config";
 
-import { Envs } from "./_envs";
+import { logger } from "@shared";
 
 export const connectToDb = async () => {
     await mongoose.connect(Envs.env.MONGODB_URI, err => {

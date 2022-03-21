@@ -3,12 +3,12 @@ import { Schema } from "express-validator";
 import { isValidPhoneNumber } from "libphonenumber-js";
 import moment from "moment";
 
-import { logger } from "@shared";
+import { logger, urlExists } from "@shared";
 
 export const validatorSchema: Schema = {
     responsibleFirstName: {
         in: "body",
-        errorMessage: "Invalid agency's responsible first name",
+        errorMessage: "Agency's responsible first name not specified",
         isLength: {
             errorMessage:
                 "Agency's responsible first name must be 1-100 characters long",
@@ -17,16 +17,16 @@ export const validatorSchema: Schema = {
     },
     responsibleLastName: {
         in: "body",
-        errorMessage: "Invalid agency's responsible first name",
+        errorMessage: "Agency's responsible last name not specified",
         isLength: {
             errorMessage:
-                "Agency's responsible first name must be 1-100 characters long",
+                "Agency's responsible last name must be 1-100 characters long",
             options: { min: 1, max: 100 }
         }
     },
     responsibleFiscalNumber: {
         in: "body",
-        errorMessage: "Invalid fiscal number",
+        errorMessage: "Fiscal number not specified",
         isString: {
             errorMessage: "fiscalNumber must be string"
         },
@@ -50,16 +50,27 @@ export const validatorSchema: Schema = {
             }
         }
     },
+    websiteURL: {
+        in: "body",
+        errorMessage: "Website URL not specified",
+        isURL: {
+            errorMessage: "Website URL must be a valid URL"
+        },
+        custom: {
+            errorMessage: "Website URL doesn't exist",
+            options: async v => await urlExists(v)
+        }
+    },
     email: {
         in: "body",
-        errorMessage: "Invalid email",
+        errorMessage: "Email not specified",
         isEmail: {
             errorMessage: "Invalid email"
         }
     },
     phoneNumber: {
         in: "body",
-        errorMessage: "Invalid phone number",
+        errorMessage: "Phone number not specified",
         custom: {
             options: value => {
                 if (!isValidPhoneNumber(value, "IT")) {
@@ -71,7 +82,7 @@ export const validatorSchema: Schema = {
     },
     agencyName: {
         in: "body",
-        errorMessage: "Invalid agency name",
+        errorMessage: "Agency name not specified",
         isLength: {
             errorMessage: "Invalid agency name length",
             options: { min: 1, max: 100 }
@@ -79,7 +90,7 @@ export const validatorSchema: Schema = {
     },
     agencyDescription: {
         in: "body",
-        errorMessage: "Invalid agency description",
+        errorMessage: "Agency description not specified",
         isLength: {
             errorMessage: "Description must be 16-1000 characters long",
             options: { min: 16, max: 1000 }
@@ -87,7 +98,7 @@ export const validatorSchema: Schema = {
     },
     agencyAddress: {
         in: "body",
-        errorMessage: "Invalid agency address",
+        errorMessage: "Agency address not specified",
         isLength: {
             errorMessage: "Agency address must be at least 3 characters long",
             options: { min: 3 }
@@ -95,13 +106,21 @@ export const validatorSchema: Schema = {
     },
     vatCode: {
         in: "body",
-        errorMessage: "Invalid agency VAT code"
+        errorMessage: "Agency VAT code not specified",
+        isLength: {
+            errorMessage: "VAT code must be between 2-32 characters long",
+            options: { min: 2, max: 32 }
+        }
     },
     logoUrl: {
         in: "body",
-        errorMessage: "Invalid logo URL",
+        errorMessage: "Logo URL not specified",
         isURL: {
             errorMessage: "Logo URL must be an URL"
+        },
+        custom: {
+            errorMessage: "Logo URL doesn't exist",
+            options: async v => await urlExists(v)
         },
         optional: true
     }

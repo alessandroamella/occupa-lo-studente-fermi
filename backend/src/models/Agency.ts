@@ -1,3 +1,4 @@
+import { urlExists } from "@shared";
 import {
     getModelForClass,
     modelOptions,
@@ -20,6 +21,7 @@ import { JobOfferClass } from "./JobOffer";
  *          - responsibleLastName
  *          - responsibleFiscalNumber
  *          - email
+ *          - websiteURL
  *          - phoneNumber
  *          - agencyName
  *          - agencyDescription
@@ -47,6 +49,9 @@ import { JobOfferClass } from "./JobOffer";
  *            format: email
  *            minLength: 1
  *            description: Email that students can contact
+ *          websiteURL:
+ *            type: string
+ *            description: URL of the agency's website
  *          phoneNumber:
  *            type: string
  *            minLength: 1
@@ -95,6 +100,9 @@ export class AgencyClass {
 
     @prop({ required: true, validate: [IsEmail.validate, "Invalid email"] })
     public email!: string;
+
+    @prop({ required: true, validate: async (v: string) => await urlExists(v) })
+    public websiteURL!: string;
 
     @prop({ required: true, validate: [(v: string) => isValidPhoneNumber(v, "IT"), "Invalid phone number"] })
     public phoneNumber!: string;
