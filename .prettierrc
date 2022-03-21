@@ -10,5 +10,12 @@
     "endOfLine": "lf",
     "importOrder": ["@config[/(.*)]*$", "^@.*[/(.*)]*$", "^[./]"],
     "importOrderSeparation": true,
-    "importOrderSortSpecifiers": true
+    "importOrderSortSpecifiers": true,
+
+    "overrides": [
+        {
+            "files": ["*.jsx", "*.html", "frontend/src/index.js"],
+            "options": { "tabWidth": 2 }
+        }
+    ]
 }

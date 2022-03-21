@@ -3,7 +3,7 @@ import { Router } from "express";
 import { Envs } from "@config";
 
 import { ResErr } from "@routes";
-import { GoogleAuthService, StudentAuthService } from "@services";
+import { GoogleAuthService, StudentService } from "@services";
 import { logger } from "@shared";
 
 import { StudentAuthCookieManager } from "./StudentAuthCookieManager";
@@ -96,6 +96,7 @@ router.get("/complete", async (req, res) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         if (
             typeof err === "object" &&
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             (err as any)?.response?.data?.error === "invalid_grant"
         ) {
             logger.debug("Invalid Google /complete code");
@@ -112,7 +113,7 @@ router.get("/complete", async (req, res) => {
     try {
         if (!params.id) throw new Error("Google account has no ID param");
 
-        const student = await StudentAuthService.findStudent({
+        const student = await StudentService.findStudent({
             googleId: params.id
         });
 

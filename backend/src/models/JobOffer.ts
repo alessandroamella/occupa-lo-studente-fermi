@@ -4,6 +4,7 @@ import {
     prop,
     Ref
 } from "@typegoose/typegoose";
+import moment from "moment";
 import { AgencyClass } from "./Agency";
 import { JobApplicationClass } from "./JobApplication";
 
@@ -19,7 +20,9 @@ import { JobApplicationClass } from "./JobApplication";
  *          - agency
  *          - title
  *          - description
- *          - status
+ *          - fieldOfStudy
+ *          - expiryDate
+ *          - mustHaveDiploma
  *          - jobApplications
  *        properties:
  *          agency:
@@ -31,6 +34,20 @@ import { JobApplicationClass } from "./JobApplication";
  *          description:
  *            type: string
  *            description: Description of this job offer
+ *          fieldOfStudy:
+ *            type: string
+ *            enum:
+ *              - it
+ *              - electronics
+ *              - chemistry
+ *            description: Field of study that this offer is designated for
+ *          expiryDate:
+ *            type: string
+ *            format: date-time
+ *            description: When this job offer will expire. Max 1 year from now!
+ *          mustHaveDiploma:
+ *            type: boolean
+ *            description: Whether the student must have a diploma. Defaults to false.
  *          jobApplications:
  *            type: array
  *            description: ObjectIds of the job applications for this offer
@@ -49,6 +66,15 @@ export class JobOfferClass {
 
     @prop({ required: true, minlength: 50, maxlength: 3000 })
     public description!: string;
+
+    @prop({required: true, enum: ["any", "it", "electronics", "chemistry"]})
+    public fieldOfStudy!: string;
+
+    @prop({required: true, default: () => moment().add(3, "months"), validate:[(v: Date) => !!v && moment(v).isValid() && moment(v).diff(moment(), "months") <= 12, "Expiry date must be at most 1 year from now"] })
+    public expiryDate!: Date;
+
+    @prop({required: true, default: false })
+    public mustHaveDiploma!: boolean;
 
     @prop({ required: true, ref: "JobApplication", default: [] })
     public jobApplications!: Ref<JobApplicationClass>[];

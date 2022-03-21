@@ -6,7 +6,7 @@ import { oauth2_v2 } from "googleapis";
 import { Envs } from "@config";
 
 import { ResErr } from "@routes";
-import { GoogleAuthService, StudentAuthService } from "@services";
+import { GoogleAuthService, StudentService } from "@services";
 import { logger } from "@shared";
 import { mongoose } from "@typegoose/typegoose";
 
@@ -124,7 +124,7 @@ router.post(
 
         try {
             // user already exists, just login
-            const existingStudent = await StudentAuthService.findStudent({
+            const existingStudent = await StudentService.findStudent({
                 email
             });
             if (existingStudent) {
@@ -137,7 +137,7 @@ router.post(
                 return res.json(existingStudent.toObject());
             }
         } catch (err) {
-            logger.error("Error while finding student in StudentAuthService");
+            logger.error("Error while finding student in StudentService");
             logger.error(err);
             return res
                 .status(500)
@@ -179,7 +179,7 @@ router.post(
         }
 
         try {
-            student = await StudentAuthService.createStudent({
+            student = await StudentService.createStudent({
                 email: email as string,
                 firstName,
                 lastName,

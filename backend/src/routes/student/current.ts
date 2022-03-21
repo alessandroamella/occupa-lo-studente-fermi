@@ -1,8 +1,6 @@
 import { Router } from "express";
-import { param, validationResult } from "express-validator";
 
 import { ResErr } from "@routes";
-import { AgencyService } from "@services";
 
 /**
  * @openapi

@@ -57,7 +57,7 @@ services:
             # DEBUG viene usato un secret semplice
             - COOKIE_SECRET=fermi
             # DEBUG viene usata pagina di localhost
-            - SIGNUP_URL=http://localhost:3000/signup
+            - SIGNUP_URL=http://localhost:3000/student/signup
             - LAST_PAGE_URL_COOKIE_NAME=lastpage
             - TEMP_AUTH_DATA_COOKIE_NAME=tempauthdata
             - EMAIL_SUFFIX=fermi.mo.it

@@ -12,12 +12,16 @@ export class JobOfferService {
      * @param  {number} [skip=0] - defaults to 0
      */
     public static async find(
-        fields: FilterQuery<DocumentType<JobOfferClass> | null>,
+        fields: FilterQuery<DocumentType<JobOfferClass>>,
         skip = 0,
         limit = 100
     ): Promise<DocumentType<JobOfferClass> | null> {
         logger.debug("Finding jobOffer...");
-        return await JobOffer.findOne(fields).skip(skip).limit(limit).exec();
+        return await JobOffer.findOne(fields)
+            .populate("agency")
+            .skip(skip)
+            .limit(limit)
+            .exec();
     }
     /**
      * Creates new job offer.

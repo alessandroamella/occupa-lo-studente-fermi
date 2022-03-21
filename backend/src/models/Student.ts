@@ -51,6 +51,13 @@ import { JobApplicationClass } from "./JobApplication";
  *          phoneNumber:
  *            type: string
  *            description: Phone number validated with phone.js
+ *          fieldOfStudy:
+ *            type: string
+ *            enum:
+ *              - it
+ *              - electronics
+ *              - chemistry
+ *            description: Field of study of this student
  *          spidVerified:
  *            type: boolean
  *            description: Whether the student has authenticated with SPID
@@ -87,6 +94,9 @@ export class StudentClass {
     @prop({ required: true, validate: [(v: string) => isValidPhoneNumber(v, "IT"), "Invalid phone number"] })
     public phoneNumber!: string;
 
+    @prop({ required: true, enum: ["it", "electronics", "chemistry"] })
+    public fieldOfStudy!: string;
+
     @prop({ required: true, default: false })
     public spidVerified!: boolean;
 
@@ -96,13 +106,6 @@ export class StudentClass {
 
 export const Student = getModelForClass(StudentClass);
 
-export interface StudentTempData {
-    googleId: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    pictureURL: string;
-} 
 
 export interface CreateStudentData {
     googleId: string;
@@ -115,3 +118,4 @@ export interface CreateStudentData {
     phoneNumber: string;
     spidVerified?: boolean;
 } 
+export type StudentTempData = Omit<CreateStudentData, "fiscalNumber" | "curriculumLink" | "phoneNumber" | "spidVerified">;
