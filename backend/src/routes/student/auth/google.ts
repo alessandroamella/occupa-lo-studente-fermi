@@ -33,7 +33,7 @@ const router = Router();
  */
 
 router.get("/", async (req, res) => {
-    const auth = await GoogleAuthService.createConnection(); // this is from previous step
+    const auth = await GoogleAuthService.createConnection();
     const url = await GoogleAuthService.getConnectionUrl(auth);
 
     logger.debug("Creating Google auth URL");
@@ -153,7 +153,7 @@ router.get("/complete", async (req, res) => {
             })`
         );
 
-        res.redirect(lastPageCookie || "/");
+        res.redirect(lastPageCookie || "/student");
     } catch (err) {
         logger.error("Error while loading Google account from code");
         logger.error(err);

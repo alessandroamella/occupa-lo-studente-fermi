@@ -47,7 +47,7 @@ import { JobApplicationClass } from "./JobApplication";
  *            description: When this job offer will expire. Max 1 year from now!
  *          mustHaveDiploma:
  *            type: boolean
- *            description: Whether the student must have a diploma. Defaults to false.
+ *            description: Whether the student must have a diploma. Defaults to false
  *          jobApplications:
  *            type: array
  *            description: ObjectIds of the job applications for this offer

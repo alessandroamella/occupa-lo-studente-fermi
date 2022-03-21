@@ -5,6 +5,7 @@ import { oauth2_v2 } from "googleapis";
 
 import { Envs } from "@config";
 
+import { GoogleAuthUrl } from "@models";
 import { ResErr } from "@routes";
 import { GoogleAuthService, StudentService } from "@services";
 import { logger } from "@shared";
@@ -53,14 +54,27 @@ const router = Router();
  *          application/json:
  *            schema:
  *              $ref: '#/components/schemas/ResErr'
+ *      '510':
+ *        description: Missing temp data cookie, client needs to navigate to response URL in order to login again with Google
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/GoogleAuthUrl'
  */
+
+// To not repeat code
+function _clearTempCookie(res: Response) {
+    // Bad temp data cookie, clear it
+    res.clearCookie(Envs.env.TEMP_AUTH_DATA_COOKIE_NAME, {
+        httpOnly: true,
+        signed: true
+    });
+}
 
 router.post(
     "/",
     checkSchema(studentValidatorSchema),
     async (req: Request, res: Response) => {
-        logger.debug("/signup passed student schema verification");
-
         if (req.student) {
             logger.debug("Student is already logged in");
             return res.json(req.student.toObject());
@@ -83,19 +97,23 @@ router.post(
             } as ResErr);
         }
 
+        logger.debug("/signup passed student schema verification");
+
         const tempDataCookie =
             req.signedCookies[Envs.env.TEMP_AUTH_DATA_COOKIE_NAME];
         if (!tempDataCookie) {
-            return res
-                .status(400)
-                .json({ err: "No Google temp data cookie" } as ResErr);
-        }
+            // return res
+            //     .status(400)
+            //     .json({ err: "No Google temp data cookie" } as ResErr);
 
-        // Clear temp data cookie
-        res.clearCookie(Envs.env.TEMP_AUTH_DATA_COOKIE_NAME, {
-            httpOnly: true,
-            signed: true
-        });
+            const auth = await GoogleAuthService.createConnection(); // this is from previous step
+            const url = await GoogleAuthService.getConnectionUrl(auth);
+
+            logger.debug(
+                "No Google temp data cookie, generated new URL " + url
+            );
+            return res.status(510).json({ url } as GoogleAuthUrl);
+        }
 
         // Load Google data from cookie
         let googleTempData: oauth2_v2.Schema$Userinfo;
@@ -107,6 +125,9 @@ router.post(
         } catch (err) {
             logger.error("Error while parsing Google temp data JWT");
             logger.error(err);
+
+            _clearTempCookie(res);
+
             return res
                 .status(500)
                 .json({ err: "Error while loading Google data" } as ResErr);
@@ -117,6 +138,8 @@ router.post(
         logger.debug(`Loaded temp data cookie, email is "${email}"`);
 
         if (!hd || !Envs.env.EMAIL_SUFFIX.includes(hd)) {
+            _clearTempCookie(res);
+
             return res.status(400).json({
                 err: `You're not part of the ${Envs.env.EMAIL_SUFFIX} organization`
             } as ResErr);
@@ -151,7 +174,8 @@ router.post(
             lastName,
             fiscalNumber,
             phoneNumber,
-            curriculumLink
+            curriculumLink,
+            fieldOfStudy
         } = req.body;
 
         const cf = new CodiceFiscale(fiscalNumber);
@@ -186,6 +210,7 @@ router.post(
                 fiscalNumber,
                 googleId: id as string,
                 phoneNumber,
+                fieldOfStudy,
                 pictureURL: picture as string,
                 curriculumLink,
                 spidVerified: false
@@ -206,6 +231,7 @@ router.post(
 
         logger.debug(`New student "${firstName} ${lastName}" saved in DB`);
 
+        _clearTempCookie(res);
         await StudentAuthCookieManager.saveStudentAuthCookie(res, student);
 
         res.json(student.toObject());

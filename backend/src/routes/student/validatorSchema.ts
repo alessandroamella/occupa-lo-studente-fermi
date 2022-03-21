@@ -18,21 +18,21 @@ export const studentValidatorSchema: Schema = {
     // },
     firstName: {
         in: "body",
-        errorMessage: "Invalid first name",
+        errorMessage: "First name not specified",
         isString: {
             errorMessage: "firstName must be string"
         }
     },
     lastName: {
         in: "body",
-        errorMessage: "Invalid first name",
+        errorMessage: "Last name not specified",
         isString: {
             errorMessage: "lastName must be string"
         }
     },
     fiscalNumber: {
         in: "body",
-        errorMessage: "Invalid fiscal number",
+        errorMessage: "Fiscal number not specified",
         isString: {
             errorMessage: "fiscalNumber must be string"
         },
@@ -56,7 +56,7 @@ export const studentValidatorSchema: Schema = {
     },
     curriculumLink: {
         in: "body",
-        errorMessage: "Invalid curriculum link",
+        errorMessage: "Curriculum link not specified",
         optional: true,
         isURL: {
             errorMessage: "curriculumLink must be a valid URL"
@@ -81,7 +81,7 @@ export const studentValidatorSchema: Schema = {
     // },
     phoneNumber: {
         in: "body",
-        errorMessage: "Invalid phone number",
+        errorMessage: "Phone number not specified",
         custom: {
             options: value => {
                 if (!isValidPhoneNumber(value, "IT")) {
@@ -89,6 +89,14 @@ export const studentValidatorSchema: Schema = {
                 }
                 return true;
             }
+        }
+    },
+    fieldOfStudy: {
+        in: "body",
+        errorMessage: "Field of study not specified",
+        isIn: {
+            options: [["any", "it", "electronics", "chemistry"]],
+            errorMessage: "Invalid field of study"
         }
     }
 };

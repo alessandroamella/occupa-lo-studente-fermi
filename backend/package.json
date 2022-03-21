@@ -1,6 +1,6 @@
 {
     "name": "occupa-lo-studente-backend",
-    "version": "1.0.2",
+    "version": "1.1.1",
     "description": "Backend progetto SSH \"occupa lo studente\" di Alessandro Amella e Yaroslav Pavlik",
     "main": "index.js",
     "scripts": {

@@ -20,7 +20,7 @@ services:
         ports:
             # DEBUG le porte vengono pubblicate
             # In produzione viene fatto soltanto l'expose
-            - 27017:27017
+            - 27018:27017
         volumes:
             - mongodb_data:/data/db
         logging:

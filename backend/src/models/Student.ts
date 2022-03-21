@@ -24,6 +24,7 @@ import { JobApplicationClass } from "./JobApplication";
  *          - email
  *          - pictureURL
  *          - phoneNumber
+ *          - fieldOfStudy
  *          - spidVerified
  *        properties:
  *          googleId:
@@ -63,7 +64,7 @@ import { JobApplicationClass } from "./JobApplication";
  *            description: Whether the student has authenticated with SPID
  *          jobApplications:
  *            type: array
- *            description: Job applications from the student
+ *            description: ObjectIds of the job applications for this student
  *            items:
  *              type: string
  */
@@ -116,6 +117,7 @@ export interface CreateStudentData {
     email: string;
     pictureURL: string;
     phoneNumber: string;
+    fieldOfStudy: "it"| "electronics"| "chemistry";
     spidVerified?: boolean;
 } 
 export type StudentTempData = Omit<CreateStudentData, "fiscalNumber" | "curriculumLink" | "phoneNumber" | "spidVerified">;
