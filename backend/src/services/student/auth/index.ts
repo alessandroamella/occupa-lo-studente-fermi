@@ -61,7 +61,7 @@ export class StudentAuthService {
                         );
                     }
 
-                    StudentService.findStudent({
+                    StudentService.findOne({
                         _id: jwtPayload.student
                     })
                         .then(obj =>

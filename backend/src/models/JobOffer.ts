@@ -43,8 +43,8 @@ import { JobApplicationClass } from "./JobApplication";
  *            description: Field of study that this offer is designated for
  *          expiryDate:
  *            type: string
- *            format: date-time
- *            description: When this job offer will expire. Max 1 year from now!
+ *            format: date
+ *            description: When this job offer will expire. Max 1 year from now! Format is YYYY-MM-DD (inclusive)
  *          mustHaveDiploma:
  *            type: boolean
  *            description: Whether the student must have a diploma. Defaults to false
@@ -58,7 +58,7 @@ import { JobApplicationClass } from "./JobApplication";
 // MODEL: ADD MORE THINGS TO THIS MODEL
 @modelOptions({ schemaOptions: { collection: "JobOffer", timestamps: true } })
 export class JobOfferClass {
-    @prop({ required: true, ref: "Agency" })
+    @prop({ required: true, ref: "AgencyClass" })
     public agency!: Ref<AgencyClass>;
 
     @prop({ required: true, minlength: 5, maxlength: 32 })
@@ -76,7 +76,7 @@ export class JobOfferClass {
     @prop({required: true, default: false })
     public mustHaveDiploma!: boolean;
 
-    @prop({ required: true, ref: "JobApplication", default: [] })
+    @prop({ required: true, ref: "JobApplicationClass", default: [] })
     public jobApplications!: Ref<JobApplicationClass>[];
 }
 

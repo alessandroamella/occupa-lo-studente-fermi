@@ -113,7 +113,7 @@ router.get("/complete", async (req, res) => {
     try {
         if (!params.id) throw new Error("Google account has no ID param");
 
-        const student = await StudentService.findStudent({
+        const student = await StudentService.findOne({
             googleId: params.id
         });
 

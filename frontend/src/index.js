@@ -13,6 +13,7 @@ import MainHomepage from "./components/MainHomepage";
 import StudentBase from "./components/student/StudentBase";
 import StudentHome from "./components/student/StudentHome";
 import StudentSignup from "./components/student/StudentSignup";
+import StudentJobOffers from "./components/student/StudentJobOffers";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -25,6 +26,7 @@ ReactDOM.render(
           </Route>
           <Route path="student" element={<StudentBase />}>
             <Route path="" element={<StudentHome />} />
+            <Route path="joboffers" element={<StudentJobOffers />} />
             <Route path="signup" element={<StudentSignup />} />
           </Route>
         </Route>

@@ -122,7 +122,7 @@ export class AgencyClass {
     @prop({ required: false })
     public logoUrl?: string;
     
-    @prop({ required: true, ref: "JobOffer" })
+    @prop({ required: true, ref: "JobOfferClass" })
     public jobOffers!: Ref<JobOfferClass>[];
 }
 

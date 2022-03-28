@@ -8,7 +8,7 @@ export class JobApplicationService {
     /**
      * Finds a job application
      */
-    public static async find(
+    public static async findOne(
         fields: FilterQuery<DocumentType<JobApplicationClass> | null>,
         skip = 0,
         limit = 100

@@ -1,9 +1,8 @@
-import { useNavigate, Outlet } from "react-router-dom";
+import { Outlet, Link } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 
 function Homepage() {
-  const navigate = useNavigate();
   return (
     <div>
       <Container bg="dark" variant="dark" className="mt-8">
@@ -12,13 +11,10 @@ function Homepage() {
             Sono la <span className="font-semibold">homepage</span>
           </p>
           <div className="mt-4">
-            <Button
-              variant="outline-success"
-              onClick={() => navigate("/student")}
-            >
+            <Button as={Link} to="/student" variant="outline-success">
               Studente
             </Button>{" "}
-            <Button variant="outline-info" onClick={() => navigate("/agency")}>
+            <Button as={Link} to="/agency" variant="outline-info">
               Azienda
             </Button>{" "}
           </div>

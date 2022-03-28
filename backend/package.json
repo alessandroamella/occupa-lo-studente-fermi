@@ -25,6 +25,7 @@
         "eslint": "^8.9.0",
         "nodemon": "^2.0.15",
         "rimraf": "^3.0.2",
+        "supertest": "^6.2.2",
         "ts-node": "^10.4.0",
         "tsconfig-paths": "^3.12.0",
         "typescript": "^4.5.5"
@@ -33,6 +34,7 @@
     "license": "ISC",
     "dependencies": {
         "@typegoose/typegoose": "^9.6.2",
+        "chai": "^4.3.6",
         "codice-fiscale-js": "^2.3.15",
         "cookie-parser": "^1.4.6",
         "dotenv": "^16.0.0",
@@ -42,6 +44,7 @@
         "isemail": "^3.2.0",
         "jsonwebtoken": "^8.5.1",
         "libphonenumber-js": "^1.9.49",
+        "mocha": "^9.2.2",
         "moment": "^2.29.1",
         "mongoose": "^6.2.0",
         "morgan": "^1.10.0",

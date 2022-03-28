@@ -18,5 +18,18 @@
             "double",
             { "avoidEscape": true, "allowTemplateLiterals": true }
         ]
-    }
+    },
+    "overrides": [
+        {
+            "files": "test/*",
+            "parser": "babel-eslint",
+            "env": {
+                "browser": false,
+                // "es6": true,
+                "es6": false,
+                "node": true,
+                "mocha": true
+            }
+        }
+    ]
 }

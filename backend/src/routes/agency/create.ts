@@ -58,7 +58,7 @@ router.post(
 
         let existingAgency;
         try {
-            existingAgency = await AgencyService.find({
+            existingAgency = await AgencyService.findOne({
                 vatCode: req.body.vatCode as string
             });
         } catch (err) {

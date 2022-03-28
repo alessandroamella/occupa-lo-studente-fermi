@@ -101,7 +101,7 @@ export class StudentClass {
     @prop({ required: true, default: false })
     public spidVerified!: boolean;
 
-    @prop({ required: true, ref: "JobApplication", default: [] })
+    @prop({ required: true, ref: "JobApplicationClass", default: [] })
     public jobApplications!: Ref<JobApplicationClass>[];
 }
 

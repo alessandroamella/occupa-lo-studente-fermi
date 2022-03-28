@@ -4,13 +4,13 @@ import { CreateStudentData, Student, StudentClass } from "@models";
 import { DocumentType } from "@typegoose/typegoose";
 
 export class StudentService {
-    public static async createStudent(
+    public static async create(
         data: CreateStudentData
     ): Promise<DocumentType<StudentClass>> {
         return await Student.create(data);
     }
 
-    public static async findStudent(
+    public static async findOne(
         fields: FilterQuery<DocumentType<StudentClass> | null>
     ): Promise<DocumentType<StudentClass> | null> {
         return await Student.findOne(fields).exec();

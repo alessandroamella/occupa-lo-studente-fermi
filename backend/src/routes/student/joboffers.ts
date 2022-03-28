@@ -4,6 +4,7 @@ import { ResErr } from "routes/ResErr";
 import { JobOfferService } from "services/jobOffer";
 
 import { isStudentLoggedIn } from "@middlewares";
+import { logger } from "@shared";
 
 /**
  * @openapi
@@ -34,12 +35,6 @@ import { isStudentLoggedIn } from "@middlewares";
  *              description: Array of JobOffer objects
  *              items:
  *                  $ref: '#/components/schemas/JobOffer'
- *      '400':
- *        description: Invalid query params
- *        content:
- *          application/json:
- *            schema:
- *              $ref: '#/components/schemas/ResErr'
  *      '401':
  *        description: Not logged in
  *        content:
@@ -63,23 +58,30 @@ router.get(
         .optional()
         .isIn(["any", "it", "electronics", "chemistry"]),
     async (req, res) => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
+        try {
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                return res
+                    .status(400)
+                    .json({ err: errors.array().join(", ") } as ResErr);
+            }
+
+            const { fieldOfStudy } = req.query;
+
+            // Find job offers that haven't expired yet
+            const jobOffers = await JobOfferService.find({
+                fieldOfStudy,
+                expiryDate: { $lt: new Date() }
+            });
+
+            return res.json(jobOffers);
+        } catch (err) {
+            logger.error("Error while finding job offers");
+            logger.error(err);
             return res
-                .status(400)
-                .json({ err: errors.array().join(", ") } as ResErr);
+                .status(500)
+                .json({ err: "Error while finding job offers" } as ResErr);
         }
-
-        const { fieldOfStudy } = req.query;
-
-        // Find job offers that haven't expired yet
-
-        const jobOffers = await JobOfferService.find({
-            fieldOfStudy,
-            expiryDate: { $lt: new Date() }
-        });
-
-        return res.json(jobOffers);
     }
 );
 

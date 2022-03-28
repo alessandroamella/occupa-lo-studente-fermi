@@ -147,7 +147,7 @@ router.post(
 
         try {
             // user already exists, just login
-            const existingStudent = await StudentService.findStudent({
+            const existingStudent = await StudentService.findOne({
                 email
             });
             if (existingStudent) {
@@ -203,7 +203,7 @@ router.post(
         }
 
         try {
-            student = await StudentService.createStudent({
+            student = await StudentService.create({
                 email: email as string,
                 firstName,
                 lastName,

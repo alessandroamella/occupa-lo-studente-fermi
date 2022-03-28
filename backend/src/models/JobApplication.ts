@@ -42,10 +42,10 @@ import { StudentClass } from "./Student";
     schemaOptions: { collection: "JobApplication", timestamps: true }
 })
 export class JobApplicationClass {
-    @prop({ required: true, ref: "Student" })
+    @prop({ required: true, ref: "StudentClass" })
     public fromStudent!: Ref<StudentClass>;
 
-    @prop({ required: true, ref: "JobOffer" })
+    @prop({ required: true, ref: "JobOfferClass" })
     public forJobOffer!: Ref<JobOfferClass>;
 
     @prop({ required: true, enum: ["open", "accepted", "rejected"] })

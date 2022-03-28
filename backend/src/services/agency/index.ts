@@ -5,7 +5,7 @@ import { logger } from "@shared";
 import { DocumentType } from "@typegoose/typegoose";
 
 export class AgencyService {
-    public static async find(
+    public static async findOne(
         fields: FilterQuery<DocumentType<AgencyClass> | null>,
         skip = 0,
         limit = 100
