@@ -77,6 +77,17 @@ import { JobOfferClass } from "./JobOffer";
  *            maxLength: 32
  *            description: VAT Code of the agency
  *            example: 02201090368
+ *          approvalStatus:
+ *            type: string
+ *            enum:
+ *              - waiting
+ *              - approved
+ *              - rejected
+ *            description: Approval status
+ *          approvalDate:
+ *            type: string
+ *            format: date-time
+ *            description: When this agency got approved (or rejected), undefined or null if not approved yet
  *          logoUrl:
  *            type: string
  *            description: URL of the agency's logo
@@ -118,6 +129,12 @@ export class AgencyClass {
 
     @prop({ required: true, minlength: 2, maxlength: 32 })
     public vatCode!: string;
+
+    @prop({ required: true, enum: ["waiting", "approved", "rejected"] })
+    public approvalStatus!: string;
+
+    @prop({ required: false, default: null })
+    public approvalDate?: Date;
 
     @prop({ required: false })
     public logoUrl?: string;
