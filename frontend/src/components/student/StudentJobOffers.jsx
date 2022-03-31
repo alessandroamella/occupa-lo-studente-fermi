@@ -30,7 +30,7 @@ const StudentJobOffers = () => {
         setJobOffers(data);
       } catch (err) {
         console.log(err);
-        setErr(err?.err || "Errore sconosciuto");
+        setErr(err?.response?.data?.err || "Errore sconosciuto");
       } finally {
         setLoaded(true);
       }

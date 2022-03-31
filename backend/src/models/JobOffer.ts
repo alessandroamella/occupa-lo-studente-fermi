@@ -23,6 +23,7 @@ import { JobApplicationClass } from "./JobApplication";
  *          - fieldOfStudy
  *          - expiryDate
  *          - mustHaveDiploma
+ *          - numberOfPositions
  *          - jobApplications
  *        properties:
  *          agency:
@@ -48,6 +49,9 @@ import { JobApplicationClass } from "./JobApplication";
  *          mustHaveDiploma:
  *            type: boolean
  *            description: Whether the student must have a diploma. Defaults to false
+ *          numberOfPositions:
+ *            type: integer
+ *            description: Number of this position available. Defaults to 1
  *          jobApplications:
  *            type: array
  *            description: ObjectIds of the job applications for this offer
@@ -75,6 +79,9 @@ export class JobOfferClass {
 
     @prop({required: true, default: false })
     public mustHaveDiploma!: boolean;
+
+    @prop({required: true, default: 1})
+    public numberOfPositions!: number;
 
     @prop({ required: true, ref: "JobApplicationClass", default: [] })
     public jobApplications!: Ref<JobApplicationClass>[];

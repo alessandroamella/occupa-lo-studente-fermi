@@ -18,6 +18,7 @@ export const requiredEnvs = [
     "LAST_PAGE_URL_COOKIE_NAME",
     "TEMP_AUTH_DATA_COOKIE_NAME",
     "SIGNUP_URL",
+    "CLIENT_LOGIN_REDIRECT_URL",
     "EMAIL_SUFFIX"
 ] as const;
 

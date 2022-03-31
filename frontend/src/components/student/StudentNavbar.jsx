@@ -1,12 +1,24 @@
 import React from "react";
-import GoogleLogin from "../GoogleLogin";
 import { Link, useNavigate } from "react-router-dom";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import Container from "react-bootstrap/Container";
+import { useDispatch, useSelector } from "react-redux";
+import GoogleLogin from "../GoogleLogin";
+import { logout } from "../../slices/studentAuthSlice";
 
-const StudentNavbar = ({ loginLoaded, student, logout }) => {
+const selectStudent = state => state.student;
+
+const StudentNavbar = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  async function dispatchLogout() {
+    dispatch(logout());
+  }
+
+  const { student } = useSelector(selectStudent);
+
   return (
     <Navbar bg="dark" variant="dark">
       <Container>
@@ -32,23 +44,25 @@ const StudentNavbar = ({ loginLoaded, student, logout }) => {
         </Navbar.Collapse>
 
         <div className="text-white">
-          {loginLoaded ? (
+          {
+            // loginLoaded ? (
             student ? (
               <div className="flex">
                 <p className="mr-5">
                   Ciao, <span className="underline">{student.firstName}</span>
                 </p>
                 {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-                <a href="#" onClick={logout}>
+                <a href="#" onClick={dispatchLogout}>
                   Logout
                 </a>
               </div>
             ) : (
               <GoogleLogin />
             )
-          ) : (
-            <p>Caricamento...</p>
-          )}
+            // ) : (
+            //   <p>Caricamento...</p>
+            // )
+          }
         </div>
       </Container>
     </Navbar>

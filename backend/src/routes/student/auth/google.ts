@@ -147,13 +147,20 @@ router.get("/complete", async (req, res) => {
             await StudentAuthCookieManager.saveStudentAuthCookie(res, student);
         }
 
-        logger.debug(
-            `Redirecting student to last visited page (${
-                lastPageCookie || "/"
-            })`
-        );
+        // logger.debug(
+        //     `Redirecting student to last visited page (${
+        //         lastPageCookie || "/"
+        //     })`
+        // );
 
-        res.redirect(lastPageCookie || "/student");
+        // res.redirect(lastPageCookie || "/student");
+
+        try {
+            const url = new URL(lastPageCookie);
+            res.redirect(`${url.protocol}//${url.host}/student`);
+        } catch (err) {
+            res.redirect(Envs.env.CLIENT_LOGIN_REDIRECT_URL);
+        }
     } catch (err) {
         logger.error("Error while loading Google account from code");
         logger.error(err);
