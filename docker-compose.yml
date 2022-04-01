@@ -62,6 +62,8 @@ services:
             - LAST_PAGE_URL_COOKIE_NAME=lastpage
             - TEMP_AUTH_DATA_COOKIE_NAME=tempauthdata
             - EMAIL_SUFFIX=fermi.mo.it
+            # DEBUG viene usata la mia email come debug
+            - SECRETARY_EMAIL=alessandro.amella@fermi.mo.it
     frontend:
         depends_on:
             - backend

@@ -1,6 +1,6 @@
 import CodiceFiscale from "codice-fiscale-js";
 import { Schema } from "express-validator";
-import { isValidPhoneNumber } from "libphonenumber-js";
+import { isValidPhoneNumber, parsePhoneNumber } from "libphonenumber-js";
 import moment from "moment";
 
 import { logger, urlExists } from "@shared";
@@ -50,7 +50,7 @@ export const validatorSchema: Schema = {
             }
         }
     },
-    websiteURL: {
+    websiteUrl: {
         in: "body",
         errorMessage: "Website URL not specified",
         isURL: {
@@ -77,6 +77,11 @@ export const validatorSchema: Schema = {
                     throw new Error("Invalid phone number");
                 }
                 return true;
+            }
+        },
+        customSanitizer: {
+            options: value => {
+                return parsePhoneNumber(value, "IT").format("E.164");
             }
         }
     },
@@ -112,6 +117,22 @@ export const validatorSchema: Schema = {
             options: { min: 2, max: 32 }
         }
     },
+    // approvalStatus: {
+    //     in: "body",
+    //     errorMessage: "Approval status not specified",
+    //     isIn: {
+    //         options: [["waiting", "approved", "rejected"]],
+    //         errorMessage: "Invalid approval status"
+    //     }
+    // },
+    // approvalDate: {
+    //     in: "body",
+    //     errorMessage: "Approval date not specified",
+    //     isDate: {
+    //         errorMessage: "Approval date must be date"
+    //     },
+    //     optional: true
+    // },
     logoUrl: {
         in: "body",
         errorMessage: "Logo URL not specified",

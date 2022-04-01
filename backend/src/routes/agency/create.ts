@@ -1,6 +1,7 @@
 import { Request, Response, Router } from "express";
 import { checkSchema, validationResult } from "express-validator";
 
+import { Agency } from "@models";
 import { ResErr } from "@routes";
 import { AgencyService } from "@services";
 import { logger } from "@shared";
@@ -56,10 +57,25 @@ router.post(
             } as ResErr);
         }
 
+        const {
+            responsibleFirstName,
+            responsibleLastName,
+            responsibleFiscalNumber,
+            email,
+            websiteUrl,
+            phoneNumber,
+            agencyName,
+            agencyDescription,
+            agencyAddress,
+            vatCode
+            // approvalStatus,
+            // jobOffers
+        } = req.body;
+
         let existingAgency;
         try {
             existingAgency = await AgencyService.findOne({
-                vatCode: req.body.vatCode as string
+                $or: [{ agencyName }, { email }, { vatCode }]
             });
         } catch (err) {
             logger.error("Error while finding existing agency");
@@ -71,11 +87,28 @@ router.post(
 
         if (existingAgency) {
             return res.status(400).json({
-                err: "Agency with the same VAT code already exists"
+                err: "Agency with the same data (name, email or VAT code) already exists"
             } as ResErr);
         }
 
-        res.json(await AgencyService.create(req.body));
+        const agencyDoc = new Agency({
+            responsibleFirstName,
+            responsibleLastName,
+            responsibleFiscalNumber,
+            email,
+            websiteUrl,
+            phoneNumber,
+            agencyName,
+            agencyDescription,
+            agencyAddress,
+            vatCode,
+            approvalStatus: "waiting",
+            jobOffers: []
+        });
+        res.json(await AgencyService.create(agencyDoc));
+
+        // DEBUG
+        logger.warn("DEBUG new agency: send email");
     }
 );
 

@@ -19,7 +19,8 @@ export const requiredEnvs = [
     "TEMP_AUTH_DATA_COOKIE_NAME",
     "SIGNUP_URL",
     "CLIENT_LOGIN_REDIRECT_URL",
-    "EMAIL_SUFFIX"
+    "EMAIL_SUFFIX",
+    "SECRETARY_EMAIL"
 ] as const;
 
 type EnvName = typeof requiredEnvs[number];

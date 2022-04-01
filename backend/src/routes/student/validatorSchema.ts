@@ -1,6 +1,6 @@
 import CodiceFiscale from "codice-fiscale-js";
 import { Schema } from "express-validator";
-import { isValidPhoneNumber } from "libphonenumber-js";
+import { isValidPhoneNumber, parsePhoneNumber } from "libphonenumber-js";
 import moment from "moment";
 
 import { logger } from "@shared";
@@ -88,6 +88,11 @@ export const studentValidatorSchema: Schema = {
                     throw new Error("Invalid phone number");
                 }
                 return true;
+            }
+        },
+        customSanitizer: {
+            options: value => {
+                return parsePhoneNumber(value, "IT").format("E.164");
             }
         }
     },

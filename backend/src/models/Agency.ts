@@ -21,12 +21,13 @@ import { JobOfferClass } from "./JobOffer";
  *          - responsibleLastName
  *          - responsibleFiscalNumber
  *          - email
- *          - websiteURL
+ *          - websiteUrl
  *          - phoneNumber
  *          - agencyName
  *          - agencyDescription
  *          - agencyAddress
  *          - vatCode
+ *          - approvalStatus
  *          - jobOffers
  *        properties:
  *          responsibleFirstName:
@@ -49,7 +50,7 @@ import { JobOfferClass } from "./JobOffer";
  *            format: email
  *            minLength: 1
  *            description: Email that students can contact
- *          websiteURL:
+ *          websiteUrl:
  *            type: string
  *            description: URL of the agency's website
  *          phoneNumber:
@@ -113,7 +114,7 @@ export class AgencyClass {
     public email!: string;
 
     @prop({ required: true, validate: async (v: string) => await urlExists(v) })
-    public websiteURL!: string;
+    public websiteUrl!: string;
 
     @prop({ required: true, validate: [(v: string) => isValidPhoneNumber(v, "IT"), "Invalid phone number"] })
     public phoneNumber!: string;

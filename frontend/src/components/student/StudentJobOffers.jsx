@@ -3,6 +3,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
+import Spinner from "react-bootstrap/Spinner";
 import axios from "axios";
 
 const StudentJobOffers = () => {
@@ -43,7 +44,9 @@ const StudentJobOffers = () => {
         &#60;- Homepage studenti
       </Button>
       {!loaded ? (
-        <p>Caricamento...</p>
+        <Spinner animation="border" role="status">
+          <span className="visually-hidden">Caricamento...</span>
+        </Spinner>
       ) : Array.isArray(jobOffers) ? (
         <div>
           <p className="my-3 text-3xl font-semibold">Offerte di lavoro</p>

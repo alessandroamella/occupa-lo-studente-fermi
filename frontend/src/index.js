@@ -23,6 +23,8 @@ import StudentLogin from "./components/student/StudentLogin";
 import StudentSignup from "./components/student/StudentSignup";
 import StudentJobOffers from "./components/student/StudentJobOffers";
 import store from "./app/store";
+import SecretaryBase from "./components/secretary/SecretaryBase";
+import SecretaryHomepage from "./components/secretary/SecretaryHomepage";
 
 const selectStudent = state => state.student;
 
@@ -47,6 +49,9 @@ ReactDOM.render(
             <Route path="" element={<MainBase />}>
               <Route path="" element={<MainHomepage />} />
               {/* eventually other routes not related to student or agency */}
+            </Route>
+            <Route path="secretary" element={<SecretaryBase />}>
+              <Route path="" element={<SecretaryHomepage />} />
             </Route>
             <Route path="student" element={<StudentBase />}>
               <Route path="" element={<StudentHome />} />
