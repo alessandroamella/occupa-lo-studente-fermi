@@ -21,7 +21,6 @@ import StudentBase from "./components/student/StudentBase";
 import StudentHome from "./components/student/StudentHome";
 import StudentLogin from "./components/student/StudentLogin";
 import StudentSignup from "./components/student/StudentSignup";
-import StudentJobOffers from "./components/student/StudentJobOffers";
 import store from "./app/store";
 import SecretaryBase from "./components/secretary/SecretaryBase";
 import SecretaryHomepage from "./components/secretary/SecretaryHomepage";
@@ -55,14 +54,6 @@ ReactDOM.render(
             </Route>
             <Route path="student" element={<StudentBase />}>
               <Route path="" element={<StudentHome />} />
-              <Route
-                path="joboffers"
-                element={
-                  // <RequireStudentAuth>
-                  <StudentJobOffers />
-                  // </RequireStudentAuth>
-                }
-              />
               <Route path="signup" element={<StudentSignup />} />
               <Route path="login" element={<StudentLogin />} />
             </Route>

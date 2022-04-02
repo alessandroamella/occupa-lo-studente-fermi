@@ -8,13 +8,15 @@ const selectStudent = state => state.student;
 const RequireStudentLogin = ({ children }) => {
   const { isLoggingIn, student } = useSelector(selectStudent);
 
+  console.log({ isLoggingIn, student });
+
   return isLoggingIn ? (
-    <>
+    <div className="mt-3 flex w-full justify-center text-center items-center">
       <Spinner animation="border" role="status">
         <span className="visually-hidden">Caricamento...</span>
       </Spinner>{" "}
-      Caricamento...
-    </>
+      <p className="ml-2">Caricamento...</p>
+    </div>
   ) : student ? (
     children
   ) : (

@@ -19,8 +19,6 @@ const StudentNavbar = () => {
 
   const { student, isLoggingIn } = useSelector(selectStudent);
 
-  console.log({ isLoggingIn });
-
   return (
     <Navbar bg="dark" variant="dark">
       <Container>
@@ -39,7 +37,7 @@ const StudentNavbar = () => {
             <Nav.Link as={Link} to="/student">
               Home
             </Nav.Link>
-            <Nav.Link as={Link} to="/joboffers">
+            <Nav.Link as={Link} to="/student">
               Offerte di lavoro
             </Nav.Link>
           </Nav>

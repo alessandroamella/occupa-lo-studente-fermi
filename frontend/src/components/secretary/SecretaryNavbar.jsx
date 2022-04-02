@@ -25,9 +25,6 @@ const SecretaryNavbar = () => {
             <Nav.Link as={Link} to="/student">
               Home
             </Nav.Link>
-            <Nav.Link as={Link} to="/joboffers">
-              Offerte di lavoro
-            </Nav.Link>
           </Nav>
         </Navbar.Collapse>
 
