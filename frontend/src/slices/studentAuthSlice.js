@@ -1,8 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-export const login = createAsyncThunk("/student/login", async () => {
+export const login = createAsyncThunk("/student/login", async (_, thunkAPI) => {
     try {
+        thunkAPI.dispatch(studentAuthSlice.actions.setIsLoggingIn(true));
+
         const { data } = await axios.get("/api/student/current");
         // DEBUG
         // console.log("Student logged in", data);
@@ -11,6 +13,8 @@ export const login = createAsyncThunk("/student/login", async () => {
         // console.log("Student not logged in");
         return null;
         // setStudent(null);
+    } finally {
+        thunkAPI.dispatch(studentAuthSlice.actions.setIsLoggingIn(false));
     }
 });
 
@@ -26,16 +30,14 @@ export const logout = createAsyncThunk("/student/logout", async () => {
 export const studentAuthSlice = createSlice({
     name: "student",
     initialState: {
-        student: null
+        student: null,
+        isLoggingIn: false
     },
-    // reducers: {
-    //     login: (state, action) => {
-    //         state.student = action.payload;
-    //     },
-    //     logout: state => {
-    //         state.student = null;
-    //     }
-    // }
+    reducers: {
+        setIsLoggingIn: (state, action) => {
+            state.isLoggingIn = action.payload;
+        }
+    },
     extraReducers: builder => {
         builder.addCase(login.fulfilled, (state, action) => {
             if (action.payload) state.student = action.payload;
@@ -47,6 +49,6 @@ export const studentAuthSlice = createSlice({
     }
 });
 
-// export const { login, logout } = studentAuthSlice.actions;
+export const { setIsLoggingIn } = studentAuthSlice.actions;
 
 export default studentAuthSlice.reducer;

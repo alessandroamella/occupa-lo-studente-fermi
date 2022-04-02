@@ -58,9 +58,9 @@ ReactDOM.render(
               <Route
                 path="joboffers"
                 element={
-                  <RequireStudentAuth>
-                    <StudentJobOffers />
-                  </RequireStudentAuth>
+                  // <RequireStudentAuth>
+                  <StudentJobOffers />
+                  // </RequireStudentAuth>
                 }
               />
               <Route path="signup" element={<StudentSignup />} />

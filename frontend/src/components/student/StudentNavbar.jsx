@@ -17,7 +17,9 @@ const StudentNavbar = () => {
     dispatch(logout());
   }
 
-  const { student } = useSelector(selectStudent);
+  const { student, isLoggingIn } = useSelector(selectStudent);
+
+  console.log({ isLoggingIn });
 
   return (
     <Navbar bg="dark" variant="dark">
@@ -46,7 +48,9 @@ const StudentNavbar = () => {
         <div className="text-white">
           {
             // loginLoaded ? (
-            student ? (
+            isLoggingIn ? (
+              <p>Caricamento...</p>
+            ) : student ? (
               <div className="flex">
                 <p className="mr-5">
                   Ciao, <span className="underline">{student.firstName}</span>
@@ -59,9 +63,6 @@ const StudentNavbar = () => {
             ) : (
               <GoogleLogin />
             )
-            // ) : (
-            //   <p>Caricamento...</p>
-            // )
           }
         </div>
       </Container>

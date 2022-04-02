@@ -37,6 +37,9 @@ const SecretaryAgencyView = ({ agency, children }) => {
         <br />
         <span className="font-light">Cognome: </span>
         {agency.responsibleLastName}
+        <br />
+        <span className="font-light">Codice fiscale: </span>
+        {agency.responsibleFiscalNumber}
       </p>
 
       <p className="font-medium text-lg">Contatti</p>
@@ -46,9 +49,6 @@ const SecretaryAgencyView = ({ agency, children }) => {
         <br />
         <span className="font-light">Numero di telefono: </span>
         <a href={`tel:${agency.phoneNumber}`}>{agency.phoneNumber}</a>
-        <br />
-        <span className="font-light">Codice fiscale: </span>
-        {agency.responsibleFiscalNumber}
       </p>
 
       <p className="font-medium text-lg">Partita IVA</p>
