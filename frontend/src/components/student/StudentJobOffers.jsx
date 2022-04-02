@@ -46,9 +46,11 @@ const StudentJobOffers = () => {
           &#60;- Homepage studenti
         </Button>
         {!loaded ? (
-          <Spinner animation="border" role="status">
-            <span className="visually-hidden">Caricamento...</span>
-          </Spinner>
+          <div className="flex w-full justify-center text-center mt-3">
+            <Spinner animation="border" role="status">
+              <span className="visually-hidden">Caricamento...</span>
+            </Spinner>
+          </div>
         ) : Array.isArray(jobOffers) ? (
           <div>
             <p className="my-3 text-3xl font-semibold">Offerte di lavoro</p>

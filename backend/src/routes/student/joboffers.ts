@@ -73,7 +73,7 @@ router.get(
                 fieldOfStudy,
                 expiryDate: { $lt: new Date() }
             });
-
+            
             return res.json(jobOffers);
         } catch (err) {
             logger.error("Error while finding job offers");
