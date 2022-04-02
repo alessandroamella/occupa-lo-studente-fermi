@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { StudentAuthCookieManager } from "routes/student/auth/StudentAuthCookieManager";
+import { StudentAuthCookieManager } from "../routes/student/auth/StudentAuthCookieManager";
 
 import { Envs } from "@config";
 

@@ -1,13 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  Navigate,
-  useLocation
-} from "react-router-dom";
-import { Provider, useSelector } from "react-redux";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Provider } from "react-redux";
 import "./index.css";
 // import "bootstrap/dist/css/bootstrap.min.css";
 import App from "./App";
@@ -24,20 +18,6 @@ import StudentSignup from "./components/student/StudentSignup";
 import store from "./app/store";
 import SecretaryBase from "./components/secretary/SecretaryBase";
 import SecretaryHomepage from "./components/secretary/SecretaryHomepage";
-
-const selectStudent = state => state.student;
-
-function RequireStudentAuth({ children }) {
-  const { student } = useSelector(selectStudent);
-  const location = useLocation();
-
-  if (!student) {
-    // Send to login
-    return <Navigate to="/student/login" state={{ from: location }} replace />;
-  }
-
-  return children;
-}
 
 ReactDOM.render(
   <React.StrictMode>

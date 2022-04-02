@@ -16,9 +16,9 @@ export class AgencyService {
         fields: FilterQuery<DocumentType<AgencyClass> | null>,
         skip = 0,
         limit = 100
-    ): Promise<DocumentType<AgencyClass> | null> {
+    ): Promise<DocumentType<AgencyClass>[] | null> {
         logger.debug("Finding all agencies...");
-        return await Agency.find(fields).skip(skip).limit(limit).exec();
+        return await Agency.find(fields).skip(skip).limit(limit).sort({updatedAt: -1}).exec();
     }
 
     public static async create(newAgency: DocumentType<AgencyClass>) {

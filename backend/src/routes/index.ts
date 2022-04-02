@@ -5,6 +5,7 @@ import { logger } from "@shared";
 import { ResErr } from "./ResErr";
 import agencyRoutes from "./agency";
 import studentRoutes from "./student";
+import secretaryRoutes from "./secretary";
 
 logger.info("Loading API routes...");
 
@@ -12,6 +13,7 @@ const router = Router();
 
 router.use("/agency", agencyRoutes);
 router.use("/student", studentRoutes);
+router.use("/secretary", secretaryRoutes);
 
 // Fallback route
 router.all("*", (req, res) =>

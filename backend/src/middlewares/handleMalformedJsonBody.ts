@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import { ResErr } from "@routes";
 import { logger } from "@shared";
 
-export default function handleMalformedJsonBody(
+export function handleMalformedJsonBody(
     err: any,
     req: Request,
     res: Response,

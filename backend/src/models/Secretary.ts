@@ -5,7 +5,7 @@ import {
     prop,
 } from "@typegoose/typegoose";
 import bcrypt from "bcrypt"
-import cryptoRandomString from "crypto-random-string";
+import randomString from "randomstring"
 
 /**
  * @openapi
@@ -15,11 +15,16 @@ import cryptoRandomString from "crypto-random-string";
  *      Secretary:
  *        type: object
  *        required:
- *          - hashedAuthCode
+ *          - hashedPassword
  *        properties:
- *          hashedAuthCode:
+ *          username:
  *            type: string
- *            description: Hash of the authCode needed to login to the school secretary panel
+ *            minLength: 5
+ *            maxLength: 64
+ *            description: Username of this school secretary
+ *          hashedPassword:
+ *            type: string
+ *            description: Hash of the password needed to login to this school secretary account
  *          loginIpAddresses:
  *            type: array
  *            description: IP addresses that logged in
@@ -28,13 +33,16 @@ import cryptoRandomString from "crypto-random-string";
  *          lastLoginDate:
  *            type: string
  *            format: date-time
- *            description: Last login date
+ *            description: Last login date of this account
  */
 
 @modelOptions({ schemaOptions: { collection: "Secretary", timestamps: true } })
 export class SecretaryClass {
-    @prop({ required: true })
-    public hashedAuthCode!: string;
+    @prop({ required: true, minlength: 5, maxlength: 64 })
+    public username!: string;
+
+    @prop({ required: true, minlength: 16, maxlength: 16 })
+    public hashedPassword!: string;
 
     @prop({ required: true, default: [] })
     public loginIpAddresses!: string[];
@@ -42,14 +50,14 @@ export class SecretaryClass {
     @prop({ required: true, default: new Date })
     public lastLoginDate!: Date;
  
-    public async isValidAuthCode(this: DocumentType<SecretaryClass>, plainAuthCode: string): Promise<boolean> {
-        return await bcrypt.compare(plainAuthCode, this.hashedAuthCode)
+    public async isValidPassword(this: DocumentType<SecretaryClass>, plainPassword: string): Promise<boolean> {
+        return await bcrypt.compare(plainPassword, this.hashedPassword)
     }
  
-    public async generateAuthCode(this: DocumentType<SecretaryClass>): Promise<string> {
-        this.hashedAuthCode = cryptoRandomString({length: 16, type: "distinguishable"});
+    public async generatePassword(this: DocumentType<SecretaryClass>): Promise<string> {
+        this.hashedPassword = randomString.generate({length: 16, readable: true});
         await this.save();
-        return this.hashedAuthCode;
+        return this.hashedPassword;
     }
 
     public async saveNewLogin(this: DocumentType<SecretaryClass>, ipAddress: string) {

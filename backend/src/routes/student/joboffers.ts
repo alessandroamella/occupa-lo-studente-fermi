@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { query, validationResult } from "express-validator";
-import { ResErr } from "routes/ResErr";
-import { JobOfferService } from "services/jobOffer";
+import { ResErr } from "@routes";
+import { JobOfferService } from "@services";
 
 import { isStudentLoggedIn } from "@middlewares";
 import { logger } from "@shared";

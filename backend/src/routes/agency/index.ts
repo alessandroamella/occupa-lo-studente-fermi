@@ -1,14 +1,14 @@
 import { Router } from "express";
 
 import createRoute from "./create";
-import showAllRoute from "./showAll";
-import showOneRoute from "./showOne";
+import listRoute from "./list";
+import showRoute from "./show";
 import updateRoute from "./update";
 
 const router = Router();
 
-router.use("/", showOneRoute);
-router.use("/", showAllRoute);
+router.use("/", showRoute);
+router.use("/", listRoute);
 router.use("/", createRoute);
 router.use("/", updateRoute);
 

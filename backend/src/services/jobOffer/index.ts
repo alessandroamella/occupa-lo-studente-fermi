@@ -17,7 +17,7 @@ export class JobOfferService {
         limit = 100
     ): Promise<DocumentType<JobOfferClass> | null> {
         logger.debug("Finding jobOffer...");
-        return await JobOffer.find({})
+        return await JobOffer.find(fields)
             .populate("agency")
             .skip(skip)
             .limit(limit)

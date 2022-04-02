@@ -21,10 +21,10 @@ const AcceptAgency = ({ agency }) => {
         <Modal.Body>Accettare l'azienda "{agency.agencyName}"?</Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
-            Close
+            Annulla
           </Button>
           <Button variant="primary" onClick={handleClose}>
-            Save Changes
+            Accetta
           </Button>
         </Modal.Footer>
       </Modal>

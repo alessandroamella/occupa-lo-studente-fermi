@@ -1,6 +1,6 @@
 import cookieParser from "cookie-parser";
 import express, { Express } from "express";
-import handleMalformedJsonBody from "middlewares/handleMalformedJsonBody";
+import { handleMalformedJsonBody } from "@middlewares";
 import moment from "moment";
 import morgan from "morgan";
 import swaggerUi from "swagger-ui-express";
@@ -8,7 +8,7 @@ import swaggerUi from "swagger-ui-express";
 import { Envs, loadConfig, specs as swaggerSpecs } from "@config";
 
 import { PopulateReq } from "@middlewares";
-import { Agency, AgencyClass, JobOffer, StudentClass } from "@models";
+import { Agency, AgencyClass, JobOffer, SecretaryClass, StudentClass } from "@models";
 import apiRoutes from "@routes";
 import { LoggerStream, logger } from "@shared";
 import { DocumentType } from "@typegoose/typegoose";
@@ -22,6 +22,7 @@ declare global {
         interface Request {
             student: DocumentType<StudentClass> | null;
             agency: DocumentType<AgencyClass> | null;
+            secretary?: DocumentType<SecretaryClass>;
         }
     }
 }
