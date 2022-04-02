@@ -11,6 +11,7 @@
         "lint-fix": "eslint . --ext .ts --fix"
     },
     "devDependencies": {
+        "@faker-js/faker": "^6.1.1",
         "@trivago/prettier-plugin-sort-imports": "^3.2.0",
         "@types/bcrypt": "^5.0.0",
         "@types/cookie-parser": "^1.4.2",

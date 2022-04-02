@@ -11,6 +11,8 @@ import SecretaryAgencyView from "./SecretaryAgencyView";
 const SecretaryHomepage = () => {
   const [agencies, setAgencies] = useState(null);
 
+  const loaded = () => agencies && agencies.length > 0;
+
   useEffect(() => {
     async function fetchAgencies() {
       try {
@@ -34,11 +36,11 @@ const SecretaryHomepage = () => {
           <span className="visually-hidden">Caricamento...</span>
         </Spinner>
       ) : (
-        agencies.length === 0 && <p>Nessuna azienda nel database</p>
+        agencies && agencies.length < 0 && <p>Nessuna azienda nel database</p>
       )}
 
       <h1 className="text-xl font-semibold">Aziende in attesa</h1>
-      {agencies.length > 0 &&
+      {loaded() &&
         agencies.filter(e => e.approvalStatus === "waiting").length > 0 && (
           <Accordion defaultActiveKey="0" className="mt-2">
             <Row>
@@ -60,7 +62,7 @@ const SecretaryHomepage = () => {
                         </SecretaryAgencyView>
                         <Button
                           variant="outline-danger"
-                          onClick={() => alert("DEBUG rifiuta azienda")}
+                          onClick={() => alert("DEBUG rifiuta azienda ")}
                         >
                           Rifiuta
                         </Button>
@@ -73,7 +75,7 @@ const SecretaryHomepage = () => {
         )}
 
       <h1 className="text-xl font-semibold mt-3">Aziende approvate</h1>
-      {agencies.length > 0 &&
+      {loaded() &&
       agencies.filter(e => e.approvalStatus === "approved").length > 0 ? (
         <Accordion defaultActiveKey="0" className="mt-2">
           <Row>
@@ -112,7 +114,7 @@ const SecretaryHomepage = () => {
       )}
 
       <h1 className="text-xl font-semibold mt-3">Aziende rifiutate</h1>
-      {agencies.length > 0 &&
+      {loaded() &&
       agencies.filter(e => e.approvalStatus === "rejected").length > 0 ? (
         <Accordion defaultActiveKey="0" className="mt-2">
           <Row>
