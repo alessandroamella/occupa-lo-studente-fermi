@@ -1,3 +1,4 @@
+import bcrypt from "bcrypt";
 import { Request, Response, Router } from "express";
 import { checkSchema, validationResult } from "express-validator";
 
@@ -23,7 +24,7 @@ import { validatorSchema } from "./validatorSchema";
  *      content:
  *        application/json:
  *          schema:
- *            $ref: '#/components/schemas/Agency'
+ *            $ref: '#/components/schemas/AgencyReq'
  *    responses:
  *      '200':
  *        description: Agency
@@ -66,6 +67,7 @@ router.post(
             responsibleLastName,
             responsibleFiscalNumber,
             email,
+            password,
             websiteUrl,
             phoneNumber,
             agencyName,
@@ -95,11 +97,15 @@ router.post(
             } as ResErr);
         }
 
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
         const agencyDoc = new Agency({
             responsibleFirstName,
             responsibleLastName,
             responsibleFiscalNumber,
             email,
+            hashedPassword,
             websiteUrl,
             phoneNumber,
             agencyName,
@@ -142,6 +148,5 @@ router.post(
 // for (let i = 0; i < 10; i++) {
 //     generateRandom();
 // }
-
 
 export default router;

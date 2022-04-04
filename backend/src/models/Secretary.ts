@@ -1,11 +1,12 @@
+import bcrypt from "bcrypt";
+import randomString from "randomstring";
+
 import {
     DocumentType,
     getModelForClass,
     modelOptions,
-    prop,
+    prop
 } from "@typegoose/typegoose";
-import bcrypt from "bcrypt"
-import randomString from "randomstring"
 
 /**
  * @openapi
@@ -24,7 +25,7 @@ import randomString from "randomstring"
  *            description: Username of this school secretary
  *          hashedPassword:
  *            type: string
- *            description: Hash of the password needed to login to this school secretary account
+ *            description: Hash of the password needed to login to this school secretary account (plaintext must be 16 characters long)
  *          loginIpAddresses:
  *            type: array
  *            description: IP addresses that logged in
@@ -41,26 +42,39 @@ export class SecretaryClass {
     @prop({ required: true, minlength: 5, maxlength: 64 })
     public username!: string;
 
-    @prop({ required: true, minlength: 16, maxlength: 16 })
+    @prop({ required: true })
     public hashedPassword!: string;
 
-    @prop({ required: true, default: [] })
+    @prop({ required: true, type: () => [String], default: [] })
     public loginIpAddresses!: string[];
- 
-    @prop({ required: true, default: new Date })
+
+    @prop({ required: true, default: new Date() })
     public lastLoginDate!: Date;
- 
-    public async isValidPassword(this: DocumentType<SecretaryClass>, plainPassword: string): Promise<boolean> {
-        return await bcrypt.compare(plainPassword, this.hashedPassword)
-    }
- 
-    public async generatePassword(this: DocumentType<SecretaryClass>): Promise<string> {
-        this.hashedPassword = randomString.generate({length: 16, readable: true});
-        await this.save();
-        return this.hashedPassword;
+
+    public async isValidPassword(
+        this: DocumentType<SecretaryClass>,
+        plainPassword: string
+    ): Promise<boolean> {
+        return await bcrypt.compare(plainPassword, this.hashedPassword);
     }
 
-    public async saveNewLogin(this: DocumentType<SecretaryClass>, ipAddress: string) {
+    public async generatePassword(
+        this: DocumentType<SecretaryClass>
+    ): Promise<string> {
+        const p = randomString.generate({
+            length: 16,
+            readable: true
+        });
+        const salt = await bcrypt.genSalt(10);
+        this.hashedPassword = await bcrypt.hash(p, salt);
+        await this.save();
+        return p;
+    }
+
+    public async saveNewLogin(
+        this: DocumentType<SecretaryClass>,
+        ipAddress: string
+    ) {
         this.loginIpAddresses.push(ipAddress);
         this.lastLoginDate = new Date();
         await this.save();

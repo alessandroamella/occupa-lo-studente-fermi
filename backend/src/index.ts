@@ -8,7 +8,13 @@ import swaggerUi from "swagger-ui-express";
 import { Envs, loadConfig, specs as swaggerSpecs } from "@config";
 
 import { PopulateReq } from "@middlewares";
-import { Agency, AgencyClass, JobOffer, SecretaryClass, StudentClass } from "@models";
+import {
+    Agency,
+    AgencyClass,
+    JobOffer,
+    SecretaryClass,
+    StudentClass
+} from "@models";
 import apiRoutes from "@routes";
 import { LoggerStream, logger } from "@shared";
 import { DocumentType } from "@typegoose/typegoose";
@@ -64,39 +70,3 @@ loadConfig().then(() => {
 app.listen(PORT, IP, () => {
     logger.info(`Server started at ${IP}:${PORT}`);
 });
-
-async function testData() {
-    const agency = new Agency({
-        responsibleFirstName: "Giuseppina",
-        responsibleLastName: "Russo",
-        responsibleFiscalNumber: "RSSGPP70A41F839C",
-        email: "napoli.merda@gmail.com",
-        websiteUrl:
-            "http://minecraft.gamepedia.com/Formatting_codes#Color_codes",
-        phoneNumber: "3924133359",
-        agencyName: "Beppa Pizza",
-        agencyDescription: "Migliore pizzeria di napoli",
-        agencyAddress: "Via ASghfWUFWUFWEFIWEF, Agrigento",
-        vatCode: "2201090368",
-        jobOffers: []
-    });
-
-    const jobOffer = new JobOffer({
-        agency: agency._id,
-        title: "Programmatore Node",
-        description:
-            "Masse! Volevi. Ma secondo te?? Secondo te?? aljnbkausfd jgfwruvufgu gfadsukgfakl fhaewiyfgaewufaghkyiftgaw8 gfaweut7faweutfawuaewi7tdf",
-        fieldOfStudy: "it",
-        expiryDate: moment().add(3, "months").toDate(),
-        mustHaveDiploma: false,
-        jobApplications: []
-    });
-
-    agency.jobOffers.push(jobOffer._id);
-
-    await agency.save();
-
-    await jobOffer.save();
-}
-
-// testData();

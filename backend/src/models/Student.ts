@@ -88,11 +88,17 @@ export class StudentClass {
 
     @prop({ required: true, validate: [IsEmail.validate, "Invalid email"] })
     public email!: string;
-    
+
     @prop({ required: true })
     public pictureURL!: string;
 
-    @prop({ required: true, validate: [(v: string) => isValidPhoneNumber(v, "IT"), "Invalid phone number"] })
+    @prop({
+        required: true,
+        validate: [
+            (v: string) => isValidPhoneNumber(v, "IT"),
+            "Invalid phone number"
+        ]
+    })
     public phoneNumber!: string;
 
     @prop({ required: true, enum: ["it", "electronics", "chemistry"] })
@@ -107,7 +113,6 @@ export class StudentClass {
 
 export const Student = getModelForClass(StudentClass);
 
-
 export interface CreateStudentData {
     googleId: string;
     firstName: string;
@@ -117,7 +122,10 @@ export interface CreateStudentData {
     email: string;
     pictureURL: string;
     phoneNumber: string;
-    fieldOfStudy: "it"| "electronics"| "chemistry";
+    fieldOfStudy: "it" | "electronics" | "chemistry";
     spidVerified?: boolean;
-} 
-export type StudentTempData = Omit<CreateStudentData, "fiscalNumber" | "curriculumLink" | "phoneNumber" | "spidVerified">;
+}
+export type StudentTempData = Omit<
+    CreateStudentData,
+    "fiscalNumber" | "curriculumLink" | "phoneNumber" | "spidVerified"
+>;

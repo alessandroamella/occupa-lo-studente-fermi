@@ -1,6 +1,5 @@
 import { Router } from "express";
 import { param, query, validationResult } from "express-validator";
-import moment from "moment";
 import { ResErr } from "routes/ResErr";
 
 import { secretaryAuth } from "@middlewares";
@@ -9,9 +8,9 @@ import { logger } from "@shared";
 
 /**
  * @openapi
- * /api/secretary/approve/{agencyId}:
+ * /api/secretary/deleteagency/{agencyId}:
  *  get:
- *    summary: Approves or rejects an agency
+ *    summary: Deletes an agency along with all its jobOffers
  *    parameters:
  *      - in: query
  *        name: username
@@ -30,23 +29,23 @@ import { logger } from "@shared";
  *        schema:
  *          type: string
  *        required: true
- *        description: ObjectId of the agency to approve
+ *        description: ObjectId of the agency to delete
  *      - in: query
- *        name: action
+ *        name: notifyAgency
  *        schema:
  *          type: string
  *          enum:
- *            - approve
- *            - reject
- *        required: true
- *        description: Whether to approve or reject this agency
+ *            - yes
+ *            - no
+ *        required: false
+ *        description: Whether to send an email to this agency notifying the deletion
  *    tags:
  *      - secretary
  *    responses:
  *      '200':
- *        description: Agency approved
+ *        description: Agency deleted
  *      '400':
- *        description: Invalid agencyId or query params
+ *        description: Invalid agencyId
  *        content:
  *          application/json:
  *            schema:
@@ -59,12 +58,6 @@ import { logger } from "@shared";
  *              $ref: '#/components/schemas/ResErr'
  *      '404':
  *        description: Agency not found
- *        content:
- *          application/json:
- *            schema:
- *              $ref: '#/components/schemas/ResErr'
- *      '403':
- *        description: Agency was already approved or rejected
  *        content:
  *          application/json:
  *            schema:
@@ -82,7 +75,7 @@ const router = Router();
 router.get(
     "/:agencyId",
     param("agencyId").isMongoId(),
-    query("action").isIn(["approve", "reject"]),
+    query("notifyAgency").optional().isIn(["yes", "no"]),
     secretaryAuth,
     async (req, res) => {
         const errors = validationResult(req);
@@ -98,50 +91,20 @@ router.get(
         }
 
         const { agencyId } = req.params;
-        const { action } = req.query;
+        const { notifyAgency } = req.query;
 
         const agency = await AgencyService.findOne({ _id: agencyId });
         if (!agency) {
-            logger.debug(`Agency to approve "${agencyId}" not found`);
+            logger.debug(`Agency to delete "${agencyId}" not found`);
             return res.status(404).json({ err: "Agency not found" } as ResErr);
         }
 
-        if (agency.approvalDate) {
-            logger.debug(
-                `Agency to approve ${agencyId} was already: ${agency.approvalStatus}`
-            );
-            return res.status(403).json({
-                err: `Agency "${agency.agencyName}" with _id ${
-                    agency._id
-                } was already ${agency.approvalStatus} on ${moment(
-                    agency.approvalDate
-                ).format("DD/MM/YYYY")}`
-            });
-        }
+        await AgencyService.delete(agency);
 
-        if (action === "approve") {
-            await agency.approveAgency();
-            logger.info(
-                `Agency "${agency.agencyName}" with _id ${
-                    agency._id
-                } just got approved by secretary ${
-                    req.secretary?.username || "--unknown username--"
-                }`
-            );
-        } else if (action === "reject") {
-            await agency.rejectAgency();
-            logger.info(
-                `Agency "${agency.agencyName}" with _id ${
-                    agency._id
-                } just got rejected by secretary ${
-                    req.secretary?.username || "--unknown username--"
-                }`
-            );
-        } else {
-            logger.error("Invalid action in agency approve route");
-            return res
-                .status(500)
-                .json({ err: "Error while validating action" });
+        logger.debug("deleteAgency notifyAgency=" + notifyAgency);
+        if (notifyAgency !== "no") {
+            // DEBUG to be implemented
+            logger.warn("DEBUG notifyAgency for Agency deletion!");
         }
 
         return res.sendStatus(200);

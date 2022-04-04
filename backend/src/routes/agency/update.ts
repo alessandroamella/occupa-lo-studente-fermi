@@ -25,7 +25,7 @@ import { validatorSchema } from "./validatorSchema";
  *        content:
  *          application/json:
  *            schema:
- *              $ref: '#/components/schemas/Agency'
+ *              $ref: '#/components/schemas/AgencyReq'
  *      '400':
  *        description: Data validation failed
  *        content:
@@ -41,6 +41,8 @@ import { validatorSchema } from "./validatorSchema";
  */
 
 const router = Router();
+
+// DEBUG change for AgencyReq not Agency
 
 router.put(
     "/:id",

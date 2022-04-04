@@ -68,6 +68,14 @@ export const validatorSchema: Schema = {
             errorMessage: "Invalid email"
         }
     },
+    password: {
+        in: "body",
+        errorMessage: "Password not specified",
+        isLength: {
+            options: { min: 8, max: 64 },
+            errorMessage: "Password must be between 8-64 characters long"
+        }
+    },
     phoneNumber: {
         in: "body",
         errorMessage: "Phone number not specified",

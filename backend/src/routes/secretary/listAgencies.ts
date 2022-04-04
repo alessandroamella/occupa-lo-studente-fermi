@@ -1,9 +1,9 @@
 import { Router } from "express";
 
-import { checkSecretaryPassword } from "@middlewares";
+import { secretaryAuth } from "@middlewares";
+import { ResErr } from "@routes";
 import { AgencyService } from "@services";
 import { logger } from "@shared";
-import { ResErr } from "@routes";
 
 /**
  * @openapi
@@ -51,7 +51,7 @@ import { ResErr } from "@routes";
 
 const router = Router();
 
-router.get("/", checkSecretaryPassword, async (req, res) => {
+router.get("/", secretaryAuth, async (req, res) => {
     // DEBUG check authentication
     try {
         const agencies = await AgencyService.find({});
@@ -60,7 +60,9 @@ router.get("/", checkSecretaryPassword, async (req, res) => {
         logger.error("Error while finding agencies for secretary");
         logger.error(err);
 
-        return res.status(500).json({err: "Error while finding agencies"} as ResErr)
+        return res
+            .status(500)
+            .json({ err: "Error while finding agencies" } as ResErr);
     }
 });
 

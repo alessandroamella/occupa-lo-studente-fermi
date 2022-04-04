@@ -1,9 +1,9 @@
 import { Router } from "express";
 import { query, validationResult } from "express-validator";
-import { ResErr } from "@routes";
-import { JobOfferService } from "@services";
 
 import { isStudentLoggedIn } from "@middlewares";
+import { ResErr } from "@routes";
+import { JobOfferService } from "@services";
 import { logger } from "@shared";
 
 /**
@@ -73,7 +73,7 @@ router.get(
                 fieldOfStudy,
                 expiryDate: { $lt: new Date() }
             });
-            
+
             return res.json(jobOffers);
         } catch (err) {
             logger.error("Error while finding job offers");

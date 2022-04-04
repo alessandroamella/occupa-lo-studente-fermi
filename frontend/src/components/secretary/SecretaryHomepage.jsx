@@ -29,6 +29,11 @@ const SecretaryHomepage = () => {
     fetchAgencies();
   }, []);
 
+  async function approveAgency(agency) {
+    // DEBUG
+    // const
+  }
+
   return (
     <Container bg="dark" variant="dark" className="mt-8 mb-3">
       {!Array.isArray(agencies) ? (

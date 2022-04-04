@@ -71,16 +71,26 @@ export class JobOfferClass {
     @prop({ required: true, minlength: 50, maxlength: 3000 })
     public description!: string;
 
-    @prop({required: true, enum: ["any", "it", "electronics", "chemistry"]})
+    @prop({ required: true, enum: ["any", "it", "electronics", "chemistry"] })
     public fieldOfStudy!: string;
 
-    @prop({required: true, default: () => moment().add(3, "months"), validate:[(v: Date) => !!v && moment(v).isValid() && moment(v).diff(moment(), "months") <= 12, "Expiry date must be at most 1 year from now"] })
+    @prop({
+        required: true,
+        default: () => moment().add(3, "months"),
+        validate: [
+            (v: Date) =>
+                !!v &&
+                moment(v).isValid() &&
+                moment(v).diff(moment(), "months") <= 12,
+            "Expiry date must be at most 1 year from now"
+        ]
+    })
     public expiryDate!: Date;
 
-    @prop({required: true, default: false })
+    @prop({ required: true, default: false })
     public mustHaveDiploma!: boolean;
 
-    @prop({required: true, default: 1})
+    @prop({ required: true, default: 1 })
     public numberOfPositions!: number;
 
     @prop({ required: true, ref: "JobApplicationClass", default: [] })

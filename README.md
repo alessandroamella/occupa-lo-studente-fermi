@@ -25,4 +25,4 @@ Vengono creati 3 container: il backend, il frontend, e l'immagine di MongoDB
 
 Alcune variabili d'ambiente usate nel backend sono segrete, come le credenziali per Google OAuth.
 
-Per impostarle, bisogna creare un file `.env` all'interno della cartella `backend` e dichiararle lì nel formato `ENV=valore`.
+Per impostarle, bisogna creare un file `.env` all'interno della cartella `backend` e dichiararle lì nel formato `ENV=valore`.zz

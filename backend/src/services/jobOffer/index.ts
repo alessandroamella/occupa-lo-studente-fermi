@@ -6,7 +6,7 @@ import { DocumentType, isDocument, mongoose } from "@typegoose/typegoose";
 
 export class JobOfferService {
     /**
-     * Finds a job offer
+     * Finds many job offers
      * @param  {FilterQuery<DocumentType<JobOfferClass>|null>} fields
      * @param  {number} [limit=100] - defaults to 100
      * @param  {number} [skip=0] - defaults to 0
@@ -15,13 +15,24 @@ export class JobOfferService {
         fields: FilterQuery<DocumentType<JobOfferClass>>,
         skip = 0,
         limit = 100
-    ): Promise<DocumentType<JobOfferClass> | null> {
-        logger.debug("Finding jobOffer...");
+    ): Promise<DocumentType<JobOfferClass>[] | null> {
+        logger.debug("Finding jobOffers...");
         return await JobOffer.find(fields)
             .populate("agency")
             .skip(skip)
             .limit(limit)
             .exec();
+    }
+
+    /**
+     * Finds one job offer
+     * @param  {FilterQuery<DocumentType<JobOfferClass>|null>} fields
+     */
+    public static async findOne(
+        fields: FilterQuery<DocumentType<JobOfferClass>>
+    ): Promise<DocumentType<JobOfferClass> | null> {
+        logger.debug("Finding jobOffer...");
+        return await JobOffer.findOne(fields).populate("agency").exec();
     }
     /**
      * Creates new job offer.
@@ -67,6 +78,11 @@ export class JobOfferService {
         }
 
         // Delete jobApplications related to offer
+        logger.debug(
+            `Deleting jobApplications for jobOffer ${
+                jobOffer._id
+            }: ${jobOffer.jobApplications.join(", ")}`
+        );
         await JobApplication.deleteMany({
             _id: { $in: jobOffer.jobApplications }
         }).exec();
@@ -75,6 +91,9 @@ export class JobOfferService {
         );
 
         // Delete jobOffer from agency
+        logger.debug(
+            `Deleting jobOffer ref in agency ${jobOffer.agency._id} for jobOffer ${jobOffer._id}`
+        );
         (
             jobOffer.agency.jobOffers as mongoose.Types.Array<
                 DocumentType<JobOfferClass>
@@ -86,7 +105,7 @@ export class JobOfferService {
             `Updated jobOffer ${jobOffer.agency._id} with removed jobOffer ${jobOffer._id}`
         );
 
-        await logger.debug(`Deleting job offer with _id ${jobOffer._id}...`);
+        logger.debug(`Deleting job offer with _id ${jobOffer._id}...`);
         await jobOffer.deleteOne();
     }
 }

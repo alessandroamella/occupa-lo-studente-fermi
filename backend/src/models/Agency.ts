@@ -1,12 +1,15 @@
-import { urlExists } from "@shared";
-import {
-    getModelForClass,
-    modelOptions,
-    prop,
-    Ref
-} from "@typegoose/typegoose";
 import IsEmail from "isemail";
 import { isValidPhoneNumber } from "libphonenumber-js";
+
+import { urlExists } from "@shared";
+import {
+    DocumentType,
+    Ref,
+    getModelForClass,
+    modelOptions,
+    prop
+} from "@typegoose/typegoose";
+
 import { JobOfferClass } from "./JobOffer";
 
 /**
@@ -21,6 +24,7 @@ import { JobOfferClass } from "./JobOffer";
  *          - responsibleLastName
  *          - responsibleFiscalNumber
  *          - email
+ *          - hashedPassword
  *          - websiteUrl
  *          - phoneNumber
  *          - agencyName
@@ -50,6 +54,9 @@ import { JobOfferClass } from "./JobOffer";
  *            format: email
  *            minLength: 1
  *            description: Email that students can contact
+ *          hashedPassword:
+ *            type: string
+ *            description: Hashed password of the agency
  *          websiteUrl:
  *            type: string
  *            description: URL of the agency's website
@@ -77,7 +84,6 @@ import { JobOfferClass } from "./JobOffer";
  *            minLength: 2
  *            maxLength: 32
  *            description: VAT Code of the agency
- *            example: 02201090368
  *          approvalStatus:
  *            type: string
  *            enum:
@@ -113,10 +119,19 @@ export class AgencyClass {
     @prop({ required: true, validate: [IsEmail.validate, "Invalid email"] })
     public email!: string;
 
+    @prop({ required: true })
+    public hashedPassword!: string;
+
     @prop({ required: true, validate: async (v: string) => await urlExists(v) })
     public websiteUrl!: string;
 
-    @prop({ required: true, validate: [(v: string) => isValidPhoneNumber(v, "IT"), "Invalid phone number"] })
+    @prop({
+        required: true,
+        validate: [
+            (v: string) => isValidPhoneNumber(v, "IT"),
+            "Invalid phone number"
+        ]
+    })
     public phoneNumber!: string;
 
     @prop({ required: true, minlength: 1, maxlength: 100 })
@@ -139,9 +154,26 @@ export class AgencyClass {
 
     @prop({ required: false })
     public logoUrl?: string;
-    
+
     @prop({ required: true, ref: "JobOfferClass" })
     public jobOffers!: Ref<JobOfferClass>[];
+
+    private async _changeApprovedStatus(
+        this: DocumentType<AgencyClass>,
+        approve: "approve" | "reject"
+    ) {
+        this.approvalStatus = approve === "approve" ? "approved" : "rejected";
+        this.approvalDate = new Date();
+        await this.save();
+    }
+
+    public async approveAgency(this: DocumentType<AgencyClass>) {
+        return await this._changeApprovedStatus("approve");
+    }
+
+    public async rejectAgency(this: DocumentType<AgencyClass>) {
+        return await this._changeApprovedStatus("reject");
+    }
 }
 
 export const Agency = getModelForClass(AgencyClass);

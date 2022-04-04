@@ -11,7 +11,12 @@
     "importOrder": ["@config[/(.*)]*$", "^@.*[/(.*)]*$", "^[./]"],
     "importOrderSeparation": true,
     "importOrderSortSpecifiers": true,
-    "importOrderParserPlugins": ["classProperties", "decorators-legacy"],
+    "importOrderParserPlugins": [
+        "typescript",
+        "jsx",
+        "classProperties",
+        "decorators-legacy"
+    ],
     "overrides": [
         {
             "files": ["*.jsx", "*.html", "frontend/src/index.js"],
