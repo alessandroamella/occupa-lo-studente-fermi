@@ -108,5 +108,8 @@
         "skipLibCheck": true /* Skip type checking all .d.ts files. */
     },
     "exclude": ["node_modules", "logs", "build"],
-    "include": ["src"]
+    "include": ["src", "src/**/*.test.js"],
+    "typeAcquisition": {
+        "include": ["jest"]
+    }
 }

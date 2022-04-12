@@ -1,11 +1,12 @@
 {
     "root": true,
     "parser": "@typescript-eslint/parser",
-    "plugins": ["@typescript-eslint"],
+    "plugins": ["@typescript-eslint", "jest"],
     "extends": [
         "eslint:recommended",
         "plugin:@typescript-eslint/eslint-recommended",
-        "plugin:@typescript-eslint/recommended"
+        "plugin:@typescript-eslint/recommended",
+        "plugin:jest/recommended"
     ],
     "parserOptions": {
         "project": "./backend/tsconfig.json"
@@ -16,8 +17,16 @@
         "@typescript-eslint/quotes": [
             "error",
             "double",
-            { "avoidEscape": true, "allowTemplateLiterals": true }
-        ]
+            {
+                "avoidEscape": true,
+                "allowTemplateLiterals": true
+            }
+        ],
+        "jest/no-disabled-tests": "warn",
+        "jest/no-focused-tests": "error",
+        "jest/no-identical-title": "error",
+        "jest/prefer-to-have-length": "warn",
+        "jest/valid-expect": "error"
     },
     "overrides": [
         {
@@ -28,7 +37,8 @@
                 // "es6": true,
                 "es6": false,
                 "node": true,
-                "mocha": true
+                "jest/globals": true,
+                "jest": true
             }
         }
     ]
