@@ -25,8 +25,5 @@
         "skipLibCheck": true
     },
     "exclude": ["node_modules", "logs", "build", "test"],
-    "include": ["src", "src/**/*.test.js"],
-    "typeAcquisition": {
-        "include": ["jest"]
-    }
+    "include": ["src", "src/**/*.test.js"]
 }
