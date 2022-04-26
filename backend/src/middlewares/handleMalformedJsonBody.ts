@@ -4,6 +4,7 @@ import { ResErr } from "@routes";
 import { logger } from "@shared";
 
 export function handleMalformedJsonBody(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     err: any,
     req: Request,
     res: Response,
@@ -14,6 +15,7 @@ export function handleMalformedJsonBody(
 
     if (
         err instanceof SyntaxError &&
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (err as any).status === 400 &&
         "body" in err
     ) {

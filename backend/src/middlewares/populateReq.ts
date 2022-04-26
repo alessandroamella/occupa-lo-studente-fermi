@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { StudentAuthCookieManager } from "../routes/student/auth/StudentAuthCookieManager";
 
 import { Envs } from "@config";
 
@@ -9,12 +8,12 @@ import { logger } from "@shared";
 import { ReturnModelType, mongoose } from "@typegoose/typegoose";
 import { BeAnObject, DocumentType } from "@typegoose/typegoose/lib/types";
 
+import { StudentAuthCookieManager } from "../routes/student/auth/StudentAuthCookieManager";
+
 interface UserWithId {
     student?: string;
     agency?: string;
 }
-
-const { AUTH_COOKIE_NAME, JWT_SECRET } = Envs.env;
 
 // enum _PossibleFields {
 //     STUDENT = "student",
@@ -74,6 +73,8 @@ export class PopulateReq {
         req: Request,
         next: NextFunction
     ) {
+        const { AUTH_COOKIE_NAME, JWT_SECRET } = Envs.env;
+
         try {
             if (!req.signedCookies[AUTH_COOKIE_NAME as string]) {
                 return PopulateReq._nullReq(fieldName, req, next);

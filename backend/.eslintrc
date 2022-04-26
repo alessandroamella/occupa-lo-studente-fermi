@@ -41,5 +41,6 @@
                 "jest": true
             }
         }
-    ]
+    ],
+    "ignorePatterns": [".eslintrc"]
 }

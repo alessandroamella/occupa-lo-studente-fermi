@@ -4,8 +4,8 @@ import { logger } from "@shared";
 
 import { ResErr } from "./ResErr";
 import agencyRoutes from "./agency";
-import studentRoutes from "./student";
 import secretaryRoutes from "./secretary";
+import studentRoutes from "./student";
 
 logger.info("Loading API routes...");
 

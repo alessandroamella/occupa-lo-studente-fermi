@@ -57,5 +57,5 @@ export class Envs {
         logger.info("Envs loaded");
     };
 
-    private static _staticConstructor = Envs._loadEnvs();
+    // private static _staticConstructor = Envs._loadEnvs();
 }
