@@ -9,16 +9,18 @@ import { validatorSchema } from "./validatorSchema";
 
 /**
  * @openapi
- * /api/agency:
+ * /api/agency/{agencyId}:
  *  put:
  *    summary: Update an existing agency
+ *    parameters:
+ *      - in: path
+ *        name: agencyId
+ *        schema:
+ *          type: string
+ *        required: true
+ *        description: ObjectId of the agency to update
  *    tags:
  *      - agency
- *    requestBody:
- *      content:
- *        application/json:
- *          schema:
- *            $ref: '#/components/schemas/Agency'
  *    responses:
  *      '200':
  *        description: Agency

@@ -8,7 +8,8 @@
         "build": "rimraf ./build && tsc",
         "start": "npm run build && node build/index.js",
         "lint": "eslint . --ext .ts",
-        "lint-fix": "eslint . --ext .ts --fix"
+        "lint-fix": "eslint . --ext .ts --fix",
+        "test": "mocha --reporter spec"
     },
     "devDependencies": {
         "@faker-js/faker": "^6.1.1",
@@ -24,7 +25,10 @@
         "@types/swagger-ui-express": "^4.1.3",
         "@typescript-eslint/eslint-plugin": "^5.12.0",
         "@typescript-eslint/parser": "^5.12.0",
+        "chai": "^4.3.6",
+        "chai-http": "^4.3.0",
         "eslint": "^8.13.0",
+        "mocha": "^9.2.2",
         "nodemon": "^2.0.15",
         "rimraf": "^3.0.2",
         "ts-node": "^10.4.0",
