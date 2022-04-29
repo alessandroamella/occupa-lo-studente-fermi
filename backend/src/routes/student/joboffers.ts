@@ -12,8 +12,8 @@ import { logger } from "@shared";
  *  get:
  *    summary: Find available job offers
  *    parameters:
- *      - in: path
- *        name: fieldOfStudy
+ *      - in: query
+ *        name: field
  *        schema:
  *          type: string
  *          enum:
@@ -54,7 +54,7 @@ const router = Router();
 router.get(
     "/",
     isStudentLoggedIn.isStudentLoggedIn,
-    query("fieldOfStudy", "Invalid fieldOfStudy query")
+    query("field", "Invalid field query")
         .optional()
         .isIn(["any", "it", "electronics", "chemistry"]),
     async (req, res) => {
@@ -66,7 +66,7 @@ router.get(
                     .json({ err: errors.array().join(", ") } as ResErr);
             }
 
-            const { fieldOfStudy } = req.query;
+            const fieldOfStudy = req.query.field;
 
             // Find job offers that haven't expired yet
             const jobOffers = await JobOfferService.find({

@@ -1,8 +1,8 @@
 import { Router } from "express";
 import { param, query, validationResult } from "express-validator";
-import { ResErr } from "routes/ResErr";
 
 import { secretaryAuth } from "@middlewares";
+import { ResErr } from "@routes";
 import { AgencyService } from "@services";
 import { logger } from "@shared";
 

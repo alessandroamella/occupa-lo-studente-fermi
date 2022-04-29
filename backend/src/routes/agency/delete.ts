@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { ResErr } from "routes/ResErr";
 
+import { ResErr } from "@routes";
 import { AgencyService } from "@services";
 
 /**

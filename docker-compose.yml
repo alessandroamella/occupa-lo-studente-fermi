@@ -48,7 +48,9 @@ services:
             - PORT=5000
             # - REDIS_URL=redis://redis
             # DEBUG viene usata la NODE_ENV development
-            - NODE_ENV=development
+            # - NODE_ENV=development
+            # DEBUG viene usata la NODE_ENV test
+            - NODE_ENV=test
             - MONGODB_URI=mongodb://mongodb:27017/occupa-lo-studente
             - AUTH_COOKIE_DURATION_DAYS=14
             - AUTH_COOKIE_NAME=token

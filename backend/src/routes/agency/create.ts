@@ -21,6 +21,7 @@ import { validatorSchema } from "./validatorSchema";
  *    tags:
  *      - agency
  *    requestBody:
+ *      required: true
  *      content:
  *        application/json:
  *          schema:

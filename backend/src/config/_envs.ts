@@ -30,22 +30,35 @@ type EnvsType = {
 
 export class Envs {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    public static env: EnvsType = {} as any;
+    private static _env: EnvsType = {} as any;
+
+    static get env() {
+        if (!Envs._env.NODE_ENV) {
+            Envs._loadEnvs();
+        }
+        return Envs._env;
+    }
 
     public static _loadEnvs = () => {
         logger.info("Loading envs...");
 
         const missingEnvs: string[] = [];
+        const loadedEnvs: string[] = [];
         for (const env of requiredEnvs) {
             if (typeof process.env[env] !== "string") {
                 logger.debug(`Env "${env}" doesn't exist`);
                 missingEnvs.push(env);
             } else {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                logger.debug(`Env "${env}" loaded`);
-                Envs.env[env] = process.env[env] as string;
+                loadedEnvs.push(env);
+                Envs._env[env] = process.env[env] as string;
             }
         }
+        logger.info(
+            "Loaded envs: " +
+                (Envs._env.NODE_ENV === "test"
+                    ? loadedEnvs.map(e => e + "=" + process.env[e]).join(", ")
+                    : loadedEnvs.join(", "))
+        );
 
         if (missingEnvs.length > 0) {
             logger.error(
@@ -54,7 +67,7 @@ export class Envs {
             process.exit(1);
         }
 
-        logger.info("Envs loaded");
+        logger.info("NODE_ENV is set to " + Envs._env.NODE_ENV);
     };
 
     // private static _staticConstructor = Envs._loadEnvs();

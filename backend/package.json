@@ -9,10 +9,10 @@
         "start": "npm run build && node build/index.js",
         "lint": "eslint . --ext .ts",
         "lint-fix": "eslint . --ext .ts --fix",
-        "test": "mocha --reporter spec"
+        "test": "mocha -b --reporter spec"
     },
     "devDependencies": {
-        "@faker-js/faker": "^6.1.1",
+        "@faker-js/faker": "^6.2.0",
         "@trivago/prettier-plugin-sort-imports": "^3.2.0",
         "@types/bcrypt": "^5.0.0",
         "@types/cookie-parser": "^1.4.2",

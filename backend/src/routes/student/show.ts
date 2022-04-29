@@ -4,7 +4,7 @@ import { ResErr } from "@routes";
 
 /**
  * @openapi
- * /api/student/current:
+ * /api/student/show:
  *  get:
  *    summary: Get current student from request object (if signed in)
  *    tags:
