@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
+import { ArrowLeft } from "react-bootstrap-icons";
 
 import axios from "axios";
 
@@ -81,7 +82,11 @@ const AgencySignup = () => {
 
   return (
     <Container bg="dark" variant="dark" className="mt-8 mb-4">
-      <h1 className="text-2xl font-light mb-3">Registrazione</h1>
+      <Button as={Link} to="/agency" variant="outline-dark">
+        <ArrowLeft />
+      </Button>
+
+      <h1 className="text-2xl font-light my-3">Registrazione</h1>
 
       <Form onSubmit={submitForm}>
         <Form.Group className="mb-3" controlId="email">

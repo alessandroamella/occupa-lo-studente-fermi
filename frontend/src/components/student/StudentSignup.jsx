@@ -81,7 +81,7 @@ const StudentSignup = () => {
   }
 
   return (
-    <Container bg="dark" variant="dark" className="mt-8">
+    <Container bg="dark" variant="dark" className="mt-8 mb-4">
       <h1 className="text-2xl font-light mb-3">Registrazione</h1>
 
       <Form onSubmit={submitForm}>

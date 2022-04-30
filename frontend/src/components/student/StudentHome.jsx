@@ -25,8 +25,6 @@ const StudentHome = () => {
   const [err, setErr] = useState(null);
   const [loaded, setLoaded] = useState(false);
 
-  const navigate = useNavigate();
-
   const { student } = useSelector(selectStudent);
 
   useEffect(() => {
@@ -50,52 +48,50 @@ const StudentHome = () => {
 
   return (
     <RequireStudentLogin>
-      <div>
-        <Container bg="dark" variant="dark" className="mt-8">
-          <div>
-            <p>
-              Sono la <span className="font-semibold">student homepage!!</span>
-            </p>
-          </div>
+      <Container bg="dark" variant="dark" className="mt-8 mb-4">
+        <div>
+          <p>
+            Sono la <span className="font-semibold">student homepage!!</span>
+          </p>
+        </div>
 
-          {!loaded ? (
-            <div className="flex w-full justify-center text-center mt-3">
-              <Spinner animation="border" role="status">
-                <span className="visually-hidden">Caricamento...</span>
-              </Spinner>
-            </div>
-          ) : Array.isArray(jobOffers) ? (
-            <div>
-              <p className="my-3 text-3xl font-semibold">Offerte di lavoro</p>
-              {/* {JSON.stringify(jobOffers, null, 4)} */}
-              {jobOffers.length > 0 ? (
-                jobOffers.map((e, i) => (
-                  <div key={i}>
-                    <Card style={{ width: "18rem" }}>
-                      {e.logoUrl && <Card.Img variant="top" src={e.logoUrl} />}
-                      <Card.Body>
-                        <Card.Title>{e.title}</Card.Title>
-                        <Card.Subtitle className="mb-2 text-muted">
-                          {e.agencyName}
-                        </Card.Subtitle>
-                        <Card.Text>{e.description}</Card.Text>
-                        <Button className="mt-2" variant="outline-primary">
-                          Visualizza
-                        </Button>
-                      </Card.Body>
-                    </Card>
-                  </div>
-                ))
-              ) : (
-                <div>Nessuna offerta di lavoro disponibile :(</div>
-              )}
-            </div>
-          ) : (
-            <div>Errore: {err}</div>
-          )}
-          <Outlet />
-        </Container>
-      </div>
+        {!loaded ? (
+          <div className="flex w-full justify-center text-center mt-3">
+            <Spinner animation="border" role="status">
+              <span className="visually-hidden">Caricamento...</span>
+            </Spinner>
+          </div>
+        ) : Array.isArray(jobOffers) ? (
+          <div>
+            <p className="my-3 text-3xl font-semibold">Offerte di lavoro</p>
+            {/* {JSON.stringify(jobOffers, null, 4)} */}
+            {jobOffers.length > 0 ? (
+              jobOffers.map((e, i) => (
+                <div key={i}>
+                  <Card style={{ width: "18rem" }}>
+                    {e.logoUrl && <Card.Img variant="top" src={e.logoUrl} />}
+                    <Card.Body>
+                      <Card.Title>{e.title}</Card.Title>
+                      <Card.Subtitle className="mb-2 text-muted">
+                        {e.agencyName}
+                      </Card.Subtitle>
+                      <Card.Text>{e.description}</Card.Text>
+                      <Button className="mt-2" variant="outline-primary">
+                        Visualizza
+                      </Button>
+                    </Card.Body>
+                  </Card>
+                </div>
+              ))
+            ) : (
+              <div>Nessuna offerta di lavoro disponibile :(</div>
+            )}
+          </div>
+        ) : (
+          <div>Errore: {err}</div>
+        )}
+        <Outlet />
+      </Container>
     </RequireStudentLogin>
   );
 };

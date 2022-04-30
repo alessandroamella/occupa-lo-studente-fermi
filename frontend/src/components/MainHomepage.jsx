@@ -5,7 +5,7 @@ import Button from "react-bootstrap/Button";
 function Homepage() {
   return (
     <div>
-      <Container bg="dark" variant="dark" className="mt-8">
+      <Container bg="dark" variant="dark" className="mt-8 mb-4">
         <div>
           <p>
             Sono la <span className="font-semibold">homepage</span>

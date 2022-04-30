@@ -8,6 +8,8 @@ import App from "./App";
 
 import reportWebVitals from "./reportWebVitals";
 
+import store from "./app/store";
+
 import MainBase from "./components/MainBase";
 import MainHomepage from "./components/MainHomepage";
 
@@ -15,10 +17,10 @@ import StudentBase from "./components/student/StudentBase";
 import StudentHome from "./components/student/StudentHome";
 import StudentLogin from "./components/student/StudentLogin";
 import StudentSignup from "./components/student/StudentSignup";
-import store from "./app/store";
 import SecretaryBase from "./components/secretary/SecretaryBase";
 import SecretaryHomepage from "./components/secretary/SecretaryHomepage";
 import AgencyBase from "./components/agency/AgencyBase";
+import AgencyHome from "./components/agency/AgencyHome";
 import AgencySignup from "./components/agency/AgencySignup";
 
 ReactDOM.render(
@@ -40,7 +42,7 @@ ReactDOM.render(
               <Route path="login" element={<StudentLogin />} />
             </Route>
             <Route path="agency" element={<AgencyBase />}>
-              {/* <Route path="" element={<StudentHome />} /> */}
+              <Route path="" element={<AgencyHome />} />
               <Route path="signup" element={<AgencySignup />} />
             </Route>
           </Route>
