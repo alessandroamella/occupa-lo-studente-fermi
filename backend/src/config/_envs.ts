@@ -20,7 +20,11 @@ export const requiredEnvs = [
     "SIGNUP_URL",
     "CLIENT_LOGIN_REDIRECT_URL",
     "EMAIL_SUFFIX",
-    "SECRETARY_EMAIL"
+    "SECRETARY_EMAIL",
+    "MAIL_SERVER",
+    "MAIL_USERNAME",
+    "MAIL_PASSWORD",
+    "SEND_EMAIL_FROM"
 ] as const;
 
 type EnvName = typeof requiredEnvs[number];

@@ -1,6 +1,10 @@
 import bcrypt from "bcrypt";
 import { Request, Response, Router } from "express";
 import { checkSchema, validationResult } from "express-validator";
+import Mail from "nodemailer/lib/mailer";
+import EmailService from "services/email";
+
+import { Envs } from "@config";
 
 import { Agency } from "@models";
 import { ResErr } from "@routes";
@@ -8,10 +12,6 @@ import { AgencyService } from "@services";
 import { logger } from "@shared";
 
 import { validatorSchema } from "./validatorSchema";
-
-// DEBUG
-// import faker from "@faker-js/faker"
-// import CodiceFiscale from "codice-fiscale-js";
 
 /**
  * @openapi
@@ -118,36 +118,25 @@ router.post(
         });
         res.json(await AgencyService.create(agencyDoc));
 
-        // DEBUG
-        logger.warn("DEBUG new agency: send email");
+        // DEBUG write better
+        const message: Mail.Options = {
+            from: `"Occupa lo Studente" ${Envs.env.SEND_EMAIL_FROM}`,
+            to: Envs.env.SECRETARY_EMAIL,
+            subject: `Nuova azienda "${agencyDoc.agencyName}" da approvare`,
+            html:
+                "<p>Buongiorno, l'azienda <strong>" +
+                agencyDoc.agencyName +
+                "</strong> ha richiesto di essere approvata.<br>" +
+                "Decidi se approvarla o rifiutarla dall'URL /secretary"
+        };
+
+        try {
+            await EmailService.sendMail(message);
+        } catch (err) {
+            logger.error("Error while sending email");
+            logger.error(err);
+        }
     }
 );
-
-// DEBUG
-// async function generateRandom() {
-//     const name = faker.name.firstName();
-//     const surname = faker.name.lastName();
-
-//     const cf = new CodiceFiscale({birthplace: "Modena", birthplaceProvincia: "MO", day: faker.datatype.number({min: 1, max: 30}), gender: "M", month: faker.datatype.number({min: 1, max: 12}), name, surname, year: faker.datatype.number({min: 1990, max: 2003})})
-//     const agencyDoc = new Agency({
-//         responsibleFirstName: name,
-//         responsibleLastName: surname,
-//         responsibleFiscalNumber: cf,
-//         email: faker.internet.email(name, surname),
-//         websiteUrl: "https://www.google.com",
-//         phoneNumber: "3924133359",
-//         agencyName: faker.company.companyName(),
-//         agencyDescription: faker.lorem.paragraphs(3),
-//         agencyAddress: faker.address.city() + " " + faker.address.secondaryAddress(),
-//         vatCode: faker.datatype.string(10),
-//         approvalStatus: faker.random.arrayElement(["waiting", "approved", "rejected"]),
-//         jobOffers: []
-//     });
-//     await AgencyService.create(agencyDoc);
-// }
-
-// for (let i = 0; i < 10; i++) {
-//     generateRandom();
-// }
 
 export default router;
