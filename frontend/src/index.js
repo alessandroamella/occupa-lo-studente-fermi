@@ -18,6 +18,8 @@ import StudentSignup from "./components/student/StudentSignup";
 import store from "./app/store";
 import SecretaryBase from "./components/secretary/SecretaryBase";
 import SecretaryHomepage from "./components/secretary/SecretaryHomepage";
+import AgencyBase from "./components/agency/AgencyBase";
+import AgencySignup from "./components/agency/AgencySignup";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -36,6 +38,10 @@ ReactDOM.render(
               <Route path="" element={<StudentHome />} />
               <Route path="signup" element={<StudentSignup />} />
               <Route path="login" element={<StudentLogin />} />
+            </Route>
+            <Route path="agency" element={<AgencyBase />}>
+              {/* <Route path="" element={<StudentHome />} /> */}
+              <Route path="signup" element={<AgencySignup />} />
             </Route>
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
