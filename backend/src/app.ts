@@ -5,7 +5,7 @@ import swaggerUi from "swagger-ui-express";
 
 import { Envs, specs as swaggerSpecs } from "@config";
 
-import { handleMalformedJsonBody } from "@middlewares";
+import { handleExpressErrors, handleMalformedJsonBody } from "@middlewares";
 import { PopulateReq } from "@middlewares";
 import { AgencyClass, SecretaryClass, StudentClass } from "@models";
 import apiRoutes from "@routes";
@@ -50,6 +50,7 @@ app.use(PopulateReq.populateAgency);
 app.use(PopulateReq.populateStudent);
 // Custom middleware to handle malformed JSON bodies
 app.use(handleMalformedJsonBody);
+app.use(handleExpressErrors);
 
 // API Routes
 app.use("/api", apiRoutes);

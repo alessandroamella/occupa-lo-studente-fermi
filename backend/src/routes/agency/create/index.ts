@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 import { Request, Response, Router } from "express";
 import { checkSchema, validationResult } from "express-validator";
 import Mail from "nodemailer/lib/mailer";
+import CaptchaService from "services/captcha";
 import EmailService from "services/email";
 
 import { Envs } from "@config";
@@ -12,7 +13,7 @@ import { AgencyService } from "@services";
 import { logger } from "@shared";
 import { mongoose } from "@typegoose/typegoose";
 
-import schema from "./validatorSchema";
+import schema from "./createSchema";
 
 /**
  * @openapi
@@ -72,11 +73,34 @@ router.post("/", checkSchema(schema), async (req: Request, res: Response) => {
         agencyName,
         agencyDescription,
         agencyAddress,
-        vatCode
+        vatCode,
+        captcha
         // approvalStatus,
         // jobOffers
     } = req.body;
 
+    // Check CAPTCHA
+    // DEBUG decomment this
+    // if (Envs.env.NODE_ENV === "test") {
+    //     logger.warn("Create agency skipping CAPTCHA verification");
+    // } else {
+    try {
+        const valid = await CaptchaService.verify(captcha);
+        if (!valid) throw new ReferenceError();
+    } catch (err) {
+        if (err instanceof ReferenceError) {
+            logger.info("CAPTCHA failed for creating agency " + agencyName);
+            return res.status(401).json({ err: "Invalid ReCAPTCHA" } as ResErr);
+        }
+        logger.error("Error while verifying ReCAPTCHA");
+        logger.error(err);
+        return res
+            .status(500)
+            .json({ err: "Error while verifying ReCAPTCHA" } as ResErr);
+    }
+    // }
+
+    // Check if agency already exists
     let existingAgency;
     try {
         existingAgency = await AgencyService.findOne({

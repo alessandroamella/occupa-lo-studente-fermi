@@ -1,4 +1,4 @@
-FROM node:16
+FROM node:17.9.0
 
 # Create app directory
 WORKDIR /app
@@ -18,7 +18,5 @@ EXPOSE 5000
 
 ENV IP 0.0.0.0
 ENV PORT 5000
-# TPER news server has bad TSL signature, unfortunately this is necessary
-# RUN sed -i 's/CipherString = DEFAULT@SECLEVEL=2/CipherString = DEFAULT@SECLEVEL=1/g' openssl.cnf
 
 CMD [ "npm", "run", "dev" ]

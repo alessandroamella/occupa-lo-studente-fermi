@@ -4,10 +4,12 @@ import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import { ArrowLeft } from "react-bootstrap-icons";
+import ReCAPTCHA from "react-google-recaptcha";
 
 import axios from "axios";
 
 const AgencySignup = () => {
+  const [captcha, setCaptcha] = useState(null);
   const [responsibleFirstName, setResponsibleFirstName] = useState(""); // "string",
   const [responsibleLastName, setResponsibleLastName] = useState(""); // "string",
   const [responsibleFiscalNumber, setResponsibleFiscalNumber] = useState(""); // "string",
@@ -30,7 +32,7 @@ const AgencySignup = () => {
   async function submitForm(event) {
     event.preventDefault();
 
-    console.log({
+    const formData = {
       responsibleFirstName,
       responsibleLastName,
       responsibleFiscalNumber,
@@ -42,28 +44,18 @@ const AgencySignup = () => {
       agencyDescription,
       agencyAddress,
       vatCode,
-      logoUrl
-    });
+      logoUrl: logoUrl || undefined,
+      captcha
+    };
+
+    console.log(formData);
 
     setDisabled(true);
 
     let agency;
 
     try {
-      const res = await axios.post("/api/agency", {
-        responsibleFirstName,
-        responsibleLastName,
-        responsibleFiscalNumber,
-        email,
-        password,
-        websiteUrl,
-        phoneNumber,
-        agencyName,
-        agencyDescription,
-        agencyAddress,
-        vatCode,
-        logoUrl: logoUrl || undefined
-      });
+      const res = await axios.post("/api/agency", formData);
 
       console.log(res.data);
       agency = res.data;
@@ -78,6 +70,11 @@ const AgencySignup = () => {
     alert(JSON.stringify(agency));
     setDisabled(false);
     return false;
+  }
+
+  function captchaChange(value) {
+    console.log("Captcha value:", value);
+    setCaptcha(value);
   }
 
   return (
@@ -280,6 +277,13 @@ const AgencySignup = () => {
             URL del logo azienda (opzionale).
           </Form.Text>
         </Form.Group>
+
+        <ReCAPTCHA
+          // sitekey="6LcPZrMfAAAAAGfknvhtuFNoBPinIM3snOr-Am5z"
+          // DEBUG viene usata chiave di testing
+          sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+          onChange={captchaChange}
+        />
 
         <Button variant="outline-primary" type="submit">
           Registra

@@ -6,3 +6,4 @@ export * from "./populateReq";
 export * from "./isStudentLoggedIn";
 export * from "./secretaryAuth";
 export * from "./handleMalformedJsonBody";
+export * from "./handleExpressErrors";

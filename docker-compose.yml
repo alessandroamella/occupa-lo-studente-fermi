@@ -66,6 +66,8 @@ services:
             - EMAIL_SUFFIX=fermi.mo.it
             # DEBUG viene usata la mia email come debug
             - SECRETARY_EMAIL=alessandro.amella@fermi.mo.it
+            # DEBUG fornita da Google per testing
+            - GOOGLE_RECAPTCHA_SECRET_KEY=6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe
     frontend:
         depends_on:
             - backend

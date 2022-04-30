@@ -82,6 +82,10 @@ export const studentValidatorSchema: Schema = {
     phoneNumber: {
         in: "body",
         errorMessage: "Phone number not specified",
+        isString: {
+            bail: true,
+            errorMessage: "Phone number must be a string"
+        },
         custom: {
             options: value => {
                 if (!isValidPhoneNumber(value, "IT")) {
