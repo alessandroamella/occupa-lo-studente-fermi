@@ -25,8 +25,9 @@ export class isStudentLoggedIn {
             logger.debug(err);
         }
 
+        logger.debug("isStudentLoggedIn not logged in");
         res.status(401).json({
-            err: "You need to be logged in to view this page"
+            err: "You need to be logged in (as a student) to view this page"
         } as ResErr);
     }
 }

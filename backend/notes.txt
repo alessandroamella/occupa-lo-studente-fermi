@@ -16,3 +16,5 @@ CREATE JobOffer:
 DELETE JobOffer:
 - ...
 - rimuovi TUTTE le JobApplication per quell'offer
+
+FAI GEOCODING CON POSITION STACK!
