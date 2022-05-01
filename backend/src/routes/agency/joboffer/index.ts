@@ -1,2 +1,9 @@
-// DEBUG: for each jobOffer check that req.agency is populated
-// and that ** agency approvalStatus==approved **
+import { Router } from "express";
+
+import createRoute from "./create";
+
+const router = Router();
+
+router.use("/", createRoute);
+
+export default router;

@@ -39,7 +39,7 @@ router.get("/", async (req, res) => {
     // DEBUG check authentication
 
     const agency = await AgencyService.find({});
-    res.json(agency);
+    res.json(agency?.map(a => a.toObject()));
 });
 
 export default router;

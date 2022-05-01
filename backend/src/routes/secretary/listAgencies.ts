@@ -55,7 +55,7 @@ router.get("/", secretaryAuth, async (req, res) => {
     // DEBUG check authentication
     try {
         const agencies = await AgencyService.find({});
-        return res.json(agencies);
+        return res.json(agencies?.map(a => a.toObject()));
     } catch (err) {
         logger.error("Error while finding agencies for secretary");
         logger.error(err);

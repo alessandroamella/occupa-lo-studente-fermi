@@ -74,7 +74,7 @@ router.get(
                 expiryDate: { $lt: new Date() }
             });
 
-            return res.json(jobOffers);
+            return res.json(jobOffers?.map(j => j.toObject()));
         } catch (err) {
             logger.error("Error while finding job offers");
             logger.error(err);

@@ -7,7 +7,7 @@ import { AgencyService } from "@services";
  * @openapi
  * /api/agency/{agencyId}:
  *  delete:
- *    summary: Deletes an agency
+ *    summary: Delete an agency
  *    parameters:
  *      - in: path
  *        name: agencyId

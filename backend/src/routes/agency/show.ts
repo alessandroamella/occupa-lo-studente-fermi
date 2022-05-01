@@ -8,7 +8,7 @@ import { AgencyService } from "@services";
  * @openapi
  * /api/agency/{agencyId}:
  *  get:
- *    summary: Get a single agency by ID
+ *    summary: Get a single agency by _id
  *    parameters:
  *      - in: path
  *        name: agencyId
@@ -62,7 +62,7 @@ router.get("/:id", param("id").isMongoId(), async (req, res) => {
         return res.status(404).json({ err: "Agency not found" } as ResErr);
     }
 
-    res.json(agency);
+    res.json(agency.toObject());
 });
 
 export default router;

@@ -9,7 +9,7 @@
         "start": "npm run build && node build/index.js",
         "lint": "eslint . --ext .ts",
         "lint-fix": "eslint . --ext .ts --fix",
-        "test": "mocha -b --reporter spec"
+        "test": "mocha --timeout 5000 -b --reporter spec"
     },
     "devDependencies": {
         "@faker-js/faker": "^6.2.0",

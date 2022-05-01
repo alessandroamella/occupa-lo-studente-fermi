@@ -175,7 +175,7 @@ router.post("/", checkSchema(schema), async (req: Request, res: Response) => {
         logger.error(err);
     }
 
-    res.json(agency);
+    res.json(agency.toObject());
 });
 
 export default router;

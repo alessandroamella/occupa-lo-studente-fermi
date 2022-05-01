@@ -34,7 +34,7 @@ const router = Router();
 
 router.get("/", (req, res) => {
     if (req.student) {
-        return res.json(req.student);
+        return res.json(req.student.toObject());
     }
 
     return res.status(401).json({ err: "Not logged in" } as ResErr);

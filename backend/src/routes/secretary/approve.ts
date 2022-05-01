@@ -11,7 +11,7 @@ import { logger } from "@shared";
  * @openapi
  * /api/secretary/approve/{agencyId}:
  *  get:
- *    summary: Approves or rejects an agency
+ *    summary: Approve or reject an agency
  *    parameters:
  *      - in: query
  *        name: username

@@ -19,7 +19,7 @@
     ],
     "overrides": [
         {
-            "files": ["*.jsx", "*.html", "frontend/src/index.js"],
+            "files": ["*.jsx", "*.html", "frontend/src/index.js", "*.test.js"],
             "options": { "tabWidth": 2 }
         }
     ]

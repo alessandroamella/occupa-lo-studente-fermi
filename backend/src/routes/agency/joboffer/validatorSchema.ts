@@ -1,9 +1,8 @@
-import CodiceFiscale from "codice-fiscale-js";
 import { Schema } from "express-validator";
-import { isValidPhoneNumber, parsePhoneNumber } from "libphonenumber-js";
 import moment from "moment";
 
-import { logger, urlExists } from "@shared";
+import { AgencyService } from "@services";
+import { logger } from "@shared";
 
 export const validatorSchema: Schema = {
     agency: {
@@ -11,6 +10,21 @@ export const validatorSchema: Schema = {
         errorMessage: "Agency ObjectId not specified",
         isMongoId: {
             errorMessage: "Agency ObjectId is not a valid ObjectId"
+        },
+        custom: {
+            errorMessage: "Agency must be approved",
+            options: async _id => {
+                try {
+                    const doc = await AgencyService.findOne({ _id });
+                    return doc?.approvalStatus === "approved";
+                } catch (err) {
+                    logger.error(
+                        "Error while finding agency in jobOffer validator schema"
+                    );
+                    logger.error(err);
+                    return false;
+                }
+            }
         }
     },
     title: {
