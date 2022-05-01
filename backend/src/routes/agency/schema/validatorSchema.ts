@@ -130,22 +130,22 @@ export const validatorSchema: Schema = {
             options: { min: 2, max: 32 }
         }
     },
-    // approvalStatus: {
-    //     in: "body",
-    //     errorMessage: "Approval status not specified",
-    //     isIn: {
-    //         options: [["waiting", "approved", "rejected"]],
-    //         errorMessage: "Invalid approval status"
-    //     }
-    // },
-    // approvalDate: {
-    //     in: "body",
-    //     errorMessage: "Approval date not specified",
-    //     isDate: {
-    //         errorMessage: "Approval date must be date"
-    //     },
-    //     optional: true
-    // },
+    approvalStatus: {
+        in: "body",
+        errorMessage: "Approval status not specified",
+        isIn: {
+            options: [["waiting", "approved", "rejected"]],
+            errorMessage: "Invalid approval status"
+        }
+    },
+    approvalDate: {
+        in: "body",
+        errorMessage: "Approval date not specified",
+        isDate: {
+            errorMessage: "Approval date must be date"
+        },
+        optional: true
+    },
     logoUrl: {
         in: "body",
         errorMessage: "Logo URL not specified",

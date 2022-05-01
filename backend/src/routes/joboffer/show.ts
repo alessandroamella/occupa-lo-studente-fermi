@@ -5,7 +5,7 @@ import { isLoggedIn } from "@middlewares";
 import { ResErr } from "@routes";
 import { JobOfferService } from "@services";
 import { logger } from "@shared";
-import { mongoose } from "@typegoose/typegoose";
+import { isDocument, mongoose } from "@typegoose/typegoose";
 
 /**
  * @openapi
@@ -40,6 +40,12 @@ import { mongoose } from "@typegoose/typegoose";
  *          application/json:
  *            schema:
  *              $ref: '#/components/schemas/ResErr'
+ *      '404':
+ *        description: Job offer not found
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/ResErr'
  *      '500':
  *        description: Server error
  *        content:
@@ -66,6 +72,25 @@ router.get(
         try {
             const jobOffer = await JobOfferService.findOne({ _id });
             logger.debug("Show jobOffer found jobOffer " + jobOffer?._id);
+
+            if (!jobOffer) {
+                return res
+                    .status(404)
+                    .json({ err: "Job offer not found" } as ResErr);
+            }
+
+            const agencyId = isDocument(jobOffer.agency)
+                ? jobOffer.agency._id
+                : jobOffer.agency;
+            if (req.agency?._id?.toString() !== agencyId?.toString()) {
+                logger.debug(
+                    `Logged in agency ${req.agency?._id} and jobOffers's agency to delete ${agencyId} don't match`
+                );
+                return res.status(401).json({
+                    err: "This job offer is not owned by your current agency"
+                });
+            }
+
             res.json(jobOffer?.toObject());
         } catch (err) {
             if (err instanceof mongoose.Error.ValidationError) {

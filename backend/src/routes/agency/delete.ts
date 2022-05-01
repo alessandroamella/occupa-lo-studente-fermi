@@ -1,13 +1,17 @@
 import { Router } from "express";
 
+import { Envs } from "@config";
+
+import { isLoggedIn } from "@middlewares";
 import { ResErr } from "@routes";
 import { AgencyService } from "@services";
+import { logger } from "@shared";
 
 /**
  * @openapi
- * /api/agency/{agencyId}:
+ * /api/agency:
  *  delete:
- *    summary: Delete an agency
+ *    summary: Delete the currently logged in agency
  *    parameters:
  *      - in: path
  *        name: agencyId
@@ -26,8 +30,8 @@ import { AgencyService } from "@services";
  *          application/json:
  *            schema:
  *              $ref: '#/components/schemas/ResErr'
- *      '404':
- *        description: Agency not found
+ *      '401':
+ *        description: Not logged in
  *        content:
  *          application/json:
  *            schema:
@@ -42,15 +46,23 @@ import { AgencyService } from "@services";
 
 const router = Router();
 
-router.delete("/:id", async (req, res) => {
-    const agency = await AgencyService.findOne({ _id: req.params.id });
-    if (!agency) {
-        return res.status(404).json({ err: "Agency not found" } as ResErr);
+router.delete("/", isLoggedIn.isAgencyLoggedIn, async (req, res) => {
+    if (!req.agency) {
+        logger.error("req.agency null in agency delete route");
+        return res
+            .status(500)
+            .json({ err: "Error while finding agency" } as ResErr);
     }
-    // DEBUG check authentication
 
-    await AgencyService.delete(agency);
-    res.sendStatus(200);
+    try {
+        await AgencyService.delete(req.agency);
+        res.clearCookie(Envs.env.STUDENT_AUTH_COOKIE_NAME);
+        res.sendStatus(200);
+    } catch (err) {
+        logger.error("Error while deleting agency");
+        logger.error(err);
+        res.status(500).json({ err: "Error while deleting agency" } as ResErr);
+    }
 });
 
 export default router;

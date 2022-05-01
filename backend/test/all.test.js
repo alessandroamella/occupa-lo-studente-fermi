@@ -42,13 +42,6 @@ describe("Agencies", () => {
   };
 
   let agencyDB;
-  // DEBUG use auth
-  describe("List agencies", () => {
-    it("executes without auth", async () => {
-      const res = await agent.get("/agency");
-      expect(res).to.have.status(200);
-    });
-  });
 
   describe("Create an agency", () => {
     it("emits email param", async () => {
@@ -69,6 +62,26 @@ describe("Agencies", () => {
       const res = await agent.post("/agency").send(rawAgency);
       expect(res).to.have.status(200);
       expect(res).to.have.cookie("agencytoken");
+
+      agencyDB = res.body;
+    });
+  });
+
+  describe("View agency", () => {
+    it("shows logged in agency", async () => {
+      const res = await agent.get("/agency");
+      expect(res).to.have.status(200);
+      expect(res.body).to.be.an("object").with.property("_id");
+    });
+  });
+
+  describe("Edit agency", () => {
+    it("updates the email", async () => {
+      const res = await agent
+        .put("/agency")
+        .send({ email: faker.internet.email() });
+      expect(res).to.have.status(200);
+      expect(res.body).to.be.an("object").with.property("_id");
 
       agencyDB = res.body;
     });
@@ -168,7 +181,7 @@ describe("Agencies", () => {
 
   describe("Delete an agency", () => {
     it("deletes it", async () => {
-      const res = await agent.delete("/agency/" + agencyDB?._id).send(agencyDB);
+      const res = await agent.delete("/agency");
       expect(res).to.have.status(200);
     });
   });
@@ -203,25 +216,30 @@ describe("Students", () => {
 
   let studentDB;
 
-  describe("test routes while not logged in", () => {
+  describe("Test routes while not logged in", () => {
     describe("gets current user ", () => {
-      it("should return unauthorized", async () => {
+      it("returns unauthorized", async () => {
         const res = await agent.get("/student");
         expect(res).to.have.status(401);
       });
     });
 
-    describe("gets available job offers", () => {
+    describe("gets approved agencies", () => {
       it("returns unauthorized", async () => {
-        const res = await agent
-          .get("/student/joboffers")
-          .query({ field: "it" });
+        const res = await agent.get("/student/agencies").query({ field: "it" });
+        expect(res).to.have.status(401);
+      });
+    });
+
+    describe("delete student", () => {
+      it("returns unauthorized", async () => {
+        const res = await agent.delete("/student");
         expect(res).to.have.status(401);
       });
     });
   });
 
-  describe("logins in with test route", () => {
+  describe("Login using test route", () => {
     it("logs student in", async () => {
       const res = await agent.post("/student/auth/testauth").send(rawStudent);
       expect(res).to.have.status(200);
@@ -238,11 +256,9 @@ describe("Students", () => {
       });
     });
 
-    describe("gets available job offers", () => {
-      it("lists the job offers", async () => {
-        const res = await agent
-          .get("/student/joboffers")
-          .query({ field: "it" });
+    describe("gets approved agencies", () => {
+      it("lists the agencies", async () => {
+        const res = await agent.get("/student/agencies").query({ field: "it" });
         expect(res).to.have.status(200);
         expect(res.body).to.be.an("array");
       });

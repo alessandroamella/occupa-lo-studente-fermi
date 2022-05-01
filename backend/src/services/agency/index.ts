@@ -17,15 +17,21 @@ export class AgencyService {
 
     public static async find(
         fields: FilterQuery<DocumentType<AgencyClass> | null>,
+        populateJobOffers = false,
         skip = 0,
         limit = 100
-    ): Promise<DocumentType<AgencyClass>[] | null> {
+    ): Promise<DocumentType<AgencyClass>[]> {
         logger.debug("Finding all agencies...");
-        return await Agency.find(fields)
+        const query = Agency.find(fields)
             .skip(skip)
             .limit(limit)
-            .sort({ updatedAt: -1 })
-            .exec();
+            .sort({ updatedAt: -1 });
+
+        if (populateJobOffers) {
+            query.populate("jobOffers");
+        }
+
+        return await query.exec();
     }
 
     public static async create(newAgency: DocumentType<AgencyClass>) {

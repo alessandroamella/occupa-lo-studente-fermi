@@ -3,7 +3,6 @@ import { Request, Response, Router } from "express";
 import { checkSchema, validationResult } from "express-validator";
 import Mail from "nodemailer/lib/mailer";
 import CaptchaService from "services/captcha";
-import EmailService from "services/email";
 
 import { Envs } from "@config";
 
@@ -13,8 +12,8 @@ import { AgencyService } from "@services";
 import { logger } from "@shared";
 import { mongoose } from "@typegoose/typegoose";
 
-import { AgencyAuthCookieManager } from "../AgencyAuthCookieManager";
-import schema from "./createSchema";
+import { AgencyAuthCookieManager } from "./helpers";
+import schema from "./schema/createSchema";
 
 /**
  * @openapi

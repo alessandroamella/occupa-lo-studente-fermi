@@ -1,9 +1,11 @@
 import { Request, Response, Router } from "express";
 import { param, validationResult } from "express-validator";
 
+import { isLoggedIn } from "@middlewares";
 import { ResErr } from "@routes";
 import { JobOfferService } from "@services";
 import { logger } from "@shared";
+import { isDocument } from "@typegoose/typegoose";
 
 /**
  * @openapi
@@ -28,6 +30,12 @@ import { logger } from "@shared";
  *          application/json:
  *            schema:
  *              $ref: '#/components/schemas/ResErr'
+ *      '401':
+ *        description: Not signed in
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/ResErr'
  *      '404':
  *        description: Agency not found
  *        content:
@@ -46,6 +54,7 @@ const router = Router();
 
 router.delete(
     "/:_id",
+    isLoggedIn.isAgencyLoggedIn,
     param("_id").isMongoId(),
     async (req: Request, res: Response) => {
         const errors = validationResult(req);
@@ -66,6 +75,20 @@ router.delete(
             return res
                 .status(500)
                 .json({ err: "Error while finding job offer" } as ResErr);
+        }
+
+        const agencyId = isDocument(jobOffer.agency)
+            ? jobOffer.agency._id
+            : jobOffer.agency;
+        if (req.agency?._id?.toString() !== agencyId?.toString()) {
+            logger.debug(
+                `Logged in agency ${req.agency?._id} and jobOffers's agency to delete ${agencyId} don't match`
+            );
+            return res
+                .status(401)
+                .json({
+                    err: "This job offer is not owned by your current agency"
+                });
         }
 
         try {

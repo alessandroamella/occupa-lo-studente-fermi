@@ -1,16 +1,20 @@
 import { Router } from "express";
 import { query, validationResult } from "express-validator";
+import moment from "moment";
+import { LeanDocument } from "mongoose";
 
 import { isLoggedIn } from "@middlewares";
+import { AgencyClass } from "@models";
 import { ResErr } from "@routes";
-import { JobOfferService } from "@services";
+import { AgencyService } from "@services";
 import { logger } from "@shared";
+import { isDocumentArray } from "@typegoose/typegoose";
 
 /**
  * @openapi
- * /api/student/joboffers:
+ * /api/student/agencies:
  *  get:
- *    summary: Find available job offers
+ *    summary: Find agencies along with available job offers
  *    parameters:
  *      - in: query
  *        name: field
@@ -68,13 +72,40 @@ router.get(
 
             const fieldOfStudy = req.query.field;
 
-            // Find job offers that haven't expired yet
-            const jobOffers = await JobOfferService.find({
-                fieldOfStudy,
-                expiryDate: { $lt: new Date() }
-            });
+            const foundAgencies = await AgencyService.find({}, true);
+            let isErr = false; // in case a job offer isn't populated
 
-            return res.json(jobOffers?.map(j => j.toObject()));
+            const agencies: LeanDocument<AgencyClass>[] = [];
+
+            for (const agency of foundAgencies) {
+                if (!isDocumentArray(agency.jobOffers)) {
+                    logger.error(
+                        `Agency ${agency._id} jobOffers ${agency.jobOffers} is not populated in student jobOffers route`
+                    );
+                    isErr = true;
+                    return null;
+                }
+
+                const obj = {
+                    ...agency.toObject(),
+                    jobOffers: agency.jobOffers
+                        .filter(
+                            j =>
+                                j.fieldOfStudy === fieldOfStudy &&
+                                moment(j.expiryDate).isBefore(moment())
+                        )
+                        .map(j => j.toObject())
+                };
+                agencies.push(obj);
+            }
+
+            if (isErr) {
+                return res
+                    .status(500)
+                    .json({ err: "Error while finding job offers" } as ResErr);
+            }
+
+            return res.json(agencies);
         } catch (err) {
             logger.error("Error while finding job offers");
             logger.error(err);

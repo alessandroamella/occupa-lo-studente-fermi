@@ -1,6 +1,7 @@
 import { Request, Response, Router } from "express";
-import { checkSchema, param, validationResult } from "express-validator";
+import { checkSchema, validationResult } from "express-validator";
 
+import { isLoggedIn } from "@middlewares";
 import { ResErr } from "@routes";
 import { AgencyService } from "@services";
 import { logger } from "@shared";
@@ -10,16 +11,9 @@ import schema from "./schema/updateSchema";
 
 /**
  * @openapi
- * /api/agency/{agencyId}:
+ * /api/agency:
  *  put:
- *    summary: Update an existing agency
- *    parameters:
- *      - in: path
- *        name: agencyId
- *        schema:
- *          type: string
- *        required: true
- *        description: ObjectId of the agency to update
+ *    summary: Update the currently logged in agency
  *    tags:
  *      - agency
  *    responses:
@@ -31,6 +25,12 @@ import schema from "./schema/updateSchema";
  *              $ref: '#/components/schemas/AgencyReq'
  *      '400':
  *        description: Data validation failed
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/ResErr'
+ *      '401':
+ *        description: Not logged in
  *        content:
  *          application/json:
  *            schema:
@@ -48,8 +48,8 @@ const router = Router();
 // DEBUG change for AgencyReq not Agency
 
 router.put(
-    "/:id",
-    param("id").isMongoId(),
+    "/",
+    isLoggedIn.isAgencyLoggedIn,
     checkSchema(schema),
     async (req: Request, res: Response) => {
         const errors = validationResult(req);
@@ -60,25 +60,9 @@ router.put(
                     .map(e => e.msg)
                     .join(", ")
             });
-        }
-
-        const { _id } = req.params;
-
-        let agency;
-        try {
-            agency = await AgencyService.findOne({ _id });
-        } catch (err) {
-            logger.error("Error while finding agency in update route");
-            logger.error(err);
-            return res
-                .status(500)
-                .json({ err: "Error while finding agency" } as ResErr);
-        }
-
-        if (!agency) {
-            return res.status(400).json({
-                err: "Agency with given ObjectId doesn't exist"
-            } as ResErr);
+        } else if (!req.agency) {
+            logger.error("req.agency false in update route");
+            return res.status(500).json({ err: "Error while loading agency" });
         }
 
         const {
@@ -112,26 +96,26 @@ router.put(
         }) {
             if (req.body[prop]) {
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                (agency as any)[prop] = req.body[prop];
+                (req.agency as any)[prop] = req.body[prop];
             }
         }
 
         try {
-            await AgencyService.update(agency);
+            await AgencyService.update(req.agency);
         } catch (err) {
             if (err instanceof mongoose.Error.ValidationError) {
                 logger.debug("Agency update validation error");
                 logger.debug(err.message);
                 return res.status(400).json({ err: err.message } as ResErr);
             }
-            logger.error("Error while updating agency " + agency._id);
+            logger.error("Error while updating agency " + req.agency._id);
             logger.error(err);
             return res
                 .status(500)
                 .json({ err: "Error while updating agency" } as ResErr);
         }
 
-        return res.json(agency.toObject());
+        return res.json(req.agency.toObject());
     }
 );
 

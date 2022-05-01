@@ -11,8 +11,8 @@ import { GoogleAuthService, StudentService } from "@services";
 import { logger } from "@shared";
 import { mongoose } from "@typegoose/typegoose";
 
+import { StudentAuthCookieManager } from "../helpers";
 import schema from "../validatorSchema";
-import { StudentAuthCookieManager } from "./StudentAuthCookieManager";
 
 const router = Router();
 

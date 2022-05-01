@@ -6,7 +6,7 @@ import { ResErr } from "@routes";
 import { GoogleAuthService, StudentService } from "@services";
 import { logger } from "@shared";
 
-import { StudentAuthCookieManager } from "./StudentAuthCookieManager";
+import { StudentAuthCookieManager } from "../helpers";
 
 const router = Router();
 
