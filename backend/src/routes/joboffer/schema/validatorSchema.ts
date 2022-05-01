@@ -54,7 +54,7 @@ export const validatorSchema: Schema = {
     expiryDate: {
         in: "body",
         errorMessage: "Expiry date not specified",
-        isDate: {
+        isISO8601: {
             errorMessage: "Expiry date is not a valid date"
         },
         custom: {

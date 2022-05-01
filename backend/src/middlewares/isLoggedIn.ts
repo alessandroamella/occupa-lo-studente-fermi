@@ -6,7 +6,7 @@ import { ResErr } from "@routes";
 import { GoogleAuthService } from "@services";
 import { logger } from "@shared";
 
-export class isStudentLoggedIn {
+export class isLoggedIn {
     public static async isStudentLoggedIn(
         req: Request,
         res: Response,
@@ -28,6 +28,19 @@ export class isStudentLoggedIn {
         logger.debug("isStudentLoggedIn not logged in");
         res.status(401).json({
             err: "You need to be logged in (as a student) to view this page"
+        } as ResErr);
+    }
+
+    public static async isAgencyLoggedIn(
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ) {
+        if (req.agency) return next();
+
+        logger.debug("isAgencyLoggedIn not logged in");
+        res.status(401).json({
+            err: "You need to be logged in (as an agency) to view this page"
         } as ResErr);
     }
 }

@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { isStudentLoggedIn } from "@middlewares";
+import { isLoggedIn } from "@middlewares";
 import { ResErr } from "@routes";
 import { StudentService } from "@services";
 import { logger } from "@shared";
@@ -31,7 +31,7 @@ import { logger } from "@shared";
 
 const router = Router();
 
-router.delete("/", isStudentLoggedIn.isStudentLoggedIn, async (req, res) => {
+router.delete("/", isLoggedIn.isStudentLoggedIn, async (req, res) => {
     if (!req.student) {
         logger.error("req.student null with isLoggedIn middleware");
         return res.status(401).json({

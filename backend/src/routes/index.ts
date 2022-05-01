@@ -4,6 +4,7 @@ import { logger } from "@shared";
 
 import { ResErr } from "./ResErr";
 import agencyRoutes from "./agency";
+import jobOfferRoutes from "./joboffer";
 import secretaryRoutes from "./secretary";
 import studentRoutes from "./student";
 
@@ -13,6 +14,7 @@ const router = Router();
 
 router.use("/agency", agencyRoutes);
 router.use("/student", studentRoutes);
+router.use("/joboffer", jobOfferRoutes);
 router.use("/secretary", secretaryRoutes);
 
 // Fallback route

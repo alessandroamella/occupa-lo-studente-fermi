@@ -61,7 +61,7 @@ export class JobOfferService {
      * @param  {DocumentType<JobOfferClass>} jobOffer - Updated jobOffer object
      */
     public static async update(jobOffer: DocumentType<JobOfferClass>) {
-        logger.debug(`Updating jobOffer with _id ${jobOffer._id}...`);
+        logger.debug("Updating jobOffer with _id " + jobOffer._id);
         return await jobOffer.save();
     }
     /**

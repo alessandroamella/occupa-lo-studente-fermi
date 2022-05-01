@@ -68,6 +68,7 @@ describe("Agencies", () => {
     it("sends correct params", async () => {
       const res = await agent.post("/agency").send(rawAgency);
       expect(res).to.have.status(200);
+      expect(res).to.have.cookie("agencytoken");
 
       agencyDB = res.body;
     });
@@ -76,16 +77,16 @@ describe("Agencies", () => {
   describe("Job offers", () => {
     const rawJobOffer = {
       agency: agencyDB?._id,
-      title: faker.commerce.department(),
-      description: faker.lorem.sentences(),
+      title: faker.lorem.word(10),
+      description: faker.lorem.sentences(10),
       fieldOfStudy: faker.random.arrayElement([
         "it",
         "electronics",
         "chemistry"
       ]),
       expiryDate: faker.date.between(
-        moment().add(1, "week").toDate(),
-        moment().add(10, "months").toDate()
+        moment().add(1, "week").toISOString(),
+        moment().add(10, "months").toISOString()
       ),
       mustHaveDiploma: faker.datatype.boolean(),
       numberOfPositions: faker.datatype.number({ min: 1, max: 10 })
@@ -98,27 +99,28 @@ describe("Agencies", () => {
         rawJobOffer.agency = agencyDB._id;
 
         const res = await agent
-          .post("/agency/joboffer")
+          .post("/joboffer")
           .send({ ...rawJobOffer, expiryDate: faker.datatype.string() });
         expect(res).to.have.status(400);
       });
 
       it("uses expiry date too in the future", async () => {
         const res = await agent
-          .post("/agency/joboffer")
+          .post("/joboffer")
           .send({ ...rawJobOffer, expiryDate: moment().add(2, "years") });
         expect(res).to.have.status(400);
       });
 
       it("uses an invalid field of study", async () => {
         const res = await agent
-          .post("/agency/joboffer")
+          .post("/joboffer")
           .send({ ...rawJobOffer, fieldOfStudy: faker.lorem.word(16) });
         expect(res).to.have.status(400);
       });
 
       it("uses valid data", async () => {
-        const res = await agent.post("/agency/joboffer").send(rawJobOffer);
+        const res = await agent.post("/joboffer").send(rawJobOffer);
+
         expect(res).to.have.status(200);
         expect(res.body).to.be.an("object").with.property("_id");
 
@@ -129,7 +131,7 @@ describe("Agencies", () => {
     describe("Get a job offer", () => {
       it("uses an invalid ObjectId", async () => {
         const res = await agent.get("/joboffer/" + faker.lorem.word());
-        expect(res.body).to.have.status(400);
+        expect(res).to.have.status(400);
       });
 
       it("finds the job offer", async () => {
@@ -140,17 +142,10 @@ describe("Agencies", () => {
     });
 
     describe("Edit a job offer", () => {
-      it("updates an invalid param", async () => {
-        const res = await agent
-          .put("/agency/joboffer")
-          .send({ [faker.lorem.word(16)]: faker.lorem.words() });
-        expect(res.body).to.have.status(400);
-      });
-
       it("updates the title", async () => {
         const res = await agent
-          .put("/agency/joboffer")
-          .send({ title: faker.commerce.department() });
+          .put("/joboffer/" + jobOfferDB?._id)
+          .send({ title: faker.lorem.word(10) });
         expect(res).to.have.status(200);
         expect(res.body).to.be.an("object").with.property("_id");
 
@@ -161,13 +156,12 @@ describe("Agencies", () => {
     describe("Delete a job offer", async () => {
       it("uses an invalid ObjectId", async () => {
         const res = await agent.delete("/joboffer/" + faker.lorem.word());
-        expect(res.body).to.have.status(400);
+        expect(res).to.have.status(400);
       });
 
-      it("finds the job offer", async () => {
+      it("deletes the job offer", async () => {
         const res = await agent.delete("/joboffer/" + jobOfferDB?._id);
         expect(res).to.have.status(200);
-        expect(res.body).to.be.an("object").with.property("_id");
       });
     });
   });
@@ -231,6 +225,7 @@ describe("Students", () => {
     it("logs student in", async () => {
       const res = await agent.post("/student/auth/testauth").send(rawStudent);
       expect(res).to.have.status(200);
+      expect(res).to.have.cookie("studenttoken");
 
       studentDB = res.body;
     });

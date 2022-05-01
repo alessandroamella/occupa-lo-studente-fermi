@@ -142,7 +142,7 @@ router.get("/complete", async (req, res) => {
             res.clearCookie(lastPageCookie, { httpOnly: true, signed: true });
         }
 
-        if (!req.signedCookies[Envs.env.AUTH_COOKIE_NAME]) {
+        if (!req.signedCookies[Envs.env.STUDENT_AUTH_COOKIE_NAME]) {
             logger.debug("Student auth cookie was not saved, now saving it");
             await StudentAuthCookieManager.saveStudentAuthCookie(res, student);
         }

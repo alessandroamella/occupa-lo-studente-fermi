@@ -1,24 +1,10 @@
 import { NextFunction, Request, Response } from "express";
-import jwt from "jsonwebtoken";
 
 import { Envs } from "@config";
 
-import { Agency, AgencyClass, StudentClass } from "@models";
+import { AgencyService, StudentService } from "@services";
 import { logger } from "@shared";
-import { ReturnModelType, mongoose } from "@typegoose/typegoose";
-import { BeAnObject, DocumentType } from "@typegoose/typegoose/lib/types";
 
-import { StudentAuthCookieManager } from "../routes/student/auth/StudentAuthCookieManager";
-
-interface UserWithId {
-    student?: string;
-    agency?: string;
-}
-
-// enum _PossibleFields {
-//     STUDENT = "student",
-//     AGENCY = "agency"
-// }
 type _PossibleFields = "student" | "agency";
 
 export class PopulateReq {
@@ -27,31 +13,71 @@ export class PopulateReq {
         res: Response,
         next: NextFunction
     ) {
+        logger.debug("Loading student auth cookie");
+
+        const cookie = req.signedCookies[Envs.env.STUDENT_AUTH_COOKIE_NAME];
+        if (!cookie) return PopulateReq._nullReq("student", req, next);
+
         let student;
         try {
-            student = await StudentAuthCookieManager.loadStudentAuthCookie(
-                req,
-                res
-            );
+            student = await StudentService.parseAuthCookie(cookie);
         } catch (err) {
-            logger.error("Error while loading student auth cookie");
-            logger.error(err);
-            return next();
+            logger.debug("Error while parsing auth cookie, clearing it");
+            res.clearCookie(Envs.env.STUDENT_AUTH_COOKIE_NAME, {
+                httpOnly: true,
+                signed: true
+            });
+            return PopulateReq._nullReq("student", req, next);
         }
-        if (!student) return PopulateReq._nullReq("student", req, next);
+        if (!student) {
+            logger.debug("Clearing invalid auth cookie");
+            res.clearCookie(Envs.env.STUDENT_AUTH_COOKIE_NAME, {
+                httpOnly: true,
+                signed: true
+            });
+            return PopulateReq._nullReq("student", req, next);
+        }
 
-        logger.debug("populateReqStudent successful");
+        logger.debug("Student auth cookie loaded");
         req.student = student;
+
         return next();
     }
 
-    // DEBUG - To refactor!!
     public static async populateAgency(
         req: Request,
         res: Response,
         next: NextFunction
     ) {
-        return await PopulateReq._populateFields("agency", Agency, req, next);
+        logger.debug("Loading agency auth cookie");
+
+        const cookie = req.signedCookies[Envs.env.AGENCY_AUTH_COOKIE_NAME];
+        if (!cookie) return PopulateReq._nullReq("agency", req, next);
+
+        let agency;
+        try {
+            agency = await AgencyService.parseAuthCookie(cookie);
+        } catch (err) {
+            logger.debug("Error while parsing auth cookie, clearing it");
+            res.clearCookie(Envs.env.AGENCY_AUTH_COOKIE_NAME, {
+                httpOnly: true,
+                signed: true
+            });
+            return PopulateReq._nullReq("agency", req, next);
+        }
+        if (!agency) {
+            logger.debug("Clearing invalid auth cookie");
+            res.clearCookie(Envs.env.STUDENT_AUTH_COOKIE_NAME, {
+                httpOnly: true,
+                signed: true
+            });
+            return PopulateReq._nullReq("agency", req, next);
+        }
+
+        logger.debug("Agency auth cookie loaded");
+        req.agency = agency;
+
+        return next();
     }
 
     private static _nullReq(
@@ -63,49 +89,5 @@ export class PopulateReq {
 
         req[field] = null;
         return next();
-    }
-
-    private static async _populateFields(
-        fieldName: _PossibleFields,
-        DbModel:
-            | ReturnModelType<typeof StudentClass, BeAnObject>
-            | ReturnModelType<typeof AgencyClass, BeAnObject>,
-        req: Request,
-        next: NextFunction
-    ) {
-        const { AUTH_COOKIE_NAME, JWT_SECRET } = Envs.env;
-
-        try {
-            if (!req.signedCookies[AUTH_COOKIE_NAME as string]) {
-                return PopulateReq._nullReq(fieldName, req, next);
-            }
-
-            const jwtPayload: UserWithId = jwt.verify(
-                req.signedCookies[AUTH_COOKIE_NAME as string],
-                JWT_SECRET as string
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            ) as any;
-
-            if (!jwtPayload[fieldName]) {
-                return PopulateReq._nullReq(fieldName, req, next);
-            }
-
-            const obj = await DbModel.findOne({
-                _id: jwtPayload[fieldName]
-            }).exec();
-            if (!obj) return PopulateReq._nullReq(fieldName, req, next);
-
-            logger.debug("populateReq successful");
-
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            req[fieldName] = obj as DocumentType<any>;
-            return next();
-        } catch (err) {
-            logger.debug(err);
-            if (err instanceof mongoose.Error) {
-                logger.error(err);
-            }
-            PopulateReq._nullReq("student", req, next);
-        }
     }
 }

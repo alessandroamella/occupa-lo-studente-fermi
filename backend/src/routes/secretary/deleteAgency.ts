@@ -80,8 +80,6 @@ router.get(
     async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            // eslint-disable-next-line no-console
-            console.log(errors.array());
             return res.status(400).json({
                 err: errors
                     .array()

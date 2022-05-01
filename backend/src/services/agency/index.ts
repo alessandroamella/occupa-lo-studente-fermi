@@ -1,4 +1,7 @@
+import jwt from "jsonwebtoken";
 import { FilterQuery } from "mongoose";
+
+import { Envs } from "@config";
 
 import { Agency, AgencyClass, JobOffer } from "@models";
 import { logger } from "@shared";
@@ -30,12 +33,9 @@ export class AgencyService {
         return await Agency.create(newAgency);
     }
 
-    public static async update(
-        _id: string,
-        newAgency: DocumentType<AgencyClass>
-    ) {
-        logger.debug("Update agency with _id " + _id);
-        return await Agency.updateOne({ _id }, newAgency).exec();
+    public static async update(agency: DocumentType<AgencyClass>) {
+        logger.debug("Updating agency with _id " + agency._id);
+        return await agency.save();
     }
 
     public static async delete(agency: DocumentType<AgencyClass>) {
@@ -47,5 +47,76 @@ export class AgencyService {
         await JobOffer.deleteMany({ _id: { $in: agency.jobOffers } });
         logger.debug(`Deleting agency ${agency._id}`);
         await agency.deleteOne();
+    }
+
+    // Auth
+
+    public static async parseAuthCookie(
+        jwtCookie: string
+    ): Promise<DocumentType<AgencyClass>> {
+        return new Promise((resolve, reject) => {
+            jwt.verify(
+                jwtCookie,
+                Envs.env.JWT_SECRET,
+                {},
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                (err, jwtPayload: any) => {
+                    if (err) {
+                        logger.debug(
+                            "parseAuthCookie failed: error while parsing auth cookie"
+                        );
+                        logger.debug(err);
+                        return reject(err);
+                    }
+
+                    if (!jwtPayload.agency) {
+                        return reject(
+                            "parseAuthCookie jwtPayload has no agency"
+                        );
+                    }
+
+                    AgencyService.findOne({
+                        _id: jwtPayload.agency
+                    })
+                        .then(obj =>
+                            obj
+                                ? resolve(obj)
+                                : reject("parseAuthCookie can't find agency")
+                        )
+                        .catch(err => {
+                            logger.warn("parseAuthCookie failed");
+                            logger.warn(err);
+                            return reject(err);
+                        });
+                }
+            );
+        });
+    }
+
+    public static async createAuthCookie(
+        agency: DocumentType<AgencyClass>
+    ): Promise<string> {
+        return new Promise((resolve, reject) => {
+            logger.debug(`Creating JWT auth cookie for agency "${agency._id}"`);
+            jwt.sign(
+                { agency: agency._id },
+                Envs.env.JWT_SECRET,
+                {},
+                (err, cookie) => {
+                    if (err) {
+                        logger.warn(
+                            "createAuthCookie failed: error while creating auth cookie"
+                        );
+                        logger.warn(err);
+                        return reject(err);
+                    } else if (!cookie) {
+                        logger.debug("createAuthCookie cookie is undefined");
+                        return reject("createAuthCookie cookie is undefined");
+                    }
+
+                    return resolve(cookie);
+                }
+            );
+        });
     }
 }

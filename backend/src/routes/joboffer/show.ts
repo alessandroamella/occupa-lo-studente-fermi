@@ -1,20 +1,24 @@
 import { Request, Response, Router } from "express";
-import { checkSchema, query, validationResult } from "express-validator";
+import { param, validationResult } from "express-validator";
 
-import { isAgencyLoggedIn } from "@middlewares";
-import { JobOffer } from "@models";
+import { isLoggedIn } from "@middlewares";
 import { ResErr } from "@routes";
 import { JobOfferService } from "@services";
 import { logger } from "@shared";
 import { mongoose } from "@typegoose/typegoose";
 
-import schema from "./validatorSchema";
-
 /**
  * @openapi
- * /api/agency/joboffer/{jobOfferId}:
+ * /api/joboffer/{jobOfferId}:
  *  get:
- *    summary: Get a JobOffer by _id
+ *    summary: Find a JobOffer by _id
+ *    parameters:
+ *      - in: path
+ *        name: jobOfferId
+ *        schema:
+ *          type: string
+ *        required: true
+ *        description: ObjectId of the jobOffer to find
  *    tags:
  *      - joboffer
  *    responses:
@@ -26,6 +30,12 @@ import schema from "./validatorSchema";
  *              $ref: '#/components/schemas/JobOffer'
  *      '400':
  *        description: Data validation failed
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/ResErr'
+ *      '401':
+ *        description: Not logged in
  *        content:
  *          application/json:
  *            schema:
@@ -42,20 +52,21 @@ const router = Router();
 
 router.get(
     "/:_id",
-    query("_id").isMongoId(),
-    isAgencyLoggedIn.isAgencyLoggedIn,
+    param("_id").isMongoId(),
+    isLoggedIn.isAgencyLoggedIn,
+
     async (req: Request, res: Response) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res
-                .status(400)
-                .json({ err: "Invalid agency ObjectId" } as ResErr);
+            return res.status(400).json({ err: "Invalid ObjectId" } as ResErr);
         }
 
-        const { _id } = req.query;
+        const { _id } = req.params;
 
         try {
-            await JobOfferService.findOne({ _id });
+            const jobOffer = await JobOfferService.findOne({ _id });
+            logger.debug("Show jobOffer found jobOffer " + jobOffer?._id);
+            res.json(jobOffer?.toObject());
         } catch (err) {
             if (err instanceof mongoose.Error.ValidationError) {
                 logger.debug("Agency create validation error");
@@ -68,11 +79,6 @@ router.get(
                 .status(500)
                 .json({ err: "Error while creating agency" } as ResErr);
         }
-
-        logger.info(
-            `Created new jobOffer "${jobOfferDoc.title}" for agency ${jobOfferDoc.agency}`
-        );
-        return res.json(jobOfferDoc.toObject());
     }
 );
 

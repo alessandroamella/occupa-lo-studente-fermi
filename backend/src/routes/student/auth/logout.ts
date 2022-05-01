@@ -22,7 +22,7 @@ router.get("/", (req, res) => {
     logger.debug(
         "Logging out student " + (req.student?._id || "-- not logged in --")
     );
-    res.clearCookie(Envs.env.AUTH_COOKIE_NAME);
+    res.clearCookie(Envs.env.STUDENT_AUTH_COOKIE_NAME);
     res.sendStatus(200);
 });
 

@@ -50,9 +50,7 @@ const router = Router();
 router.get("/:id", param("id").isMongoId(), async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res
-            .status(400)
-            .json({ err: "Invalid agency ObjectId" } as ResErr);
+        return res.status(400).json({ err: "Invalid ObjectId" } as ResErr);
     }
 
     const agency = await AgencyService.findOne({

@@ -1,11 +1,12 @@
 import { Request, Response, Router } from "express";
 import { checkSchema, param, validationResult } from "express-validator";
 
-import { Agency } from "@models";
 import { ResErr } from "@routes";
 import { AgencyService } from "@services";
+import { logger } from "@shared";
+import { mongoose } from "@typegoose/typegoose";
 
-import { validatorSchema } from "./validatorSchema";
+import schema from "./schema/updateSchema";
 
 /**
  * @openapi
@@ -49,22 +50,88 @@ const router = Router();
 router.put(
     "/:id",
     param("id").isMongoId(),
-    checkSchema(validatorSchema),
+    checkSchema(schema),
     async (req: Request, res: Response) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res
-                .status(400)
-                .json({ err: "Invalid agency ObjectId" } as ResErr);
-        } else if (!(await Agency.exists({ _id: req.params._id }))) {
             return res.status(400).json({
-                err: "Specified agency ObjectId doesn't exist"
+                err: errors
+                    .array()
+                    .map(e => e.msg)
+                    .join(", ")
+            });
+        }
+
+        const { _id } = req.params;
+
+        let agency;
+        try {
+            agency = await AgencyService.findOne({ _id });
+        } catch (err) {
+            logger.error("Error while finding agency in update route");
+            logger.error(err);
+            return res
+                .status(500)
+                .json({ err: "Error while finding agency" } as ResErr);
+        }
+
+        if (!agency) {
+            return res.status(400).json({
+                err: "Agency with given ObjectId doesn't exist"
             } as ResErr);
         }
 
-        res.json(
-            await AgencyService.update(req.params?.id as string, req.body)
-        );
+        const {
+            responsibleFirstName,
+            responsibleLastName,
+            responsibleFiscalNumber,
+            websiteUrl,
+            email,
+            password,
+            phoneNumber,
+            agencyName,
+            agencyDescription,
+            agencyAddress,
+            vatCode,
+            logoUrl
+        } = req.body;
+
+        for (const prop in {
+            responsibleFirstName,
+            responsibleLastName,
+            responsibleFiscalNumber,
+            websiteUrl,
+            email,
+            password,
+            phoneNumber,
+            agencyName,
+            agencyDescription,
+            agencyAddress,
+            vatCode,
+            logoUrl
+        }) {
+            if (req.body[prop]) {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                (agency as any)[prop] = req.body[prop];
+            }
+        }
+
+        try {
+            await AgencyService.update(agency);
+        } catch (err) {
+            if (err instanceof mongoose.Error.ValidationError) {
+                logger.debug("Agency update validation error");
+                logger.debug(err.message);
+                return res.status(400).json({ err: err.message } as ResErr);
+            }
+            logger.error("Error while updating agency " + agency._id);
+            logger.error(err);
+            return res
+                .status(500)
+                .json({ err: "Error while updating agency" } as ResErr);
+        }
+
+        return res.json(agency.toObject());
     }
 );
 

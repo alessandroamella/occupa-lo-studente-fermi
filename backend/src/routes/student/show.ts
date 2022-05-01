@@ -1,5 +1,6 @@
 import { Router } from "express";
 
+import { isLoggedIn } from "@middlewares";
 import { ResErr } from "@routes";
 
 /**
@@ -32,12 +33,8 @@ import { ResErr } from "@routes";
 
 const router = Router();
 
-router.get("/", (req, res) => {
-    if (req.student) {
-        return res.json(req.student.toObject());
-    }
-
-    return res.status(401).json({ err: "Not logged in" } as ResErr);
+router.get("/", isLoggedIn.isStudentLoggedIn, (req, res) => {
+    return res.json(req.student?.toObject());
 });
 
 export default router;

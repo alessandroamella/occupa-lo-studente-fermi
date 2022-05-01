@@ -2,7 +2,6 @@ import { Router } from "express";
 
 import createRoute from "./create";
 import deleteRoute from "./delete";
-import jobOfferRoutes from "./joboffer";
 import listRoute from "./list";
 import showRoute from "./show";
 import updateRoute from "./update";
@@ -91,7 +90,5 @@ router.use("/", listRoute);
 router.use("/", createRoute);
 router.use("/", updateRoute);
 router.use("/", deleteRoute);
-
-router.use("/joboffer", jobOfferRoutes);
 
 export default router;

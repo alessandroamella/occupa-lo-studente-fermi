@@ -7,7 +7,8 @@ dotenv.config();
 
 export const requiredEnvs = [
     "MONGODB_URI",
-    "AUTH_COOKIE_NAME",
+    "STUDENT_AUTH_COOKIE_NAME",
+    "AGENCY_AUTH_COOKIE_NAME",
     "AUTH_COOKIE_DURATION_DAYS",
     "JWT_SECRET",
     "NODE_ENV",

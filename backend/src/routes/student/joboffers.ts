@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { query, validationResult } from "express-validator";
 
-import { isStudentLoggedIn } from "@middlewares";
+import { isLoggedIn } from "@middlewares";
 import { ResErr } from "@routes";
 import { JobOfferService } from "@services";
 import { logger } from "@shared";
@@ -53,7 +53,7 @@ const router = Router();
 
 router.get(
     "/",
-    isStudentLoggedIn.isStudentLoggedIn,
+    isLoggedIn.isStudentLoggedIn,
     query("field", "Invalid field query")
         .optional()
         .isIn(["any", "it", "electronics", "chemistry"]),

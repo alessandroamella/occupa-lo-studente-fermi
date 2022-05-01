@@ -13,6 +13,7 @@ import { AgencyService } from "@services";
 import { logger } from "@shared";
 import { mongoose } from "@typegoose/typegoose";
 
+import { AgencyAuthCookieManager } from "../AgencyAuthCookieManager";
 import schema from "./createSchema";
 
 /**
@@ -168,10 +169,19 @@ router.post("/", checkSchema(schema), async (req: Request, res: Response) => {
     };
 
     try {
-        await EmailService.sendMail(message);
+        // DEBUG decomment this
+        logger.warn("DEBUG not sending email in agency create route");
+        // await EmailService.sendMail(message);
         logger.info(`Email sent to secretary for new agency "${agencyName}"`);
     } catch (err) {
         logger.error("Error while sending email");
+        logger.error(err);
+    }
+
+    try {
+        await AgencyAuthCookieManager.saveAgencyAuthCookie(res, agency);
+    } catch (err) {
+        logger.error("Error while saving agency auth cookie in agency create");
         logger.error(err);
     }
 
