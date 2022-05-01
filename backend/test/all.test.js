@@ -108,7 +108,6 @@ describe("Students", () => {
         phoneNumber: "3924133359",
         fieldOfStudy: "it"
         // spidVerified: false,
-        // jobApplications: [],
     };
 
     let studentDB;

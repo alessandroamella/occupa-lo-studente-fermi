@@ -1,11 +1,3 @@
-CREATE JobApplication:
-- controlla che studente sia loggato
-- controlla che azienda esista
-- valida dati inseriti
-- crea candidatura
-- aggiungi candidatura al ref candidature dello studente
-- aggiungi candidatura al ref candidature dell'azienda
-
 CREATE JobOffer:
 - controlla che azienda sia loggata
 - valida dati inseriti
@@ -15,6 +7,5 @@ CREATE JobOffer:
 
 DELETE JobOffer:
 - ...
-- rimuovi TUTTE le JobApplication per quell'offer
 
 FAI GEOCODING CON POSITION STACK!

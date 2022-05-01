@@ -1,6 +1,6 @@
 import { FilterQuery } from "mongoose";
 
-import { JobApplication, JobOffer, JobOfferClass } from "@models";
+import { JobOffer, JobOfferClass } from "@models";
 import { logger } from "@shared";
 import { DocumentType, isDocument, mongoose } from "@typegoose/typegoose";
 
@@ -76,19 +76,6 @@ export class JobOfferService {
                 "Error while populating jobOffer in jobOffer delete"
             );
         }
-
-        // Delete jobApplications related to offer
-        logger.debug(
-            `Deleting jobApplications for jobOffer ${
-                jobOffer._id
-            }: ${jobOffer.jobApplications.join(", ")}`
-        );
-        await JobApplication.deleteMany({
-            _id: { $in: jobOffer.jobApplications }
-        }).exec();
-        logger.debug(
-            `Deleted all jobApplications for jobOffer ${jobOffer._id}`
-        );
 
         // Delete jobOffer from agency
         logger.debug(

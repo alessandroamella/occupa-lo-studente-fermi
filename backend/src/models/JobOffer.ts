@@ -1,12 +1,13 @@
+import moment from "moment";
+
 import {
+    Ref,
     getModelForClass,
     modelOptions,
-    prop,
-    Ref
+    prop
 } from "@typegoose/typegoose";
-import moment from "moment";
+
 import { AgencyClass } from "./Agency";
-import { JobApplicationClass } from "./JobApplication";
 
 /**
  * @openapi
@@ -24,7 +25,6 @@ import { JobApplicationClass } from "./JobApplication";
  *          - expiryDate
  *          - mustHaveDiploma
  *          - numberOfPositions
- *          - jobApplications
  *        properties:
  *          agency:
  *            type: string
@@ -52,11 +52,6 @@ import { JobApplicationClass } from "./JobApplication";
  *          numberOfPositions:
  *            type: integer
  *            description: Number of this position available. Defaults to 1
- *          jobApplications:
- *            type: array
- *            description: ObjectIds of the job applications for this offer
- *            items:
- *              type: string
  */
 
 // MODEL: ADD MORE THINGS TO THIS MODEL
@@ -92,9 +87,6 @@ export class JobOfferClass {
 
     @prop({ required: true, default: 1 })
     public numberOfPositions!: number;
-
-    @prop({ required: true, ref: "JobApplicationClass", default: [] })
-    public jobApplications!: Ref<JobApplicationClass>[];
 }
 
 export const JobOffer = getModelForClass(JobOfferClass);

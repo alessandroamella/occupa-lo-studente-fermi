@@ -1,12 +1,7 @@
-import {
-    getModelForClass,
-    modelOptions,
-    prop,
-    Ref
-} from "@typegoose/typegoose";
 import IsEmail from "isemail";
 import { isValidPhoneNumber } from "libphonenumber-js";
-import { JobApplicationClass } from "./JobApplication";
+
+import { getModelForClass, modelOptions, prop } from "@typegoose/typegoose";
 
 /**
  * @openapi
@@ -62,11 +57,6 @@ import { JobApplicationClass } from "./JobApplication";
  *          spidVerified:
  *            type: boolean
  *            description: Whether the student has authenticated with SPID
- *          jobApplications:
- *            type: array
- *            description: ObjectIds of the job applications for this student
- *            items:
- *              type: string
  */
 
 @modelOptions({ schemaOptions: { collection: "Student", timestamps: true } })
@@ -106,9 +96,6 @@ export class StudentClass {
 
     @prop({ required: true, default: false })
     public spidVerified!: boolean;
-
-    @prop({ required: true, ref: "JobApplicationClass", default: [] })
-    public jobApplications!: Ref<JobApplicationClass>[];
 }
 
 export const Student = getModelForClass(StudentClass);
