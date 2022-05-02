@@ -66,7 +66,8 @@ export const validatorSchema: Schema = {
         errorMessage: "Email not specified",
         isEmail: {
             errorMessage: "Invalid email"
-        }
+        },
+        normalizeEmail: {}
     },
     password: {
         in: "body",

@@ -3,18 +3,9 @@ import { Schema } from "express-validator";
 import { isValidPhoneNumber, parsePhoneNumber } from "libphonenumber-js";
 import moment from "moment";
 
-import { Envs } from "@config";
-
 import { logger } from "@shared";
 
 export const studentValidatorSchema: Schema = {
-    googleId: {
-        in: "body",
-        errorMessage: "Invalid Google ID",
-        isString: {
-            errorMessage: "googleId must be string"
-        }
-    },
     firstName: {
         in: "body",
         errorMessage: "First name not specified",
@@ -59,23 +50,6 @@ export const studentValidatorSchema: Schema = {
         optional: true,
         isString: {
             errorMessage: "Curriculum must be a string"
-        }
-    },
-    email: {
-        in: "body",
-        errorMessage: "Invalid email",
-        isEmail: {
-            errorMessage: "Invalid email"
-        },
-        custom: {
-            options: (value: string) => {
-                if (!value.endsWith(Envs.env.EMAIL_SUFFIX)) {
-                    throw new Error(
-                        `Email doesn't end with specified suffix "${Envs.env.EMAIL_SUFFIX}"`
-                    );
-                }
-                return true;
-            }
         }
     },
     phoneNumber: {

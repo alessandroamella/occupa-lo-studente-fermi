@@ -8,11 +8,12 @@ import { Envs } from "@config";
 
 import { Agency } from "@models";
 import { ResErr } from "@routes";
-import { AgencyService } from "@services";
+import { AgencyService, EmailService } from "@services";
 import { logger } from "@shared";
 import { mongoose } from "@typegoose/typegoose";
 
 import { AgencyAuthCookieManager } from "./helpers";
+import generateEmail from "./helpers/generateEmail";
 import schema from "./schema/createSchema";
 
 /**
@@ -74,6 +75,7 @@ router.post("/", checkSchema(schema), async (req: Request, res: Response) => {
         agencyDescription,
         agencyAddress,
         vatCode,
+        logoUrl,
         captcha
         // approvalStatus,
         // jobOffers
@@ -135,6 +137,7 @@ router.post("/", checkSchema(schema), async (req: Request, res: Response) => {
         agencyDescription,
         agencyAddress,
         vatCode,
+        logoUrl,
         approvalStatus: "waiting",
         jobOffers: []
     });
@@ -160,17 +163,13 @@ router.post("/", checkSchema(schema), async (req: Request, res: Response) => {
         from: `"Occupa lo Studente" ${Envs.env.SEND_EMAIL_FROM}`,
         to: Envs.env.SECRETARY_EMAIL,
         subject: `Nuova azienda "${agencyDoc.agencyName}" da approvare`,
-        html:
-            "<p>Buongiorno, l'azienda <strong>" +
-            agencyDoc.agencyName +
-            "</strong> ha richiesto di essere approvata.<br>" +
-            "Decidi se approvarla o rifiutarla dall'URL /secretary"
+        html: generateEmail(agencyDoc)
     };
 
     try {
         // DEBUG decomment this
-        logger.warn("DEBUG not sending email in agency create route");
-        // await EmailService.sendMail(message);
+        // logger.warn("DEBUG not sending email in agency create route");
+        await EmailService.sendMail(message);
         logger.info(`Email sent to secretary for new agency "${agencyName}"`);
     } catch (err) {
         logger.error("Error while sending email");

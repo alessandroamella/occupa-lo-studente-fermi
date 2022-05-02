@@ -2,16 +2,15 @@ import { Response } from "express";
 
 import { Envs } from "@config";
 
-import { StudentClass } from "@models";
+import { StudentDoc } from "@models";
 import { StudentService } from "@services";
 import { logger } from "@shared";
-import { DocumentType } from "@typegoose/typegoose";
 
 // DEBUG TO REFACTOR ALONG WITH AGENCY AUTH COOKIE MANAGER
 export class StudentAuthCookieManager {
     public static async saveStudentAuthCookie(
         res: Response,
-        student: DocumentType<StudentClass>
+        student: StudentDoc
     ) {
         const c = await StudentService.createAuthCookie(student);
         if (!c) {

@@ -3,24 +3,23 @@ import { FilterQuery } from "mongoose";
 
 import { Envs } from "@config";
 
-import { Agency, AgencyClass, JobOffer } from "@models";
+import { Agency, AgencyDoc, JobOffer } from "@models";
 import { logger } from "@shared";
-import { DocumentType } from "@typegoose/typegoose";
 
 export class AgencyService {
     public static async findOne(
-        fields: FilterQuery<DocumentType<AgencyClass> | null>
-    ): Promise<DocumentType<AgencyClass> | null> {
+        fields: FilterQuery<AgencyDoc | null>
+    ): Promise<AgencyDoc | null> {
         logger.debug("Finding single agency...");
         return await Agency.findOne(fields).exec();
     }
 
     public static async find(
-        fields: FilterQuery<DocumentType<AgencyClass> | null>,
+        fields: FilterQuery<AgencyDoc | null>,
         populateJobOffers = false,
         skip = 0,
         limit = 100
-    ): Promise<DocumentType<AgencyClass>[]> {
+    ): Promise<AgencyDoc[]> {
         logger.debug("Finding all agencies...");
         const query = Agency.find(fields)
             .skip(skip)
@@ -34,17 +33,17 @@ export class AgencyService {
         return await query.exec();
     }
 
-    public static async create(newAgency: DocumentType<AgencyClass>) {
+    public static async create(newAgency: AgencyDoc) {
         logger.debug("Create agency with name " + newAgency.agencyName);
         return await Agency.create(newAgency);
     }
 
-    public static async update(agency: DocumentType<AgencyClass>) {
+    public static async update(agency: AgencyDoc) {
         logger.debug("Updating agency with _id " + agency._id);
         return await agency.save();
     }
 
-    public static async delete(agency: DocumentType<AgencyClass>) {
+    public static async delete(agency: AgencyDoc) {
         logger.debug(
             `Deleting jobOffers for agency ${
                 agency._id
@@ -57,9 +56,7 @@ export class AgencyService {
 
     // Auth
 
-    public static async parseAuthCookie(
-        jwtCookie: string
-    ): Promise<DocumentType<AgencyClass>> {
+    public static async parseAuthCookie(jwtCookie: string): Promise<AgencyDoc> {
         return new Promise((resolve, reject) => {
             jwt.verify(
                 jwtCookie,
@@ -99,9 +96,7 @@ export class AgencyService {
         });
     }
 
-    public static async createAuthCookie(
-        agency: DocumentType<AgencyClass>
-    ): Promise<string> {
+    public static async createAuthCookie(agency: AgencyDoc): Promise<string> {
         return new Promise((resolve, reject) => {
             logger.debug(`Creating JWT auth cookie for agency "${agency._id}"`);
             jwt.sign(

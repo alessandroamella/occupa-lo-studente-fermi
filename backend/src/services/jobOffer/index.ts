@@ -1,21 +1,21 @@
 import { FilterQuery } from "mongoose";
 
-import { JobOffer, JobOfferClass } from "@models";
+import { JobOffer, JobOfferDoc } from "@models";
 import { logger } from "@shared";
-import { DocumentType, isDocument, mongoose } from "@typegoose/typegoose";
+import { isDocument, mongoose } from "@typegoose/typegoose";
 
 export class JobOfferService {
     /**
      * Finds many job offers
-     * @param  {FilterQuery<DocumentType<JobOfferClass>|null>} fields
+     * @param  {FilterQuery<JobOfferDoc|null>} fields
      * @param  {number} [limit=100] - defaults to 100
      * @param  {number} [skip=0] - defaults to 0
      */
     public static async find(
-        fields: FilterQuery<DocumentType<JobOfferClass>>,
+        fields: FilterQuery<JobOfferDoc>,
         skip = 0,
         limit = 100
-    ): Promise<DocumentType<JobOfferClass>[] | null> {
+    ): Promise<JobOfferDoc[] | null> {
         logger.debug("Finding jobOffers...");
         return await JobOffer.find(fields)
             .populate("agency")
@@ -26,20 +26,20 @@ export class JobOfferService {
 
     /**
      * Finds one job offer
-     * @param  {FilterQuery<DocumentType<JobOfferClass>|null>} fields
+     * @param  {FilterQuery<JobOfferDoc|null>} fields
      */
     public static async findOne(
-        fields: FilterQuery<DocumentType<JobOfferClass>>
-    ): Promise<DocumentType<JobOfferClass> | null> {
+        fields: FilterQuery<JobOfferDoc>
+    ): Promise<JobOfferDoc | null> {
         logger.debug("Finding jobOffer...");
         return await JobOffer.findOne(fields).populate("agency").exec();
     }
     /**
      * Creates new job offer.
      * Make sure student is logged in and job offer exists.
-     * @param  {DocumentType<JobOfferClass>} jobOffer
+     * @param  {JobOfferDoc} jobOffer
      */
-    public static async create(jobOffer: DocumentType<JobOfferClass>) {
+    public static async create(jobOffer: JobOfferDoc) {
         logger.debug(`Creating job offer from agency ${jobOffer.agency}...`);
         await JobOffer.create(jobOffer);
 
@@ -58,17 +58,17 @@ export class JobOfferService {
     /**
      * Updates existing job offer.
      * Make sure student is logged in and job offer is his.
-     * @param  {DocumentType<JobOfferClass>} jobOffer - Updated jobOffer object
+     * @param  {JobOfferDoc} jobOffer - Updated jobOffer object
      */
-    public static async update(jobOffer: DocumentType<JobOfferClass>) {
+    public static async update(jobOffer: JobOfferDoc) {
         logger.debug("Updating jobOffer with _id " + jobOffer._id);
         return await jobOffer.save();
     }
     /**
      * Deletes job offer
-     * @param  {DocumentType<JobOfferClass>} jobOffer - job offer to delete
+     * @param  {JobOfferDoc} jobOffer - job offer to delete
      */
-    public static async delete(jobOffer: DocumentType<JobOfferClass>) {
+    public static async delete(jobOffer: JobOfferDoc) {
         await jobOffer.populate("agency");
 
         if (!isDocument(jobOffer.agency)) {
@@ -81,11 +81,9 @@ export class JobOfferService {
         logger.debug(
             `Deleting jobOffer ref in agency ${jobOffer.agency._id} for jobOffer ${jobOffer._id}`
         );
-        (
-            jobOffer.agency.jobOffers as mongoose.Types.Array<
-                DocumentType<JobOfferClass>
-            >
-        ).pull(jobOffer._id);
+        (jobOffer.agency.jobOffers as mongoose.Types.Array<JobOfferDoc>).pull(
+            jobOffer._id
+        );
         await jobOffer.agency.save();
 
         logger.debug(

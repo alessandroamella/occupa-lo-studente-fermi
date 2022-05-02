@@ -52,15 +52,13 @@ export class SecretaryClass {
     public lastLoginDate!: Date;
 
     public async isValidPassword(
-        this: DocumentType<SecretaryClass>,
+        this: SecretaryDoc,
         plainPassword: string
     ): Promise<boolean> {
         return await bcrypt.compare(plainPassword, this.hashedPassword);
     }
 
-    public async generatePassword(
-        this: DocumentType<SecretaryClass>
-    ): Promise<string> {
+    public async generatePassword(this: SecretaryDoc): Promise<string> {
         const p = randomString.generate({
             length: 16,
             readable: true
@@ -71,14 +69,13 @@ export class SecretaryClass {
         return p;
     }
 
-    public async saveNewLogin(
-        this: DocumentType<SecretaryClass>,
-        ipAddress: string
-    ) {
+    public async saveNewLogin(this: SecretaryDoc, ipAddress: string) {
         this.loginIpAddresses.push(ipAddress);
         this.lastLoginDate = new Date();
         await this.save();
     }
 }
+
+export type SecretaryDoc = DocumentType<SecretaryClass>;
 
 export const Secretary = getModelForClass(SecretaryClass);

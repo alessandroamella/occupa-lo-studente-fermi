@@ -1,6 +1,7 @@
 import moment from "moment";
 
 import {
+    DocumentType,
     Ref,
     getModelForClass,
     modelOptions,
@@ -88,5 +89,7 @@ export class JobOfferClass {
     @prop({ required: true, default: 1 })
     public numberOfPositions!: number;
 }
+
+export type JobOfferDoc = DocumentType<JobOfferClass>;
 
 export const JobOffer = getModelForClass(JobOfferClass);

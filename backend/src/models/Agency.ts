@@ -159,7 +159,7 @@ export class AgencyClass {
     public jobOffers!: Ref<JobOfferClass>[];
 
     private async _changeApprovedStatus(
-        this: DocumentType<AgencyClass>,
+        this: AgencyDoc,
         approve: "approve" | "reject"
     ) {
         this.approvalStatus = approve === "approve" ? "approved" : "rejected";
@@ -167,13 +167,15 @@ export class AgencyClass {
         await this.save();
     }
 
-    public async approveAgency(this: DocumentType<AgencyClass>) {
+    public async approveAgency(this: AgencyDoc) {
         return await this._changeApprovedStatus("approve");
     }
 
-    public async rejectAgency(this: DocumentType<AgencyClass>) {
+    public async rejectAgency(this: AgencyDoc) {
         return await this._changeApprovedStatus("reject");
     }
 }
+
+export type AgencyDoc = DocumentType<AgencyClass>;
 
 export const Agency = getModelForClass(AgencyClass);

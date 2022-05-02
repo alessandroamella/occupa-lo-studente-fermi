@@ -5,7 +5,7 @@ import { Envs } from "@config";
 
 import { logger } from "@shared";
 
-class EmailService {
+export class EmailService {
     private static transporter: nodemailer.Transporter | null = null;
 
     private static _initialize(): Promise<void> {
