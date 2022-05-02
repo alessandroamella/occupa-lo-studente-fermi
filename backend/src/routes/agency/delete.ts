@@ -12,13 +12,8 @@ import { logger } from "@shared";
  * /api/agency:
  *  delete:
  *    summary: Delete the currently logged in agency
- *    parameters:
- *      - in: path
- *        name: agencyId
- *        schema:
- *          type: string
- *        required: true
- *        description: ObjectId of the agency to delete
+ *    security:
+ *      - studentAuth: []
  *    tags:
  *      - agency
  *    responses:

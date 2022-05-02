@@ -1,14 +1,14 @@
 import { Router } from "express";
 
 import { isLoggedIn } from "@middlewares";
-import { ResErr } from "@routes";
-import { AgencyService } from "@services";
 
 /**
  * @openapi
  * /api/agency:
  *  get:
  *    summary: Show currently signed in agency
+ *    security:
+ *      - studentAuth: []
  *    tags:
  *      - agency
  *    responses:
