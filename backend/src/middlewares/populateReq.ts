@@ -7,6 +7,22 @@ import { logger } from "@shared";
 
 type _PossibleFields = "student" | "agency";
 
+/**
+ * @openapi
+ *
+ *  components:
+ *    schemas:
+ *      agencyAuth:
+ *        type: apiKey
+ *        in: cookie
+ *        name: agencytoken
+ *
+ *      studentAuth:
+ *        type: apiKey
+ *        in: cookie
+ *        name: studenttoken
+ */
+
 export class PopulateReq {
     public static async populateStudent(
         req: Request,

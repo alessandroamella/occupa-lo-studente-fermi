@@ -3,33 +3,28 @@ import { FilterQuery } from "mongoose";
 
 import { Envs } from "@config";
 
-import { CreateStudentData, Student, StudentClass } from "@models";
+import { CreateStudentData, Student, StudentDoc } from "@models";
 import { logger } from "@shared";
-import { DocumentType } from "@typegoose/typegoose";
 
 export class StudentService {
-    public static async create(
-        data: CreateStudentData
-    ): Promise<DocumentType<StudentClass>> {
+    public static async create(data: CreateStudentData): Promise<StudentDoc> {
         return await Student.create(data);
     }
 
     public static async findOne(
-        fields: FilterQuery<DocumentType<StudentClass> | null>
-    ): Promise<DocumentType<StudentClass> | null> {
+        fields: FilterQuery<StudentDoc | null>
+    ): Promise<StudentDoc | null> {
         return await Student.findOne(fields).exec();
     }
 
-    public static async delete(student: DocumentType<StudentClass>) {
+    public static async delete(student: StudentDoc) {
         logger.debug(`Deleting student ${student._id}`);
         await student.deleteOne();
     }
 
     // Auth
 
-    public static createAuthCookie(
-        student: DocumentType<StudentClass>
-    ): Promise<string> {
+    public static createAuthCookie(student: StudentDoc): Promise<string> {
         return new Promise((resolve, reject) => {
             logger.debug(
                 `Creating JWT auth cookie for student "${student._id}"`
@@ -58,7 +53,7 @@ export class StudentService {
 
     public static async parseAuthCookie(
         jwtCookie: string
-    ): Promise<DocumentType<StudentClass>> {
+    ): Promise<StudentDoc> {
         return new Promise((resolve, reject) => {
             jwt.verify(
                 jwtCookie,

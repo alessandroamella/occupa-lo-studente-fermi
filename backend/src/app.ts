@@ -7,10 +7,9 @@ import { Envs, specs as swaggerSpecs } from "@config";
 
 import { handleExpressErrors, handleMalformedJsonBody } from "@middlewares";
 import { PopulateReq } from "@middlewares";
-import { AgencyClass, SecretaryClass, StudentClass } from "@models";
+import { AgencyDoc, SecretaryDoc, StudentDoc } from "@models";
 import apiRoutes from "@routes";
 import { LoggerStream } from "@shared";
-import { DocumentType } from "@typegoose/typegoose";
 
 export const app: Express = express();
 
@@ -19,9 +18,9 @@ declare global {
     // eslint-disable-next-line @typescript-eslint/no-namespace
     namespace Express {
         interface Request {
-            student: DocumentType<StudentClass> | null;
-            agency: DocumentType<AgencyClass> | null;
-            secretary?: DocumentType<SecretaryClass>;
+            student: StudentDoc | null;
+            agency: AgencyDoc | null;
+            secretary?: SecretaryDoc;
         }
     }
 }

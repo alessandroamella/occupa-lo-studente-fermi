@@ -12,7 +12,7 @@ import { logger } from "@shared";
 import { mongoose } from "@typegoose/typegoose";
 
 import { StudentAuthCookieManager } from "../helpers";
-import schema from "../validatorSchema";
+import schema from "../schema/createSchema";
 
 const router = Router();
 
@@ -170,7 +170,7 @@ router.post("/", checkSchema(schema), async (req: Request, res: Response) => {
         lastName,
         fiscalNumber,
         phoneNumber,
-        curriculumLink,
+        curriculum,
         fieldOfStudy
     } = req.body;
 
@@ -208,7 +208,7 @@ router.post("/", checkSchema(schema), async (req: Request, res: Response) => {
             phoneNumber,
             fieldOfStudy,
             pictureURL: picture as string,
-            curriculumLink,
+            curriculum,
             spidVerified: false
         });
     } catch (err) {

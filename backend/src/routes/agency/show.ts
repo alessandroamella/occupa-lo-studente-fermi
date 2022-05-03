@@ -7,6 +7,8 @@ import { isLoggedIn } from "@middlewares";
  * /api/agency:
  *  get:
  *    summary: Show currently signed in agency
+ *    security:
+ *      - studentAuth: []
  *    tags:
  *      - agency
  *    responses:

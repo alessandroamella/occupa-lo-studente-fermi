@@ -1,7 +1,12 @@
 import IsEmail from "isemail";
 import { isValidPhoneNumber } from "libphonenumber-js";
 
-import { getModelForClass, modelOptions, prop } from "@typegoose/typegoose";
+import {
+    DocumentType,
+    getModelForClass,
+    modelOptions,
+    prop
+} from "@typegoose/typegoose";
 
 /**
  * @openapi
@@ -34,9 +39,9 @@ import { getModelForClass, modelOptions, prop } from "@typegoose/typegoose";
  *          fiscalNumber:
  *            type: string
  *            description: Fiscal number
- *          curriculumLink:
+ *          curriculum:
  *            type: string
- *            description: Link to the student's curriculum, like Europass
+ *            description: Student curriculum with markdown
  *          email:
  *            type: string
  *            format: email
@@ -74,7 +79,7 @@ export class StudentClass {
     public fiscalNumber!: string;
 
     @prop({ required: false })
-    public curriculumLink?: string;
+    public curriculum?: string;
 
     @prop({ required: true, validate: [IsEmail.validate, "Invalid email"] })
     public email!: string;
@@ -98,6 +103,8 @@ export class StudentClass {
     public spidVerified!: boolean;
 }
 
+export type StudentDoc = DocumentType<StudentClass>;
+
 export const Student = getModelForClass(StudentClass);
 
 export interface CreateStudentData {
@@ -105,7 +112,7 @@ export interface CreateStudentData {
     firstName: string;
     lastName: string;
     fiscalNumber: string;
-    curriculumLink?: string;
+    curriculum?: string;
     email: string;
     pictureURL: string;
     phoneNumber: string;
@@ -114,5 +121,5 @@ export interface CreateStudentData {
 }
 export type StudentTempData = Omit<
     CreateStudentData,
-    "fiscalNumber" | "curriculumLink" | "phoneNumber" | "spidVerified"
+    "fiscalNumber" | "curriculum" | "phoneNumber" | "spidVerified"
 >;

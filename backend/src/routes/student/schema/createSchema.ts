@@ -3,38 +3,22 @@ import { Schema } from "express-validator";
 import { isValidPhoneNumber, parsePhoneNumber } from "libphonenumber-js";
 import moment from "moment";
 
-import { Envs } from "@config";
-
-<<<<<<< HEAD
-// Don't validate data given by Google
-export const studentValidatorSchema: Schema = {
-=======
 import { logger } from "@shared";
 
 export const studentValidatorSchema: Schema = {
-    googleId: {
-        in: "body",
-        errorMessage: "Invalid Google ID",
-        isString: {
-            errorMessage: "googleId must be string"
-        }
-    },
->>>>>>> 8b99f984a93b6f06db083f42669f7632bdad1313
     firstName: {
         in: "body",
         errorMessage: "First name not specified",
         isString: {
             errorMessage: "firstName must be string"
-        },
-        trim: {}
+        }
     },
     lastName: {
         in: "body",
         errorMessage: "Last name not specified",
         isString: {
             errorMessage: "lastName must be string"
-        },
-        trim: {}
+        }
     },
     fiscalNumber: {
         in: "body",
@@ -58,40 +42,15 @@ export const studentValidatorSchema: Schema = {
                 }
                 return true;
             }
-        },
-        trim: {}
+        }
     },
     curriculum: {
         in: "body",
         errorMessage: "Curriculum not specified",
         optional: true,
-<<<<<<< HEAD
-        isURL: {
-            errorMessage: "curriculumLink must be a valid URL"
-        },
-        trim: {}
-=======
         isString: {
             errorMessage: "Curriculum must be a string"
         }
-    },
-    email: {
-        in: "body",
-        errorMessage: "Invalid email",
-        isEmail: {
-            errorMessage: "Invalid email"
-        },
-        custom: {
-            options: (value: string) => {
-                if (!value.endsWith(Envs.env.EMAIL_SUFFIX)) {
-                    throw new Error(
-                        `Email doesn't end with specified suffix "${Envs.env.EMAIL_SUFFIX}"`
-                    );
-                }
-                return true;
-            }
-        }
->>>>>>> 8b99f984a93b6f06db083f42669f7632bdad1313
     },
     phoneNumber: {
         in: "body",
@@ -112,8 +71,7 @@ export const studentValidatorSchema: Schema = {
             options: value => {
                 return parsePhoneNumber(value, "IT").format("E.164");
             }
-        },
-        trim: {}
+        }
     },
     fieldOfStudy: {
         in: "body",

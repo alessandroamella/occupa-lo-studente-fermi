@@ -14,6 +14,8 @@ import schema from "./schema/updateSchema";
  * /api/agency:
  *  put:
  *    summary: Update the currently logged in agency
+ *    security:
+ *      - studentAuth: []
  *    tags:
  *      - agency
  *    responses:
