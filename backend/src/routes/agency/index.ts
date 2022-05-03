@@ -2,6 +2,8 @@ import { Router } from "express";
 
 import createRoute from "./create";
 import deleteRoute from "./delete";
+import loginRoute from "./login";
+import logoutRoute from "./logout";
 import showRoute from "./show";
 import updateRoute from "./update";
 
@@ -88,5 +90,7 @@ router.use("/", showRoute);
 router.use("/", createRoute);
 router.use("/", updateRoute);
 router.use("/", deleteRoute);
+router.use("/login", loginRoute);
+router.use("/logout", logoutRoute);
 
 export default router;

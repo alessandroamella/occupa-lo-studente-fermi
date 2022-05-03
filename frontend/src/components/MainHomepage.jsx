@@ -16,7 +16,7 @@ function Homepage() {
             </Button>{" "}
             <Button as={Link} to="/agency" variant="outline-info">
               Azienda
-            </Button>{" "}
+            </Button>
           </div>
         </div>
         <Outlet />

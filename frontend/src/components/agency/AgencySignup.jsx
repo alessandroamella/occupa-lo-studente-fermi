@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
@@ -7,8 +7,13 @@ import { ArrowLeft } from "react-bootstrap-icons";
 import ReCAPTCHA from "react-google-recaptcha";
 
 import axios from "axios";
+import { setAgency } from "../../slices/agencyAuthSlice";
+import { useDispatch } from "react-redux";
 
 const AgencySignup = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const [captcha, setCaptcha] = useState(null);
   const [responsibleFirstName, setResponsibleFirstName] = useState(""); // "string",
   const [responsibleLastName, setResponsibleLastName] = useState(""); // "string",
@@ -56,8 +61,6 @@ const AgencySignup = () => {
 
     try {
       const res = await axios.post("/api/agency", formData);
-
-      console.log(res.data);
       agency = res.data;
     } catch (err) {
       console.log(err?.response?.data || err);
@@ -67,7 +70,8 @@ const AgencySignup = () => {
     }
 
     console.log({ agency });
-    alert(JSON.stringify(agency));
+    dispatch(setAgency(agency));
+    navigate("/agency/dashboard");
     setDisabled(false);
     return false;
   }

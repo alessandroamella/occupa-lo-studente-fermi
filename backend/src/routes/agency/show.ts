@@ -1,8 +1,6 @@
 import { Router } from "express";
 
 import { isLoggedIn } from "@middlewares";
-import { ResErr } from "@routes";
-import { AgencyService } from "@services";
 
 /**
  * @openapi

@@ -5,30 +5,23 @@ import moment from "moment";
 
 import { logger } from "@shared";
 
-// import { Envs } from "@config";
-
 // Don't validate data given by Google
 export const studentValidatorSchema: Schema = {
-    // googleId: {
-    //     in: "body",
-    //     errorMessage: "Invalid Google ID",
-    //     isString: {
-    //         errorMessage: "googleId must be string"
-    //     }
-    // },
     firstName: {
         in: "body",
         errorMessage: "First name not specified",
         isString: {
             errorMessage: "firstName must be string"
-        }
+        },
+        trim: {}
     },
     lastName: {
         in: "body",
         errorMessage: "Last name not specified",
         isString: {
             errorMessage: "lastName must be string"
-        }
+        },
+        trim: {}
     },
     fiscalNumber: {
         in: "body",
@@ -52,7 +45,8 @@ export const studentValidatorSchema: Schema = {
                 }
                 return true;
             }
-        }
+        },
+        trim: {}
     },
     curriculumLink: {
         in: "body",
@@ -60,25 +54,9 @@ export const studentValidatorSchema: Schema = {
         optional: true,
         isURL: {
             errorMessage: "curriculumLink must be a valid URL"
-        }
+        },
+        trim: {}
     },
-    // email: {
-    //     in: "body",
-    //     errorMessage: "Invalid email",
-    //     isEmail: {
-    //         errorMessage: "Invalid email"
-    //     },
-    //     custom: {
-    //         options: (value: string) => {
-    //             if (!value.endsWith(Envs.env.EMAIL_SUFFIX)) {
-    //                 throw new Error(
-    //                     `Email doesn't end with specified suffix "${Envs.env.EMAIL_SUFFIX}"`
-    //                 );
-    //             }
-    //             return true;
-    //         }
-    //     }
-    // },
     phoneNumber: {
         in: "body",
         errorMessage: "Phone number not specified",
@@ -98,7 +76,8 @@ export const studentValidatorSchema: Schema = {
             options: value => {
                 return parsePhoneNumber(value, "IT").format("E.164");
             }
-        }
+        },
+        trim: {}
     },
     fieldOfStudy: {
         in: "body",

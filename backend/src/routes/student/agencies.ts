@@ -14,7 +14,7 @@ import { isDocumentArray } from "@typegoose/typegoose";
  * @openapi
  * /api/student/agencies:
  *  get:
- *    summary: Find agencies along with available job offers
+ *    summary: Find approved agencies along with available job offers
  *    parameters:
  *      - in: query
  *        name: field
@@ -72,7 +72,10 @@ router.get(
 
             const fieldOfStudy = req.query.field;
 
-            const foundAgencies = await AgencyService.find({}, true);
+            const foundAgencies = await AgencyService.find(
+                { approvalStatus: "approved" },
+                true
+            );
             let isErr = false; // in case a job offer isn't populated
 
             const agencies: LeanDocument<AgencyClass>[] = [];

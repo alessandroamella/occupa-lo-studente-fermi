@@ -70,7 +70,7 @@ router.get(
         const { _id } = req.params;
 
         try {
-            const jobOffer = await JobOfferService.findOne({ _id });
+            const jobOffer = await JobOfferService.findOne({ _id }, false);
             logger.debug("Show jobOffer found jobOffer " + jobOffer?._id);
 
             if (!jobOffer) {

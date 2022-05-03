@@ -74,7 +74,8 @@ router.post("/", checkSchema(schema), async (req: Request, res: Response) => {
         agencyDescription,
         agencyAddress,
         vatCode,
-        captcha
+        captcha,
+        logoUrl
         // approvalStatus,
         // jobOffers
     } = req.body;
@@ -135,6 +136,7 @@ router.post("/", checkSchema(schema), async (req: Request, res: Response) => {
         agencyDescription,
         agencyAddress,
         vatCode,
+        logoUrl,
         approvalStatus: "waiting",
         jobOffers: []
     });
@@ -156,16 +158,16 @@ router.post("/", checkSchema(schema), async (req: Request, res: Response) => {
     }
 
     // DEBUG write better
-    const message: Mail.Options = {
-        from: `"Occupa lo Studente" ${Envs.env.SEND_EMAIL_FROM}`,
-        to: Envs.env.SECRETARY_EMAIL,
-        subject: `Nuova azienda "${agencyDoc.agencyName}" da approvare`,
-        html:
-            "<p>Buongiorno, l'azienda <strong>" +
-            agencyDoc.agencyName +
-            "</strong> ha richiesto di essere approvata.<br>" +
-            "Decidi se approvarla o rifiutarla dall'URL /secretary"
-    };
+    // const message: Mail.Options = {
+    //     from: `"Occupa lo Studente" ${Envs.env.SEND_EMAIL_FROM}`,
+    //     to: Envs.env.SECRETARY_EMAIL,
+    //     subject: `Nuova azienda "${agencyDoc.agencyName}" da approvare`,
+    //     html:
+    //         "<p>Buongiorno, l'azienda <strong>" +
+    //         agencyDoc.agencyName +
+    //         "</strong> ha richiesto di essere approvata.<br>" +
+    //         "Decidi se approvarla o rifiutarla dall'URL /secretary"
+    // };
 
     try {
         // DEBUG decomment this

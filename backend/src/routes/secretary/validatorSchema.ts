@@ -7,7 +7,8 @@ export const validatorSchema: Schema = {
         isLength: {
             errorMessage: "Secretary username must be 5-64 characters long",
             options: { min: 5, max: 64 }
-        }
+        },
+        trim: {}
     },
     password: {
         in: "query",
@@ -15,7 +16,8 @@ export const validatorSchema: Schema = {
         isLength: {
             options: { min: 16, max: 16 },
             errorMessage: "Secretary password must be 16 characters long"
-        }
+        },
+        trim: {}
     }
 };
 

@@ -19,7 +19,7 @@ export class AgencyAuthCookieManager {
             return;
         }
 
-        logger.info("Saving auth cookie " + c);
+        logger.debug("Saving auth cookie " + c);
 
         res.cookie(Envs.env.AGENCY_AUTH_COOKIE_NAME, c, {
             maxAge:

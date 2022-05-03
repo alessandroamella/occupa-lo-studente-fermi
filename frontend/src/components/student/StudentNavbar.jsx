@@ -15,6 +15,7 @@ const StudentNavbar = () => {
 
   async function dispatchLogout() {
     dispatch(logout());
+    navigate("/");
   }
 
   const { student, isLoggingIn } = useSelector(selectStudent);

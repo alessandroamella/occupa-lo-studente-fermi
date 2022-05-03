@@ -13,7 +13,8 @@ export const validatorSchema: Schema = {
             errorMessage:
                 "Agency's responsible first name must be 1-100 characters long",
             options: { min: 1, max: 100 }
-        }
+        },
+        trim: {}
     },
     responsibleLastName: {
         in: "body",
@@ -22,7 +23,8 @@ export const validatorSchema: Schema = {
             errorMessage:
                 "Agency's responsible last name must be 1-100 characters long",
             options: { min: 1, max: 100 }
-        }
+        },
+        trim: {}
     },
     responsibleFiscalNumber: {
         in: "body",
@@ -48,7 +50,8 @@ export const validatorSchema: Schema = {
                 }
                 return true;
             }
-        }
+        },
+        trim: {}
     },
     websiteUrl: {
         in: "body",
@@ -59,14 +62,17 @@ export const validatorSchema: Schema = {
         custom: {
             errorMessage: "Website URL doesn't exist",
             options: async v => await urlExists(v)
-        }
+        },
+        trim: {}
     },
     email: {
         in: "body",
         errorMessage: "Email not specified",
         isEmail: {
             errorMessage: "Invalid email"
-        }
+        },
+        normalizeEmail: {},
+        trim: {}
     },
     password: {
         in: "body",
@@ -74,7 +80,8 @@ export const validatorSchema: Schema = {
         isLength: {
             options: { min: 8, max: 64 },
             errorMessage: "Password must be between 8-64 characters long"
-        }
+        },
+        trim: {}
     },
     phoneNumber: {
         in: "body",
@@ -95,7 +102,8 @@ export const validatorSchema: Schema = {
             options: value => {
                 return parsePhoneNumber(value, "IT").format("E.164");
             }
-        }
+        },
+        trim: {}
     },
     agencyName: {
         in: "body",
@@ -103,7 +111,8 @@ export const validatorSchema: Schema = {
         isLength: {
             errorMessage: "Invalid agency name length",
             options: { min: 1, max: 100 }
-        }
+        },
+        trim: {}
     },
     agencyDescription: {
         in: "body",
@@ -111,7 +120,8 @@ export const validatorSchema: Schema = {
         isLength: {
             errorMessage: "Description must be 16-1000 characters long",
             options: { min: 16, max: 1000 }
-        }
+        },
+        trim: {}
     },
     agencyAddress: {
         in: "body",
@@ -119,7 +129,8 @@ export const validatorSchema: Schema = {
         isLength: {
             errorMessage: "Agency address must be at least 3 characters long",
             options: { min: 3 }
-        }
+        },
+        trim: {}
     },
     vatCode: {
         in: "body",
@@ -127,7 +138,8 @@ export const validatorSchema: Schema = {
         isLength: {
             errorMessage: "VAT code must be between 2-32 characters long",
             options: { min: 2, max: 32 }
-        }
+        },
+        trim: {}
     },
     logoUrl: {
         in: "body",
@@ -139,7 +151,8 @@ export const validatorSchema: Schema = {
             errorMessage: "Logo URL doesn't exist",
             options: async v => await urlExists(v)
         },
-        optional: true
+        optional: true,
+        trim: {}
     },
     captcha: {
         in: "body",

@@ -91,7 +91,10 @@ router.get(
         const { jobOfferId } = req.params;
         const { notifyAgency } = req.query;
 
-        const jobOffer = await JobOfferService.findOne({ _id: jobOfferId });
+        const jobOffer = await JobOfferService.findOne(
+            { _id: jobOfferId },
+            false
+        );
         if (!jobOffer) {
             logger.debug(`JobOffer to delete "${jobOfferId}" not found`);
             return res

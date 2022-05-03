@@ -3,12 +3,12 @@ import Spinner from "react-bootstrap/Spinner";
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 
-const selectStudent = state => state.student;
+const selectAgency = state => state.agency;
 
-const RequireStudentLogin = ({ children }) => {
-  const { isLoggingIn, student } = useSelector(selectStudent);
+const RequireAgencyLogin = ({ children }) => {
+  const { isLoggingIn, agency } = useSelector(selectAgency);
 
-  // console.log({ isLoggingIn, student });
+  // console.log({ isLoggingIn, agency });
 
   return isLoggingIn ? (
     <div className="mt-3 flex w-full justify-center text-center items-center">
@@ -17,11 +17,11 @@ const RequireStudentLogin = ({ children }) => {
       </Spinner>{" "}
       <p className="ml-2">Caricamento...</p>
     </div>
-  ) : student ? (
+  ) : agency ? (
     children
   ) : (
-    <Navigate to={"/student/login"} replace />
+    <Navigate to={"/agency/login"} replace />
   );
 };
 
-export default RequireStudentLogin;
+export default RequireAgencyLogin;

@@ -8,31 +8,39 @@ export class JobOfferService {
     /**
      * Finds many job offers
      * @param  {FilterQuery<DocumentType<JobOfferClass>|null>} fields
+     * @param  {boolean} [populateAgency=false] - whether to populate agency field
      * @param  {number} [limit=100] - defaults to 100
      * @param  {number} [skip=0] - defaults to 0
      */
     public static async find(
         fields: FilterQuery<DocumentType<JobOfferClass>>,
+        populateAgency = false,
         skip = 0,
         limit = 100
     ): Promise<DocumentType<JobOfferClass>[] | null> {
         logger.debug("Finding jobOffers...");
-        return await JobOffer.find(fields)
-            .populate("agency")
-            .skip(skip)
-            .limit(limit)
-            .exec();
+        const query = JobOffer.find(fields).skip(skip).limit(limit);
+        if (populateAgency) {
+            query.populate("agency");
+        }
+        return await query.exec();
     }
 
     /**
      * Finds one job offer
      * @param  {FilterQuery<DocumentType<JobOfferClass>|null>} fields
+     * @param  {boolean} [populateAgency=false] - whether to populate agency field
      */
     public static async findOne(
-        fields: FilterQuery<DocumentType<JobOfferClass>>
+        fields: FilterQuery<DocumentType<JobOfferClass>>,
+        populateAgency = false
     ): Promise<DocumentType<JobOfferClass> | null> {
         logger.debug("Finding jobOffer...");
-        return await JobOffer.findOne(fields).populate("agency").exec();
+        const query = JobOffer.findOne(fields);
+        if (populateAgency) {
+            query.populate("agency");
+        }
+        return await query.exec();
     }
     /**
      * Creates new job offer.

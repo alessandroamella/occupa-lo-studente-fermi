@@ -9,15 +9,27 @@ import { DocumentType } from "@typegoose/typegoose";
 
 export class AgencyService {
     public static async findOne(
-        fields: FilterQuery<DocumentType<AgencyClass> | null>
+        fields: FilterQuery<DocumentType<AgencyClass> | null>,
+        populateJobOffers = false,
+        showHashedPassword = false
     ): Promise<DocumentType<AgencyClass> | null> {
         logger.debug("Finding single agency...");
-        return await Agency.findOne(fields).exec();
+
+        const query = Agency.findOne(fields);
+
+        if (!showHashedPassword) {
+            query.select("-hashedPassword");
+        }
+        if (populateJobOffers) {
+            query.populate("jobOffers");
+        }
+        return await query.exec();
     }
 
     public static async find(
         fields: FilterQuery<DocumentType<AgencyClass> | null>,
         populateJobOffers = false,
+        showHashedPassword = false,
         skip = 0,
         limit = 100
     ): Promise<DocumentType<AgencyClass>[]> {
@@ -27,6 +39,9 @@ export class AgencyService {
             .limit(limit)
             .sort({ updatedAt: -1 });
 
+        if (!showHashedPassword) {
+            query.select("-hashedPassword");
+        }
         if (populateJobOffers) {
             query.populate("jobOffers");
         }

@@ -22,6 +22,8 @@ import SecretaryHomepage from "./components/secretary/SecretaryHomepage";
 import AgencyBase from "./components/agency/AgencyBase";
 import AgencyHome from "./components/agency/AgencyHome";
 import AgencySignup from "./components/agency/AgencySignup";
+import AgencyLogin from "./components/agency/AgencyLogin";
+import AgencyDashboard from "./components/agency/AgencyDashboard";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -44,6 +46,8 @@ ReactDOM.render(
             <Route path="agency" element={<AgencyBase />}>
               <Route path="" element={<AgencyHome />} />
               <Route path="signup" element={<AgencySignup />} />
+              <Route path="login" element={<AgencyLogin />} />
+              <Route path="dashboard" element={<AgencyDashboard />} />
             </Route>
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />

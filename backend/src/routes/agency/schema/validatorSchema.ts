@@ -13,7 +13,8 @@ export const validatorSchema: Schema = {
             errorMessage:
                 "Agency's responsible first name must be 1-100 characters long",
             options: { min: 1, max: 100 }
-        }
+        },
+        trim: {}
     },
     responsibleLastName: {
         in: "body",
@@ -22,7 +23,8 @@ export const validatorSchema: Schema = {
             errorMessage:
                 "Agency's responsible last name must be 1-100 characters long",
             options: { min: 1, max: 100 }
-        }
+        },
+        trim: {}
     },
     responsibleFiscalNumber: {
         in: "body",
@@ -48,7 +50,8 @@ export const validatorSchema: Schema = {
                 }
                 return true;
             }
-        }
+        },
+        trim: {}
     },
     websiteUrl: {
         in: "body",
@@ -59,7 +62,8 @@ export const validatorSchema: Schema = {
         custom: {
             errorMessage: "Website URL doesn't exist",
             options: async v => await urlExists(v)
-        }
+        },
+        trim: {}
     },
     email: {
         in: "body",
@@ -67,15 +71,13 @@ export const validatorSchema: Schema = {
         isEmail: {
             errorMessage: "Invalid email"
         },
-        normalizeEmail: {}
+        normalizeEmail: {},
+        trim: {}
     },
-    password: {
+    hashedPassword: {
         in: "body",
-        errorMessage: "Password not specified",
-        isLength: {
-            options: { min: 8, max: 64 },
-            errorMessage: "Password must be between 8-64 characters long"
-        }
+        errorMessage: "Hashed password not specified",
+        trim: {}
     },
     phoneNumber: {
         in: "body",
@@ -96,7 +98,8 @@ export const validatorSchema: Schema = {
             options: value => {
                 return parsePhoneNumber(value, "IT").format("E.164");
             }
-        }
+        },
+        trim: {}
     },
     agencyName: {
         in: "body",
@@ -104,7 +107,8 @@ export const validatorSchema: Schema = {
         isLength: {
             errorMessage: "Invalid agency name length",
             options: { min: 1, max: 100 }
-        }
+        },
+        trim: {}
     },
     agencyDescription: {
         in: "body",
@@ -112,7 +116,8 @@ export const validatorSchema: Schema = {
         isLength: {
             errorMessage: "Description must be 16-1000 characters long",
             options: { min: 16, max: 1000 }
-        }
+        },
+        trim: {}
     },
     agencyAddress: {
         in: "body",
@@ -120,7 +125,8 @@ export const validatorSchema: Schema = {
         isLength: {
             errorMessage: "Agency address must be at least 3 characters long",
             options: { min: 3 }
-        }
+        },
+        trim: {}
     },
     vatCode: {
         in: "body",
@@ -128,7 +134,8 @@ export const validatorSchema: Schema = {
         isLength: {
             errorMessage: "VAT code must be between 2-32 characters long",
             options: { min: 2, max: 32 }
-        }
+        },
+        trim: {}
     },
     approvalStatus: {
         in: "body",
@@ -136,7 +143,8 @@ export const validatorSchema: Schema = {
         isIn: {
             options: [["waiting", "approved", "rejected"]],
             errorMessage: "Invalid approval status"
-        }
+        },
+        trim: {}
     },
     approvalDate: {
         in: "body",
@@ -144,7 +152,8 @@ export const validatorSchema: Schema = {
         isDate: {
             errorMessage: "Approval date must be date"
         },
-        optional: true
+        optional: true,
+        trim: {}
     },
     logoUrl: {
         in: "body",
@@ -156,7 +165,15 @@ export const validatorSchema: Schema = {
             errorMessage: "Logo URL doesn't exist",
             options: async v => await urlExists(v)
         },
-        optional: true
+        optional: true,
+        trim: {}
+    },
+    jobOffers: {
+        in: "body",
+        errorMessage: "Job offers not specified",
+        isArray: {
+            errorMessage: "Job offers must be array"
+        }
     }
 };
 

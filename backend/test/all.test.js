@@ -75,6 +75,31 @@ describe("Agencies", () => {
     });
   });
 
+  describe("Logs out and logs in", () => {
+    it("logs out", async () => {
+      const res = await agent.get("/agency/logout");
+      expect(res).to.have.status(200);
+    });
+
+    it("returns unauthorized", async () => {
+      const res = await agent.get("/agency");
+      expect(res).to.have.status(401);
+    });
+
+    it("logs in", async () => {
+      const res = await agent
+        .post("/agency/login")
+        .send({ email: rawAgency.email, password: rawAgency.password });
+      expect(res).to.have.status(200);
+    });
+
+    it("shows logged in agency", async () => {
+      const res = await agent.get("/agency");
+      expect(res).to.have.status(200);
+      expect(res.body).to.be.an("object").with.property("_id");
+    });
+  });
+
   describe("Edit agency", () => {
     it("updates the email", async () => {
       const res = await agent
@@ -149,6 +174,7 @@ describe("Agencies", () => {
 
       it("finds the job offer", async () => {
         const res = await agent.get("/joboffer/" + jobOfferDB?._id);
+        // console.log(res.body);
         expect(res).to.have.status(200);
         expect(res.body).to.be.an("object").with.property("_id");
       });
@@ -241,6 +267,7 @@ describe("Students", () => {
 
   describe("Login using test route", () => {
     it("logs student in", async () => {
+      // console.log(rawStudent);
       const res = await agent.post("/student/auth/testauth").send(rawStudent);
       expect(res).to.have.status(200);
       expect(res).to.have.cookie("studenttoken");

@@ -1,7 +1,8 @@
+import bcrypt from "bcrypt";
 import IsEmail from "isemail";
 import { isValidPhoneNumber } from "libphonenumber-js";
 
-import { urlExists } from "@shared";
+import { logger, urlExists } from "@shared";
 import {
     DocumentType,
     Ref,
@@ -173,6 +174,26 @@ export class AgencyClass {
 
     public async rejectAgency(this: DocumentType<AgencyClass>) {
         return await this._changeApprovedStatus("reject");
+    }
+
+    public async isValidPassword(
+        this: DocumentType<AgencyClass>,
+        plainPw: string
+    ): Promise<boolean> {
+        logger.info(
+            "CIAO A TUTTI " +
+                plainPw +
+                " E CON " +
+                this.hashedPassword +
+                "\n\n\n\na: " +
+                JSON.stringify(this, null, 4)
+        );
+        return new Promise((resolve, reject) => {
+            bcrypt.compare(plainPw, this.hashedPassword, (err, valid) => {
+                if (err) reject(err);
+                return resolve(valid);
+            });
+        });
     }
 }
 

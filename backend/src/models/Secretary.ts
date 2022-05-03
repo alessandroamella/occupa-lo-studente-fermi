@@ -53,9 +53,14 @@ export class SecretaryClass {
 
     public async isValidPassword(
         this: DocumentType<SecretaryClass>,
-        plainPassword: string
+        plainPw: string
     ): Promise<boolean> {
-        return await bcrypt.compare(plainPassword, this.hashedPassword);
+        return new Promise((resolve, reject) => {
+            bcrypt.compare(plainPw, this.hashedPassword, (err, valid) => {
+                if (err) reject(err);
+                return resolve(valid);
+            });
+        });
     }
 
     public async generatePassword(

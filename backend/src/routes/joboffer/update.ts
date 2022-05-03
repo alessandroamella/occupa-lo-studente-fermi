@@ -77,7 +77,7 @@ router.put(
         let jobOffer;
 
         try {
-            jobOffer = await JobOfferService.findOne({ _id });
+            jobOffer = await JobOfferService.findOne({ _id }, false);
             if (!jobOffer) throw new Error("jobOffer validated but not found");
         } catch (err) {
             logger.error("Error while finding jobOffer in update route");

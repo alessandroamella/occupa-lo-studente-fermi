@@ -67,7 +67,7 @@ router.delete(
         let jobOffer;
 
         try {
-            jobOffer = await JobOfferService.findOne({ _id });
+            jobOffer = await JobOfferService.findOne({ _id }, false);
             if (!jobOffer) throw new Error("jobOffer validated but not found");
         } catch (err) {
             logger.error("Error while finding jobOffer in update route");
@@ -84,11 +84,9 @@ router.delete(
             logger.debug(
                 `Logged in agency ${req.agency?._id} and jobOffers's agency to delete ${agencyId} don't match`
             );
-            return res
-                .status(401)
-                .json({
-                    err: "This job offer is not owned by your current agency"
-                });
+            return res.status(401).json({
+                err: "This job offer is not owned by your current agency"
+            });
         }
 
         try {
