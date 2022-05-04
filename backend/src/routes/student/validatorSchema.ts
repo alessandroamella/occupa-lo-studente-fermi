@@ -5,10 +5,6 @@ import moment from "moment";
 
 import { Envs } from "@config";
 
-<<<<<<< HEAD
-// Don't validate data given by Google
-export const studentValidatorSchema: Schema = {
-=======
 import { logger } from "@shared";
 
 export const studentValidatorSchema: Schema = {
@@ -19,7 +15,6 @@ export const studentValidatorSchema: Schema = {
             errorMessage: "googleId must be string"
         }
     },
->>>>>>> 8b99f984a93b6f06db083f42669f7632bdad1313
     firstName: {
         in: "body",
         errorMessage: "First name not specified",
@@ -65,12 +60,6 @@ export const studentValidatorSchema: Schema = {
         in: "body",
         errorMessage: "Curriculum not specified",
         optional: true,
-<<<<<<< HEAD
-        isURL: {
-            errorMessage: "curriculumLink must be a valid URL"
-        },
-        trim: {}
-=======
         isString: {
             errorMessage: "Curriculum must be a string"
         }
@@ -91,7 +80,6 @@ export const studentValidatorSchema: Schema = {
                 return true;
             }
         }
->>>>>>> 8b99f984a93b6f06db083f42669f7632bdad1313
     },
     phoneNumber: {
         in: "body",
