@@ -37,6 +37,9 @@ if (Envs.env.NODE_ENV !== "production") {
 // Log requests
 app.use(morgan("dev", { stream: new LoggerStream() }));
 
+// NGINX reverse proxy
+app.set("trust proxy", true);
+
 // Parse body
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

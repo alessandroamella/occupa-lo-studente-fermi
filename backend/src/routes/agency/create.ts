@@ -183,6 +183,8 @@ router.post("/", checkSchema(schema), async (req: Request, res: Response) => {
         logger.error(err);
     }
 
+    // DEBUG send confirmation email
+
     res.json(agency.toObject());
 });
 

@@ -98,6 +98,9 @@ router.post("/", checkSchema(schema), async (req: Request, res: Response) => {
                 : jobOfferDoc.agency
         }`
     );
+
+    // DEBUG send confirmation email
+
     return res.json(jobOfferDoc.toObject());
 });
 

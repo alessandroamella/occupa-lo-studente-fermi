@@ -87,7 +87,22 @@ const AgencySignup = () => {
         <ArrowLeft />
       </Button>
 
-      <h1 className="text-2xl font-light my-3">Registrazione</h1>
+      <div className="my-3">
+        <h1 className="text-2xl font-light">Registrazione</h1>
+
+        {/* DEBUG scrivi meglio, magari facendo Terms and Conditions */}
+        <p>In questa pagina dovrai inserire i dati della tua azienda.</p>
+        <p>
+          Tutti i dati inseriti in questa pagina (ad eccezione della password){" "}
+          <u>verranno controllati dalla segreteria scolastica</u>, la quale
+          deciderà se approvare o rifiutare l'inserimento dell'azienda sulla
+          piattaforma Occupa lo studente.
+        </p>
+        <p>
+          Una volta approvata l'azienda, potrai creare <u>offerte di lavoro</u>{" "}
+          alle quali gli studenti possono candidarsi.
+        </p>
+      </div>
 
       <Form onSubmit={submitForm}>
         <Form.Group className="mb-3" controlId="email">
@@ -162,7 +177,8 @@ const AgencySignup = () => {
             required
           />
           <Form.Text className="text-muted">
-            Password utilizzata per il login.
+            Password utilizzata per il login (verrà crittografata e non sarà
+            inviata alla segreteria).
           </Form.Text>
         </Form.Group>
 

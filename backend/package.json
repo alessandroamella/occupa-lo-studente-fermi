@@ -57,7 +57,6 @@
         "mongoose": "^6.2.0",
         "morgan": "^1.10.0",
         "nodemailer": "^6.7.4",
-        "randomstring": "^1.2.2",
         "swagger-jsdoc": "^6.1.0",
         "swagger-ui-express": "^4.3.0",
         "winston": "^3.5.1"

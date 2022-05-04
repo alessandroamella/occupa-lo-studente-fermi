@@ -1,12 +1,14 @@
 import { Router } from "express";
 
 import approveRoute from "./approve";
+import checkCredentialsRoute from "./checkCredentials";
 import deleteAgencyRoute from "./deleteAgency";
 import deleteJobOfferRoute from "./deleteJobOffer";
 import listRoute from "./listAgencies";
 
 const router = Router();
 
+router.use("/check-credentials", checkCredentialsRoute);
 router.use("/agencies", listRoute);
 router.use("/approve", approveRoute);
 router.use("/deleteagency", deleteAgencyRoute);

@@ -1,8 +1,9 @@
 import bcrypt from "bcrypt";
-import randomString from "randomstring";
 
+import { logger } from "@shared";
 import {
     DocumentType,
+    ReturnModelType,
     getModelForClass,
     modelOptions,
     prop
@@ -16,6 +17,7 @@ import {
  *      Secretary:
  *        type: object
  *        required:
+ *          - username
  *          - hashedPassword
  *        properties:
  *          username:
@@ -55,23 +57,18 @@ export class SecretaryClass {
         this: DocumentType<SecretaryClass>,
         plainPw: string
     ): Promise<boolean> {
-        return new Promise((resolve, reject) => {
-            bcrypt.compare(plainPw, this.hashedPassword, (err, valid) => {
-                if (err) reject(err);
-                return resolve(valid);
-            });
-        });
+        return await bcrypt.compare(plainPw, this.hashedPassword);
     }
 
-    public async generatePassword(this: SecretaryDoc): Promise<string> {
-        const p = randomString.generate({
-            length: 16,
-            readable: true
-        });
+    public static async createNewAccount(
+        this: ReturnModelType<typeof SecretaryClass>,
+        username: string,
+        pw: string
+    ) {
         const salt = await bcrypt.genSalt(10);
-        this.hashedPassword = await bcrypt.hash(p, salt);
-        await this.save();
-        return p;
+        const hashedPassword = await bcrypt.hash(pw, salt);
+        logger.info(`Creating new secretary account "${username}"`);
+        return await Secretary.create({ username, hashedPassword });
     }
 
     public async saveNewLogin(this: SecretaryDoc, ipAddress: string) {
@@ -84,3 +81,6 @@ export class SecretaryClass {
 export type SecretaryDoc = DocumentType<SecretaryClass>;
 
 export const Secretary = getModelForClass(SecretaryClass);
+
+// DEBUG
+// Secretary.createNewAccount("fermi", "fermi");

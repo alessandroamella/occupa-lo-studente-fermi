@@ -5,10 +5,13 @@ import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { setStudent } from "../../slices/studentAuthSlice";
 
 const StudentSignup = () => {
   const [searchParams] = useSearchParams();
   let navigate = useNavigate();
+  const dispatch = useDispatch();
 
   // const email = searchParams.get("email");
   // const [firstName, lastName] = email
@@ -61,7 +64,9 @@ const StudentSignup = () => {
         fieldOfStudy
       });
       console.log(res.data);
-      navigate("/student", { state: { student: res.data } });
+
+      dispatch(setStudent(res.data));
+      navigate("/student");
       // DEBUG
       // alert(JSON.stringify(data));
     } catch (err) {

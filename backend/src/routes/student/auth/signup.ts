@@ -230,6 +230,8 @@ router.post("/", checkSchema(schema), async (req: Request, res: Response) => {
     _clearTempCookie(res);
     await StudentAuthCookieManager.saveStudentAuthCookie(res, student);
 
+    // DEBUG send confirmation email
+
     res.json(student.toObject());
 });
 

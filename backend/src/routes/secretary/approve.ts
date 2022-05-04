@@ -106,12 +106,14 @@ router.get(
 
         if (agency.approvalDate) {
             logger.debug(
-                `Agency to approve ${agencyId} was already: ${agency.approvalStatus}`
-            );
-            return res.status(403).json({
-                err: `Agency "${agency.agencyName}" with _id ${
+                `Agency "${agency.agencyName}" with _id ${
                     agency._id
                 } was already ${agency.approvalStatus} on ${moment(
+                    agency.approvalDate
+                ).format("DD/MM/YYYY")}`
+            );
+            return res.status(403).json({
+                err: `Agency was already ${agency.approvalStatus} on ${moment(
                     agency.approvalDate
                 ).format("DD/MM/YYYY")}`
             });
@@ -120,11 +122,7 @@ router.get(
         if (action === "approve") {
             await agency.approveAgency();
             logger.info(
-                `Agency "${agency.agencyName}" with _id ${
-                    agency._id
-                } just got approved by secretary ${
-                    req.secretary?.username || "--unknown username--"
-                }`
+                `Agency "${agency.agencyName}" with _id ${agency._id} just got approved by secretary "${req.secretary?.username}"`
             );
         } else if (action === "reject") {
             await agency.rejectAgency();

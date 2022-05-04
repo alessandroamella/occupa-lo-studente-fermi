@@ -14,14 +14,3 @@ export class SecretaryService {
         return await Secretary.findOne(fields).exec();
     }
 }
-
-// async function createTestSecretary() {
-//     logger.warn("Creating test secretary");
-
-//     const s = new Secretary({ username: "fermi" });
-//     const p = await s.generatePassword();
-//     // eslint-disable-next-line no-console
-//     console.log("\n\n\n\nPASSWORD", { p });
-// }
-
-// createTestSecretary();

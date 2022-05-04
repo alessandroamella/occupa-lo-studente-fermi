@@ -67,10 +67,10 @@ function generateEmail(agency: AgencyDoc) {
   
         <section>
           <h3 style="font-weight: 300; margin-bottom: 0.3rem">Descrizione</h3>
+          <p style="margin-top: 0">
+            ${md.render(agency.agencyDescription)}
+          </p>
         </section>
-        <p style="margin-top: 0">
-          ${md.render(agency.agencyDescription)}
-        </p>
   
         <div>
           <h3 style="font-weight: 300; margin-bottom: 0.6rem">
@@ -272,7 +272,7 @@ function generateEmail(agency: AgencyDoc) {
               border: none;
               border-radius: 5px;
               cursor: pointer;
-              background-color: rgb(255, 90, 90);
+              background-color: #fe3c00;
               color: white;
               font-size: 1.5rem;
               -webkit-appearance: none;

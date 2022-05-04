@@ -169,10 +169,12 @@ export class AgencyClass {
     }
 
     public async approveAgency(this: AgencyDoc) {
+        logger.info("Approving agency " + this._id);
         return await this._changeApprovedStatus("approve");
     }
 
     public async rejectAgency(this: AgencyDoc) {
+        logger.info("Rejecting agency " + this._id);
         return await this._changeApprovedStatus("reject");
     }
 
@@ -180,20 +182,7 @@ export class AgencyClass {
         this: DocumentType<AgencyClass>,
         plainPw: string
     ): Promise<boolean> {
-        logger.info(
-            "CIAO A TUTTI " +
-                plainPw +
-                " E CON " +
-                this.hashedPassword +
-                "\n\n\n\na: " +
-                JSON.stringify(this, null, 4)
-        );
-        return new Promise((resolve, reject) => {
-            bcrypt.compare(plainPw, this.hashedPassword, (err, valid) => {
-                if (err) reject(err);
-                return resolve(valid);
-            });
-        });
+        return await bcrypt.compare(plainPw, this.hashedPassword);
     }
 }
 
