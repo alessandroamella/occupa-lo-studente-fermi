@@ -1,10 +1,12 @@
 import { Outlet, Link } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
+import HomepageCarousel from "./HomepageCarousel";
 
 function Homepage() {
   return (
     <div>
+      <HomepageCarousel />
       <Container bg="dark" variant="dark" className="mt-8 mb-4">
         <div>
           <p>

@@ -10,8 +10,8 @@ import reportWebVitals from "./reportWebVitals";
 
 import store from "./app/store";
 
-import MainBase from "./components/MainBase";
-import MainHomepage from "./components/MainHomepage";
+import HomepageBase from "./components/homepage/HomepageBase";
+import Homepage from "./components/homepage/Homepage";
 
 import StudentBase from "./components/student/StudentBase";
 import StudentHome from "./components/student/StudentHome";
@@ -31,8 +31,8 @@ ReactDOM.render(
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<App />}>
-            <Route path="" element={<MainBase />}>
-              <Route path="" element={<MainHomepage />} />
+            <Route path="" element={<HomepageBase />}>
+              <Route path="" element={<Homepage />} />
               {/* eventually other routes not related to student or agency */}
             </Route>
             <Route path="secretary" element={<SecretaryBase />}>

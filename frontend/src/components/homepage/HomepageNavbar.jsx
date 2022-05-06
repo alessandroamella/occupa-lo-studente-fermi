@@ -6,7 +6,7 @@ import Container from "react-bootstrap/Container";
 const MainNavbar = () => {
   const navigate = useNavigate();
   return (
-    <Navbar bg="dark" variant="dark">
+    <Navbar bg="dark" variant="dark" className="absolute top-0 w-screen z-10">
       <Container>
         <Navbar.Brand href="#" onClick={() => navigate("/")}>
           <img
