@@ -16,18 +16,20 @@ const HomepageCarousel = () => {
   };
 
   return (
-    <Carousel activeIndex={index} onSelect={handleSelect}>
-      {images.map((e, i) => (
-        <Carousel.Item key={i}>
-          <img
-            className="w-screen h-screen object-contain"
-            src={e.src}
-            alt={e.caption}
-          />
-          <Carousel.Caption>{e.caption}</Carousel.Caption>
-        </Carousel.Item>
-      ))}
-    </Carousel>
+    <div>
+      <Carousel activeIndex={index} variant="dark" onSelect={handleSelect}>
+        {images.map((e, i) => (
+          <Carousel.Item key={i}>
+            <img
+              className="w-screen h-96 min-h-[60vh] max-h-screen object-contain"
+              src={e.src}
+              alt={e.caption}
+            />
+            <Carousel.Caption>{e.caption}</Carousel.Caption>
+          </Carousel.Item>
+        ))}
+      </Carousel>
+    </div>
   );
 };
 export default HomepageCarousel;

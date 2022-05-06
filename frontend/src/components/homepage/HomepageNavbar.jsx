@@ -6,18 +6,18 @@ import Container from "react-bootstrap/Container";
 const MainNavbar = () => {
   const navigate = useNavigate();
   return (
-    <Navbar bg="dark" variant="dark" className="absolute top-0 w-screen z-10">
-      <Container>
-        <Navbar.Brand href="#" onClick={() => navigate("/")}>
-          <img
-            alt=""
-            src="https://ssh.edu.it/images/logos/fermi.png"
-            className="d-inline-block w-14"
-          />
-          <span className="ml-3">Occupa lo studente</span>
-        </Navbar.Brand>
+    <div className="absolute w-full py-6 top-0 left-0 right-0 bg-[rgba(255,255,255,0.3)]">
+      <Container className="flex justify-center text-center items-center">
+        <img
+          alt=""
+          src="/img/fermi_trimmed.png"
+          className="d-inline-block w-14"
+        />
+        <span className="ml-3 text-3xl uppercase font-semibold text-white tracking-tight	">
+          Occupa lo studente
+        </span>
       </Container>
-    </Navbar>
+    </div>
   );
 };
 
