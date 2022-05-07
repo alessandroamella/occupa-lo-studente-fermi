@@ -1,23 +1,21 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
-import Navbar from "react-bootstrap/Navbar";
 import Container from "react-bootstrap/Container";
 
 const MainNavbar = () => {
-  const navigate = useNavigate();
   return (
-    <div className="absolute w-full py-6 top-0 left-0 right-0 bg-[rgba(255,255,255,0.3)]">
+    // <header class="sticky top-0 z-50 w-full py-6 bg-gray-800">
+    <header class="bg-[#f7f7f7] w-full py-6 text-gray-800">
       <Container className="flex justify-center text-center items-center">
         <img
           alt=""
-          src="/img/fermi_trimmed.png"
+          src="/img/fermi_trimmed_black.png"
           className="d-inline-block w-14"
         />
-        <span className="ml-3 text-3xl uppercase font-semibold text-white tracking-tight	">
+        <span className="ml-3 text-3xl uppercase font-semibold tracking-tight	">
           Occupa lo studente
         </span>
       </Container>
-    </div>
+    </header>
   );
 };
 
