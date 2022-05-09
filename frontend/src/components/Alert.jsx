@@ -1,8 +1,11 @@
 import React, { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { removeMessage } from "../slices/alertSlice";
 
-const Alert = ({ isShown, title, text, color }) => {
+const selectAlert = state => state.alert;
+
+const Alert = () => {
+  const { color, title, text, isShown } = useSelector(selectAlert);
   const dispatch = useDispatch();
 
   useEffect(() => {

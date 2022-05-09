@@ -1,9 +1,8 @@
-import { Outlet, Link, useNavigate } from "react-router-dom";
-import Container from "react-bootstrap/Container";
-import Button from "react-bootstrap/Button";
+import { useNavigate } from "react-router-dom";
 import { useRef, useState } from "react";
 // import HomepageCarousel from "./HomepageCarousel";
 // import HomepageTest from "./HomepageTest";
+import { Envelope, Telephone } from "react-bootstrap-icons";
 
 function getWindowSize() {
   return {
@@ -172,7 +171,7 @@ function Homepage() {
       </section>
 
       <section className="px-4 md:px-8 min-h-screen justify-center items-center py-12">
-        <div className="flex justify-center items-center mb-12">
+        <div className="flex justify-center items-center mb-4">
           <h1 className="text-5xl text-center mx-auto font-semibold uppercase mb-2 tracking-tighter">
             Il progetto
           </h1>
@@ -186,23 +185,32 @@ function Homepage() {
               className="max-w-xs mx-auto"
             />
           </div>
-          <div className="mt-6 md:pt-0 flex flex-col justify-center items-center">
-            <h1 className="text-xl font-semibold uppercase mb-2 tracking-tighter">
-              titolo
-            </h1>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio earum
-            corporis, omnis ipsa quo aspernatur natus reiciendis dolorum
-            adipisci. Adipisci laudantium impedit alias sunt quod assumenda nam
-            corrupti magni autem.
+          <div className="mt-6 md:pt-0">
+            <h2 className="text-3xl font-semibold uppercase tracking-tighter">
+              Come funziona
+            </h2>
+            <p className="mt-2">
+              <strong>Occupa lo studente</strong> è una piattaforma che collega
+              studenti e aziende.
+            </p>
+            <p className="mt-2">
+              Le aziende possono iscriversi e pubblicare le proprie offerte di
+              lavoro agli studenti, i quali potranno visualizzarle ed
+              eventualmente candidarsi (esternamente).
+            </p>
+            <p className="mt-2">
+              L'iscrizione è <strong>gratuita</strong> sia per gli studenti che
+              per le aziende.
+            </p>
           </div>
         </div>
 
-        <div className="flex justify-center items-center mb-4 md:mb-12">
+        <div className="justify-center mb-4 md:mb-12">
           <h1 className="text-5xl text-center mx-auto font-semibold uppercase mb-2 tracking-tighter">
             Chi siamo
           </h1>
         </div>
-        <div className=" grid grid-cols-1 md:grid-cols-2">
+        <div className="grid grid-cols-1 md:grid-cols-2">
           <div className="flex justify-center">
             <iframe
               width="600"
@@ -215,33 +223,52 @@ function Homepage() {
               // src="https://www.google.com/maps/embed/v1/streetview?location=44.6432%2C10.9153&heading=180&key=AIzaSyAUkmkBUkJjxHWHnCVLHw4GOTW9HcCLx-8"
             ></iframe>
           </div>
-          <div className="flex justify-center items-center">
-            <h1 className="text-5xl text-center mx-auto font-semibold uppercase mb-2 tracking-tighter">
-              Sezione da fare
-              <br />
-              prova <span className="text-purple-600">prova</span>
-            </h1>
-          </div>
-        </div>
-      </section>
 
-      <section className="bg-gray-100 max-w-full">
-        <Container className="py-8">
-          <div className="w-full">
+          <div className="px-4 mt-6 md:pt-0">
+            <h2 className="mb-2 text-3xl font-semibold uppercase tracking-tighter">
+              ITIS <span className="text-purple-600">Fermi</span> di Modena
+            </h2>
+
             <p>
-              Sono la <span className="font-semibold">homepage</span>
+              Istituto tecnico tecnologico con specializzazione in informatica,
+              elettronica e chimica.
             </p>
-            <div className="mt-4">
-              <Button as={Link} to="/student" variant="outline-success">
-                Studente
-              </Button>{" "}
-              <Button as={Link} to="/agency" variant="outline-info">
-                Azienda
-              </Button>
+            <p className="mt-2">
+              Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quaerat
+              maxime possimus quasi consequuntur, illo accusamus aut
+              exercitationem culpa amet saepe voluptatum rem, aperiam corrupti
+              sunt doloribus nostrum quod ipsa soluta?
+            </p>
+            <p className="mt-2">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel,
+              sapiente beatae doloribus placeat aliquam esse officia voluptates
+              enim vitae repellat eligendi dicta quidem alias ab id facere sunt
+              possimus odit.
+            </p>
+
+            <div className="mt-6">
+              <div className="flex items-center">
+                <Telephone />{" "}
+                <a
+                  rel="noopener noreferrer"
+                  href="tel:+059211092"
+                  className="ml-1 mr-3"
+                >
+                  059211092
+                </a>
+                <Envelope />{" "}
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href="mailto:motf080005@istruzione.it"
+                  className="mx-1"
+                >
+                  motf080005@istruzione.it
+                </a>
+              </div>
             </div>
           </div>
-          <Outlet />
-        </Container>
+        </div>
       </section>
     </div>
   );
