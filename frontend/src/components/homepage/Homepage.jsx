@@ -246,7 +246,13 @@ function Homepage() {
               possimus odit.
             </p>
 
-            <div className="mt-6">
+            <div className="w-full border-b h-2 my-8"></div>
+
+            <h3 className="mb-1 text-xl font-semibold uppercase tracking-tighter">
+              Contatti
+            </h3>
+
+            <div>
               <div className="flex items-center">
                 <Telephone />{" "}
                 <a
