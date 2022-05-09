@@ -35,18 +35,18 @@ function Homepage() {
       <section className="text-center px-4">
         <div className="my-8 md:my-0 h-min-fit md:h-[75vh] grid grid-cols-1 md:grid-cols-2 items-center">
           <div className="mb-6 md:mb-0">
-            <h1 className="text-5xl mx-auto font-semibold uppercase mb-2 tracking-tighter">
+            <h1 className="text-6xl mx-auto font-bold uppercase mb-4 tracking-tighter">
               Occupa lo <span className="text-purple-600">studente</span>
             </h1>
-            <p className="mx-auto text-left w-fit">
+            <p className="mx-auto w-fit">
               Una piattaforma per connettere studenti dell'ITIS Fermi e aziende.
               <br />
-              <small className="text-gray-700 text-left">
+              <small className="text-gray-700">
                 Un progetto di Alessandro Amella e Yaroslav Pavlik.
               </small>
             </p>
 
-            <div className="mt-4 flex justify-center">
+            <div className="mt-6 flex justify-center">
               <button
                 onClick={() => scroll(studentAreaRef.current)}
                 className="mr-1 bg-[#F89A05] p-3 rounded hover:bg-[#e68f05] active:bg-[#c87d04] transition-colors text-white uppercase font-medium"
@@ -124,7 +124,7 @@ function Homepage() {
         <div className="flex flex-col md:flex-row justify-center md:justify-around w-full h-full">
           <div
             ref={studentAreaRef}
-            className="pb-6 md:pb-0 w-full pt-20 h-full bg-[#F89A05] flex flex-col justify-center items-center"
+            className="pb-6 md:pb-0 w-full pt-10 md:pt-20 h-full bg-[#F89A05] flex flex-col justify-center items-center"
           >
             <img
               loading="lazy"
@@ -146,7 +146,7 @@ function Homepage() {
           </div>
           <div
             ref={agencyAreaRef}
-            className="pb-6 md:pb-0 w-full pt-24 h-full bg-blue-400 flex flex-col justify-center items-center"
+            className="pb-6 md:pb-0 w-full pt-10 md:pt-24 h-full bg-blue-400 flex flex-col justify-center items-center"
           >
             <img
               loading="lazy"
@@ -170,13 +170,13 @@ function Homepage() {
         </div>
       </section>
 
-      <section className="px-4 md:px-8 min-h-screen justify-center items-center py-12">
-        <div className="flex justify-center items-center mb-4">
-          <h1 className="text-5xl text-center mx-auto font-semibold uppercase mb-2 tracking-tighter">
+      <section className="px-4 md:px-8 min-h-screen justify-center items-center py-12 md:pb-20 md:py-16">
+        <div className="bg-purple-500 text-white w-fit mx-auto py-4 px-8 flex justify-center items-center mb-16">
+          <h1 className="text-5xl text-center mx-auto font-semibold uppercase tracking-tighter">
             Il progetto
           </h1>
         </div>
-        <div className="mb-12 md:mb-16 grid grid-cols-1 md:grid-cols-2">
+        <div className="px-4 mb-12 md:mb-16 grid grid-cols-1 md:grid-cols-2">
           <div className="flex justify-center">
             <img
               src="/img/project.svg"
@@ -185,7 +185,7 @@ function Homepage() {
               className="max-w-xs mx-auto"
             />
           </div>
-          <div className="mt-6 md:pt-0">
+          <div className="mt-8 md:pt-0">
             <h2 className="text-3xl font-semibold uppercase tracking-tighter">
               Come funziona
             </h2>
@@ -205,25 +205,7 @@ function Homepage() {
           </div>
         </div>
 
-        <div className="justify-center mb-4 md:mb-12">
-          <h1 className="text-5xl text-center mx-auto font-semibold uppercase mb-2 tracking-tighter">
-            Chi siamo
-          </h1>
-        </div>
         <div className="grid grid-cols-1 md:grid-cols-2">
-          <div className="flex justify-center">
-            <iframe
-              width="600"
-              title="ITIS Fermi su Google Maps"
-              className="border-8 border-orange-400"
-              height="450"
-              loading="lazy"
-              allowFullScreen
-              src="https://www.google.com/maps/embed/v1/streetview?location=44.64349024228466%2C10.91493  &heading=180&key=AIzaSyAUkmkBUkJjxHWHnCVLHw4GOTW9HcCLx-8"
-              // src="https://www.google.com/maps/embed/v1/streetview?location=44.6432%2C10.9153&heading=180&key=AIzaSyAUkmkBUkJjxHWHnCVLHw4GOTW9HcCLx-8"
-            ></iframe>
-          </div>
-
           <div className="px-4 mt-6 md:pt-0">
             <h2 className="mb-2 text-3xl font-semibold uppercase tracking-tighter">
               ITIS <span className="text-purple-600">Fermi</span> di Modena
@@ -252,7 +234,7 @@ function Homepage() {
               Contatti
             </h3>
 
-            <div>
+            <div className="mb-6 md:mb-0">
               <div className="flex items-center">
                 <Telephone />{" "}
                 <a
@@ -273,6 +255,19 @@ function Homepage() {
                 </a>
               </div>
             </div>
+          </div>
+
+          <div className="flex justify-center">
+            <iframe
+              width="600"
+              title="ITIS Fermi su Google Maps"
+              className="border-8 border-orange-400 shadow-lg"
+              height="450"
+              loading="lazy"
+              allowFullScreen
+              src="https://www.google.com/maps/embed/v1/streetview?location=44.64349024228466%2C10.91493  &heading=180&key=AIzaSyAUkmkBUkJjxHWHnCVLHw4GOTW9HcCLx-8"
+              // src="https://www.google.com/maps/embed/v1/streetview?location=44.6432%2C10.9153&heading=180&key=AIzaSyAUkmkBUkJjxHWHnCVLHw4GOTW9HcCLx-8"
+            ></iframe>
           </div>
         </div>
       </section>
