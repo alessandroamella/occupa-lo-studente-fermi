@@ -24,33 +24,38 @@ import AgencyHome from "./components/agency/AgencyHome";
 import AgencySignup from "./components/agency/AgencySignup";
 import AgencyLogin from "./components/agency/AgencyLogin";
 import AgencyDashboard from "./components/agency/AgencyDashboard";
+import StudentProfile from "./components/student/StudentProfile";
+import Base from "./components/Base";
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<App />}>
-            <Route path="" element={<HomepageBase />}>
-              <Route path="" element={<Homepage />} />
-              {/* eventually other routes not related to student or agency */}
+          <Route path="" element={<Base />}>
+            <Route path="/" element={<App />}>
+              <Route path="" element={<HomepageBase />}>
+                <Route path="" element={<Homepage />} />
+                {/* eventually other routes not related to student or agency */}
+              </Route>
+              <Route path="secretary" element={<SecretaryBase />}>
+                <Route path="" element={<SecretaryHomepage />} />
+              </Route>
+              <Route path="student" element={<StudentBase />}>
+                <Route path="" element={<StudentHome />} />
+                <Route path="signup" element={<StudentSignup />} />
+                <Route path="login" element={<StudentLogin />} />
+                <Route path="profile" element={<StudentProfile />} />
+              </Route>
+              <Route path="agency" element={<AgencyBase />}>
+                <Route path="" element={<AgencyHome />} />
+                <Route path="signup" element={<AgencySignup />} />
+                <Route path="login" element={<AgencyLogin />} />
+                <Route path="dashboard" element={<AgencyDashboard />} />
+              </Route>
             </Route>
-            <Route path="secretary" element={<SecretaryBase />}>
-              <Route path="" element={<SecretaryHomepage />} />
-            </Route>
-            <Route path="student" element={<StudentBase />}>
-              <Route path="" element={<StudentHome />} />
-              <Route path="signup" element={<StudentSignup />} />
-              <Route path="login" element={<StudentLogin />} />
-            </Route>
-            <Route path="agency" element={<AgencyBase />}>
-              <Route path="" element={<AgencyHome />} />
-              <Route path="signup" element={<AgencySignup />} />
-              <Route path="login" element={<AgencyLogin />} />
-              <Route path="dashboard" element={<AgencyDashboard />} />
-            </Route>
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Route>
-          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>
     </Provider>

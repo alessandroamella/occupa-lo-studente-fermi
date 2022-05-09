@@ -7,6 +7,7 @@ import Form from "react-bootstrap/Form";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setIsLoggingIn, setStudent } from "../../slices/studentAuthSlice";
+import { setMessage } from "../../slices/alertSlice";
 
 const StudentSignup = () => {
   const [searchParams] = useSearchParams();
@@ -72,6 +73,12 @@ const StudentSignup = () => {
       dispatch(setStudent(res.data));
       dispatch(setIsLoggingIn(false));
       navigate("/student");
+      dispatch(
+        setMessage({
+          color: "green",
+          text: `Benvenuto, ${res.data.firstName}, su Occupa lo Studente!`
+        })
+      );
       // DEBUG
       // alert(JSON.stringify(data));
     } catch (err) {

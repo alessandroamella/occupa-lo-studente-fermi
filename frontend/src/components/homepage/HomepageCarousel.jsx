@@ -21,6 +21,7 @@ const HomepageCarousel = () => {
         {images.map((e, i) => (
           <Carousel.Item key={i}>
             <img
+              loading="lazy"
               className="w-screen h-96 min-h-[60vh] max-h-screen object-contain"
               src={e.src}
               alt={e.caption}

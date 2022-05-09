@@ -17,7 +17,11 @@ const StudentNavbar = () => {
   async function dispatchLogout() {
     dispatch(logout());
     dispatch(
-      setMessage({ type: "success", title: null, text: "Ti sei sloggato" })
+      setMessage({
+        color: "green",
+        title: "Logout",
+        text: "Logout avvenuto con successo, sei stato reindirizzato alla homepage"
+      })
     );
     navigate("/");
   }
@@ -30,6 +34,7 @@ const StudentNavbar = () => {
         <Navbar.Brand href="#" onClick={() => navigate("/")}>
           <img
             alt=""
+            loading="lazy"
             src="https://ssh.edu.it/images/logos/fermi.png"
             className="d-inline-block w-14"
           />
@@ -52,17 +57,21 @@ const StudentNavbar = () => {
               <p>Caricamento...</p>
             ) : student ? (
               <div className="flex items-center">
-                <div className="mr-5 flex items-center">
+                <div
+                  className="mr-5 flex items-center cursor-pointer hover:bg-gray-700 transition-colors rounded p-1"
+                  onClick={() => navigate("/student/profile")}
+                >
                   {student.pictureURL ? (
                     <img
                       className="w-8 mr-2 rounded-full"
+                      loading="lazy"
                       src={student.pictureURL}
                       alt="Profile pic"
                     />
                   ) : (
                     "Ciao,"
                   )}{" "}
-                  <span className="underline">{student.firstName}</span>
+                  <span>{student.firstName}</span>
                 </div>
                 {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                 <a href="#" onClick={dispatchLogout}>

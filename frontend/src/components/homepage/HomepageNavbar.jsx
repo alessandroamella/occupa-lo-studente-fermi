@@ -7,6 +7,7 @@ const MainNavbar = () => {
     <header className="bg-[#f7f7f7] w-full py-6 text-gray-800">
       <Container className="flex justify-center text-center items-center">
         <img
+          loading="lazy"
           alt=""
           src="/img/fermi_trimmed_black.png"
           className="d-inline-block w-14"

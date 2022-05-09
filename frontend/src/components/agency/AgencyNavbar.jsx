@@ -27,6 +27,7 @@ const AgencyNavbar = () => {
             alt=""
             src="https://ssh.edu.it/images/logos/fermi.png"
             className="d-inline-block w-14"
+            loading="lazy"
           />
           <span className="ml-3">Occupa lo studente</span>
         </Navbar.Brand>

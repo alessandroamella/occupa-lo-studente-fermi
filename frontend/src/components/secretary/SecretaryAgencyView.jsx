@@ -10,6 +10,7 @@ const SecretaryAgencyView = ({ agency, children }) => {
         <>
           <p className="font-medium text-lg">Logo</p>
           <img
+            loading="lazy"
             className="max-w-full max-h-48 mb-2"
             alt="Agency logo"
             src={agency.logoUrl}

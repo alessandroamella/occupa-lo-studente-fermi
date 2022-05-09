@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
@@ -8,7 +8,8 @@ import Spinner from "react-bootstrap/Spinner";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import RequireStudentLogin from "./RequireStudentLogin";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setMessage } from "../../slices/alertSlice";
 
 const selectStudent = state => state.student;
 
@@ -27,7 +28,10 @@ const StudentHome = () => {
   const [err, setErr] = useState(null);
   const [loaded, setLoaded] = useState(false);
 
+  const dispatch = useDispatch();
   const { student } = useSelector(selectStudent);
+
+  const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
     async function fetchAgencies() {
@@ -45,7 +49,18 @@ const StudentHome = () => {
 
     if (student) {
       fetchAgencies();
+      if (searchParams.get("loggedin")) {
+        console.log("LOGGEDIN SEARCH PARAM DEBUG");
+        dispatch(
+          setMessage({
+            color: "green",
+            text: `Bentornato, ${student.firstName}!`
+          })
+        );
+        searchParams.delete("loggedin");
+      }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [student]);
 
   return (
@@ -78,6 +93,7 @@ const StudentHome = () => {
                       <div className="flex">
                         {e.logoUrl && (
                           <img
+                            loading="lazy"
                             src={e.logoUrl}
                             alt="Agency logo"
                             className="sm:p-2 md:p-3 lg:p-4 min-w-[4rem] object-contain"

@@ -70,6 +70,7 @@ function Homepage() {
             className="max-w-xs mx-auto"
           /> */}
             <img
+              loading="lazy"
               src="/img/employer.svg"
               alt="Logo"
               className="max-w-xs mx-auto"
@@ -79,7 +80,7 @@ function Homepage() {
       </section>
 
       <div className="relative w-full">
-        <div className="absolute bottom-8 md:bottom-16 z-50 right-0 left-0 h-10">
+        <div className="absolute bottom-8 md:bottom-16 z-40 right-0 left-0 h-10">
           {/* <svg
             className="absolute z-40 top-0"
             xmlns="http://www.w3.org/2000/svg"
@@ -117,7 +118,7 @@ function Homepage() {
       </div>
 
       {/* <HomepageCarousel /> */}
-      <section className="z-50 w-full md:h-[110vh] flex flex-col justify-center items-center text-white">
+      <section className="z-40 w-full md:h-[110vh] flex flex-col justify-center items-center text-white">
         {/* <h1 className="text-9xl mb-20 font-medium text-center">
             Occupa lo studente
           </h1> */}
@@ -126,9 +127,14 @@ function Homepage() {
             ref={studentAreaRef}
             className="pb-6 md:pb-0 w-full pt-20 h-full bg-[#F89A05] flex flex-col justify-center items-center"
           >
-            <img src="/img/student.svg" alt="Studenti" className="w-1/2" />
+            <img
+              loading="lazy"
+              src="/img/student.svg"
+              alt="Studenti"
+              className="w-1/2"
+            />
             <p className="text-3xl uppercase font-semibold mt-3">Studenti</p>
-            <p className="px-4 mb-4 sm:px-8 md:px-16 md:px-24 text-center">
+            <p className="px-4 mb-4 sm:px-8 md:px-16 text-center">
               Sei uno studente del Fermi alla ricerca di un lavoro? Sfoglia le
               posizioni disponibili accedendo all'area studente.
             </p>
@@ -143,9 +149,14 @@ function Homepage() {
             ref={agencyAreaRef}
             className="pb-6 md:pb-0 w-full pt-24 h-full bg-blue-400 flex flex-col justify-center items-center"
           >
-            <img src="/img/agency.svg" alt="Aziende" className="w-1/2" />
+            <img
+              loading="lazy"
+              src="/img/agency.svg"
+              alt="Aziende"
+              className="w-1/2"
+            />
             <p className="text-3xl uppercase font-semibold mt-3">Aziende</p>
-            <p className="px-4 mb-8 sm:px-8 md:px-16 md:px-24 text-center">
+            <p className="px-4 mb-8 sm:px-8 md:px-16 text-center">
               Sei un'azienda alla ricerca di studenti del Fermi da assumere?
               Registrati, pubblica le tue offerte di lavoro e visualizza gli
               studenti nell'area aziende.
@@ -170,6 +181,7 @@ function Homepage() {
           <div className="flex justify-center">
             <img
               src="/img/project.svg"
+              loading="lazy"
               alt="Project"
               className="max-w-xs mx-auto"
             />

@@ -3,15 +3,15 @@ import { createSlice } from "@reduxjs/toolkit";
 export const alertSlice = createSlice({
     name: "alert",
     initialState: {
-        type: "success",
+        color: "green",
         title: "Prova",
         text: "Benvenuto",
         isShown: false
     },
     reducers: {
         setMessage: (state, action) => {
-            const { type, title, text } = action.payload;
-            state.type = type;
+            const { color, title, text } = action.payload;
+            state.color = color;
             state.title = title;
             state.text = text;
             state.isShown = true;

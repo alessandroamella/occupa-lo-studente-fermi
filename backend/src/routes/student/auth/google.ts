@@ -163,8 +163,12 @@ router.get("/complete", async (req, res) => {
 
         try {
             const url = new URL(lastPageCookie);
-            res.redirect(`${url.protocol}//${url.host}/student`);
+            const newUrl = new URL(`${url.protocol}//${url.host}/student`);
+            newUrl.searchParams.set("loggedin", "true");
+            res.redirect(newUrl.toString());
         } catch (err) {
+            logger.warn("Error while reconstructing login redirect URL");
+            logger.warn(err);
             res.redirect(Envs.env.CLIENT_LOGIN_REDIRECT_URL);
         }
     } catch (err) {

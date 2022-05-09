@@ -12,6 +12,7 @@ const SecretaryNavbar = () => {
       <Container>
         <Navbar.Brand href="#" onClick={() => navigate("/")}>
           <img
+            loading="lazy"
             alt=""
             src="https://ssh.edu.it/images/logos/fermi.png"
             className="d-inline-block w-14"
