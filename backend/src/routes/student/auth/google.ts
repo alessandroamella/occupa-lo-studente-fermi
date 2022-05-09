@@ -135,6 +135,12 @@ router.get("/complete", async (req, res) => {
             );
         }
 
+        if (params.picture && params.picture !== student.pictureURL) {
+            student.pictureURL = params.picture;
+            logger.debug("Profile picture updated for student " + student._id);
+            await student.save();
+        }
+
         // Load last visited page cookie
         const lastPageCookie =
             req.signedCookies[Envs.env.LAST_PAGE_URL_COOKIE_NAME];
