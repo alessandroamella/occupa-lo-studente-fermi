@@ -171,7 +171,9 @@ router.post("/", checkSchema(schema), async (req: Request, res: Response) => {
         fiscalNumber,
         phoneNumber,
         curriculum,
-        fieldOfStudy
+        fieldOfStudy,
+        hasDrivingLicense,
+        canTravel
     } = req.body;
 
     const cf = new CodiceFiscale(fiscalNumber);
@@ -209,7 +211,8 @@ router.post("/", checkSchema(schema), async (req: Request, res: Response) => {
             fieldOfStudy,
             pictureURL: picture as string,
             curriculum,
-            spidVerified: false
+            hasDrivingLicense,
+            canTravel
         });
     } catch (err) {
         if (err instanceof mongoose.Error.ValidationError) {
@@ -225,7 +228,7 @@ router.post("/", checkSchema(schema), async (req: Request, res: Response) => {
             .json({ err: "Error while creating student" } as ResErr);
     }
 
-    logger.debug(`New student "${firstName} ${lastName}" saved in DB`);
+    logger.info(`New student "${firstName} ${lastName}" saved in DB`);
 
     _clearTempCookie(res);
     await StudentAuthCookieManager.saveStudentAuthCookie(res, student);

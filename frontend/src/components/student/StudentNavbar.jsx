@@ -6,6 +6,7 @@ import Container from "react-bootstrap/Container";
 import { useDispatch, useSelector } from "react-redux";
 import GoogleLogin from "./GoogleLogin";
 import { logout } from "../../slices/studentAuthSlice";
+import { setMessage } from "../../slices/alertSlice";
 
 const selectStudent = state => state.student;
 
@@ -15,6 +16,9 @@ const StudentNavbar = () => {
 
   async function dispatchLogout() {
     dispatch(logout());
+    dispatch(
+      setMessage({ type: "success", title: null, text: "Ti sei sloggato" })
+    );
     navigate("/");
   }
 
@@ -36,10 +40,7 @@ const StudentNavbar = () => {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             <Nav.Link as={Link} to="/student">
-              Home
-            </Nav.Link>
-            <Nav.Link as={Link} to="/student">
-              Offerte di lavoro
+              Home studenti
             </Nav.Link>
           </Nav>
         </Navbar.Collapse>
@@ -50,10 +51,19 @@ const StudentNavbar = () => {
             isLoggingIn ? (
               <p>Caricamento...</p>
             ) : student ? (
-              <div className="flex">
-                <p className="mr-5">
-                  Ciao, <span className="underline">{student.firstName}</span>
-                </p>
+              <div className="flex items-center">
+                <div className="mr-5 flex items-center">
+                  {student.pictureURL ? (
+                    <img
+                      className="w-8 mr-2 rounded-full"
+                      src={student.pictureURL}
+                      alt="Profile pic"
+                    />
+                  ) : (
+                    "Ciao,"
+                  )}{" "}
+                  <span className="underline">{student.firstName}</span>
+                </div>
                 {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                 <a href="#" onClick={dispatchLogout}>
                   Logout

@@ -6,7 +6,7 @@ import Form from "react-bootstrap/Form";
 
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { setStudent } from "../../slices/studentAuthSlice";
+import { setIsLoggingIn, setStudent } from "../../slices/studentAuthSlice";
 
 const StudentSignup = () => {
   const [searchParams] = useSearchParams();
@@ -33,6 +33,8 @@ const StudentSignup = () => {
   const [fiscalNumber, setFiscalNumber] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [fieldOfStudy, setFieldOfStudy] = useState("it");
+  const [hasDrivingLicense, setHasDrivingLicense] = useState(false);
+  const [canTravel, setCanTravel] = useState(false);
 
   // const [value, setValue] = React.useState({ firstName, lastName, email });
   const [disabled, setDisabled] = React.useState(true);
@@ -61,11 +63,14 @@ const StudentSignup = () => {
         lastName,
         fiscalNumber,
         phoneNumber,
-        fieldOfStudy
+        fieldOfStudy,
+        hasDrivingLicense,
+        canTravel
       });
       console.log(res.data);
 
       dispatch(setStudent(res.data));
+      dispatch(setIsLoggingIn(false));
       navigate("/student");
       // DEBUG
       // alert(JSON.stringify(data));
@@ -165,6 +170,20 @@ const StudentSignup = () => {
             <option value="electronics">Elettronica</option>
             <option value="chemistry">Chimica</option>
           </Form.Select>
+        </Form.Group>
+
+        <Form.Group className="mb-3" controlId="fieldOfStudy">
+          <Form.Label>Spostamento casa-lavoro</Form.Label>
+          <Form.Check
+            type="checkbox"
+            label="Hai la patente?"
+            onChange={e => setHasDrivingLicense(e.target.checked)}
+          />
+          <Form.Check
+            type="checkbox"
+            label="Puoi viaggiare autonomamente?"
+            onChange={e => setCanTravel(e.target.checked)}
+          />
         </Form.Group>
 
         <Button variant="outline-primary" type="submit">

@@ -7,7 +7,7 @@ import { logger } from "@shared";
 import { mongoose } from "@typegoose/typegoose";
 
 import { StudentAuthCookieManager } from "../helpers";
-import schema from "../validatorSchema";
+import schema from "../schema/validatorSchema";
 
 const router = Router();
 

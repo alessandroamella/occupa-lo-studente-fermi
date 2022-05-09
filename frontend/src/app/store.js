@@ -1,10 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 import studentAuthSlice from "../slices/studentAuthSlice";
 import agencyAuthSlice from "../slices/agencyAuthSlice";
+import alertSlice from "../slices/alertSlice";
 
 export default configureStore({
     reducer: {
         student: studentAuthSlice,
-        agency: agencyAuthSlice
+        agency: agencyAuthSlice,
+        alert: alertSlice
     }
 });

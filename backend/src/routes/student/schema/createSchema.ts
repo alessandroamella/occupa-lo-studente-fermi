@@ -80,6 +80,20 @@ export const studentValidatorSchema: Schema = {
             options: [["any", "it", "electronics", "chemistry"]],
             errorMessage: "Invalid field of study"
         }
+    },
+    hasDrivingLicense: {
+        in: "body",
+        errorMessage: "Has driving license not specified",
+        isBoolean: {
+            errorMessage: "Has driving license must be a boolean"
+        }
+    },
+    canTravel: {
+        in: "body",
+        errorMessage: "Can travel not specified",
+        isBoolean: {
+            errorMessage: "Can travel must be a boolean"
+        }
     }
 };
 

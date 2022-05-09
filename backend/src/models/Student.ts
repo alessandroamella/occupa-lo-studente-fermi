@@ -25,7 +25,8 @@ import {
  *          - pictureURL
  *          - phoneNumber
  *          - fieldOfStudy
- *          - spidVerified
+ *          - hasDrivingLicense
+ *          - canTravel
  *        properties:
  *          googleId:
  *            type: string
@@ -59,9 +60,12 @@ import {
  *              - electronics
  *              - chemistry
  *            description: Field of study of this student
- *          spidVerified:
+ *          hasDrivingLicense:
  *            type: boolean
- *            description: Whether the student has authenticated with SPID
+ *            description: Whether the student has a driving license
+ *          canTravel:
+ *            type: boolean
+ *            description: Whether the student can travel independently
  */
 
 @modelOptions({ schemaOptions: { collection: "Student", timestamps: true } })
@@ -100,7 +104,10 @@ export class StudentClass {
     public fieldOfStudy!: string;
 
     @prop({ required: true, default: false })
-    public spidVerified!: boolean;
+    public hasDrivingLicense!: boolean;
+
+    @prop({ required: true, default: false })
+    public canTravel!: boolean;
 }
 
 export type StudentDoc = DocumentType<StudentClass>;
@@ -117,9 +124,14 @@ export interface CreateStudentData {
     pictureURL: string;
     phoneNumber: string;
     fieldOfStudy: "it" | "electronics" | "chemistry";
-    spidVerified?: boolean;
+    hasDrivingLicense: boolean;
+    canTravel: boolean;
 }
 export type StudentTempData = Omit<
     CreateStudentData,
-    "fiscalNumber" | "curriculum" | "phoneNumber" | "spidVerified"
+    | "fiscalNumber"
+    | "curriculum"
+    | "phoneNumber"
+    | "hasDrivingLicense"
+    | "canTravel"
 >;

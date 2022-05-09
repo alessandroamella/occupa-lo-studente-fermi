@@ -237,7 +237,9 @@ describe("Students", () => {
     email: `${name}.${surname}@fermi.mo.it`,
     pictureURL: "https://picsum.photos/300",
     phoneNumber: "3924133359",
-    fieldOfStudy: "it"
+    fieldOfStudy: "it",
+    hasDrivingLicense: faker.datatype.boolean(),
+    canTravel: faker.datatype.boolean()
     // spidVerified: false,
   };
 

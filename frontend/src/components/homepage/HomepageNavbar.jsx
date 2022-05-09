@@ -4,7 +4,7 @@ import Container from "react-bootstrap/Container";
 const MainNavbar = () => {
   return (
     // <header class="sticky top-0 z-50 w-full py-6 bg-gray-800">
-    <header class="bg-[#f7f7f7] w-full py-6 text-gray-800">
+    <header className="bg-[#f7f7f7] w-full py-6 text-gray-800">
       <Container className="flex justify-center text-center items-center">
         <img
           alt=""

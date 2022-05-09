@@ -51,7 +51,7 @@ const SecretaryLogin = ({
     >
       <Form onSubmit={handleSubmit}>
         <Modal.Header closeButton>
-          <Modal.Title>Login secreteria</Modal.Title>
+          <Modal.Title>Login segreteria</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {err && <Alert variant="danger">{err}</Alert>}
