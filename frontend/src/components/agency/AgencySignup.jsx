@@ -9,6 +9,7 @@ import ReCAPTCHA from "react-google-recaptcha";
 import axios from "axios";
 import { setAgency } from "../../slices/agencyAuthSlice";
 import { useDispatch } from "react-redux";
+import { setMessage } from "../../slices/alertSlice";
 
 const AgencySignup = () => {
   const navigate = useNavigate();
@@ -66,7 +67,14 @@ const AgencySignup = () => {
       agency = res.data;
     } catch (err) {
       console.log(err?.response?.data || err);
-      alert(err?.response?.data?.err || "Errore sconosciuto");
+      // DEBUG
+      dispatch(
+        setMessage({
+          color: "red",
+          title: "Errore nella registrazione",
+          text: err?.response?.data?.err || "Errore sconosciuto"
+        })
+      );
       setDisabled(false);
       return false;
     }
@@ -74,6 +82,13 @@ const AgencySignup = () => {
     console.log({ agency });
     dispatch(setAgency(agency));
     navigate("/agency/dashboard");
+    dispatch(
+      setMessage({
+        color: "green",
+        title: "Buone notizie",
+        text: "Registrazione avvenuta con successo! Ora la segreteria deciderà se approvare"
+      })
+    );
     setDisabled(false);
     return false;
   }
@@ -242,7 +257,7 @@ const AgencySignup = () => {
             value={agencyDescription}
             autoComplete="off"
             minLength={16}
-            maxLength={1000}
+            maxLength={4000}
             required
           />
           <Form.Text className="text-muted">

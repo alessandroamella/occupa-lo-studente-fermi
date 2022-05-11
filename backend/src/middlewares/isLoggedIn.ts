@@ -27,7 +27,7 @@ export class isLoggedIn {
 
         logger.debug("isStudentLoggedIn not logged in");
         res.status(401).json({
-            err: "You need to be logged in (as a student) to view this page"
+            err: "You need to be logged in (as a student) to perform this operation"
         } as ResErr);
     }
 
@@ -40,7 +40,7 @@ export class isLoggedIn {
 
         logger.debug("isAgencyLoggedIn not logged in");
         res.status(401).json({
-            err: "You need to be logged in (as an agency) to view this page"
+            err: "You need to be logged in (as an agency) to perform this operation"
         } as ResErr);
     }
 }

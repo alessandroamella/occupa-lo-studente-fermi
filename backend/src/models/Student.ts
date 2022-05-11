@@ -22,7 +22,7 @@ import {
  *          - lastName
  *          - fiscalNumber
  *          - email
- *          - pictureURL
+ *          - pictureUrl
  *          - phoneNumber
  *          - fieldOfStudy
  *          - hasDrivingLicense
@@ -47,7 +47,7 @@ import {
  *            type: string
  *            format: email
  *            description: Email (must be @fermi.mo.it)
- *          pictureURL:
+ *          pictureUrl:
  *            type: string
  *            description: URL of the profile picture
  *          phoneNumber:
@@ -89,7 +89,7 @@ export class StudentClass {
     public email!: string;
 
     @prop({ required: true })
-    public pictureURL!: string;
+    public pictureUrl!: string;
 
     @prop({
         required: true,
@@ -121,7 +121,7 @@ export interface CreateStudentData {
     fiscalNumber: string;
     curriculum?: string;
     email: string;
-    pictureURL: string;
+    pictureUrl: string;
     phoneNumber: string;
     fieldOfStudy: "it" | "electronics" | "chemistry";
     hasDrivingLicense: boolean;

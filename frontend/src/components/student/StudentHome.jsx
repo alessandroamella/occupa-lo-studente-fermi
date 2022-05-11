@@ -7,8 +7,9 @@ import Container from "react-bootstrap/Container";
 import Spinner from "react-bootstrap/Spinner";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import RequireStudentLogin from "./RequireStudentLogin";
 import { useDispatch, useSelector } from "react-redux";
+import ReactMarkdown from "react-markdown";
+import RequireStudentLogin from "./RequireStudentLogin";
 import { setMessage } from "../../slices/alertSlice";
 
 const selectStudent = state => state.student;
@@ -90,13 +91,13 @@ const StudentHome = () => {
                       <code>{JSON.stringify(e, null, 4)}</code>
                     </pre> */}
                     <Card>
-                      <div className="flex">
+                      <div className="flex flex-col">
                         {e.logoUrl && (
                           <img
                             loading="lazy"
                             src={e.logoUrl}
                             alt="Agency logo"
-                            className="sm:p-2 md:p-3 lg:p-4 min-w-[4rem] object-contain"
+                            className="max-w-xs mx-auto sm:p-2 md:p-3 lg:p-4 min-w-[4rem] object-contain"
                           />
                         )}
                         <Card.Body>
@@ -111,7 +112,14 @@ const StudentHome = () => {
                             </a>
                           </Card.Subtitle>
                           <Card.Text className="mb-2 text-muted">
-                            {e.agencyDescription}
+                            <ReactMarkdown
+                              children={
+                                e.agencyDescription.length > 100
+                                  ? e.agencyDescription.substring(0, 100) +
+                                    "..."
+                                  : e.agencyDescription
+                              }
+                            />
                           </Card.Text>
                           <Card.Text>
                             <strong>{e.jobOffers.length}</strong> offerte di

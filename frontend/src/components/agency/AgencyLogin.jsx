@@ -8,6 +8,7 @@ import { ArrowLeft } from "react-bootstrap-icons";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setAgency } from "../../slices/agencyAuthSlice";
+import { setMessage } from "../../slices/alertSlice";
 
 const AgencySignup = () => {
   const [email, setEmail] = useState(""); // "user@example.com",
@@ -37,7 +38,14 @@ const AgencySignup = () => {
       agency = res.data;
     } catch (err) {
       console.log(err?.response?.data || err);
-      alert(err?.response?.data?.err || "Errore sconosciuto");
+      // DEBUG
+      dispatch(
+        setMessage({
+          color: "red",
+          title: "Errore nel login",
+          text: err?.response?.data?.err || "Errore sconosciuto"
+        })
+      );
       setDisabled(false);
       return false;
     }
@@ -50,7 +58,7 @@ const AgencySignup = () => {
   }
 
   return (
-    <Container bg="dark" variant="dark" className="mt-8 mb-4">
+    <Container bg="dark" variant="dark" className="mt-8 mb-20">
       <Button as={Link} to="/agency" variant="outline-dark">
         <ArrowLeft />
       </Button>

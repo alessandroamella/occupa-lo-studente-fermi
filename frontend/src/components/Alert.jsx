@@ -24,19 +24,21 @@ const Alert = () => {
     //   className={`text-white px-6 py-4 border-0 rounded relative mb-4 bg-${color}-500`}
     // >
     <div
-      className={`text-white mx-4 md:mx-0 px-3 md:px-6 py-4 md:py-5 border-0 rounded relative ease-in-out transition-all duration-500 ${
-        isShown ? "mb-4" : "-mb-24"
-      } bg-green-500`}
+      className={`text-white mx-4 md:mx-0 px-3 md:px-6 py-4 md:py-5 border-0 rounded ease-in-out transition-all duration-500 ${
+        isShown ? "mb-4" : "-mb-32"
+      } ${color === "green" ? "bg-green-500" : "bg-red-500"}`}
     >
-      <span className="inline-block align-middle mr-8">
-        <b>{title}</b> {text}
-      </span>
-      <button
-        className="hover:text-gray-200 absolute bg-transparent text-2xl font-semibold leading-none right-0 mr-6 outline-none focus:outline-none"
-        onClick={() => isShown && dispatch(removeMessage())}
-      >
-        <span>&times;</span>
-      </button>
+      <div className="w-full h-full relative">
+        <span className="inline-block align-middle mr-8">
+          <b>{title}</b> {text}
+        </span>
+        <button
+          className="hover:text-gray-200 absolute bg-transparent text-2xl font-semibold leading-none right-0 outline-none focus:outline-none"
+          onClick={() => isShown && dispatch(removeMessage())}
+        >
+          <span>&times;</span>
+        </button>
+      </div>
     </div>
   );
 };

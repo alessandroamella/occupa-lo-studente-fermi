@@ -19,7 +19,7 @@ const StudentProfile = () => {
       <Container bg="dark" variant="dark" className="mt-12 mb-4">
         {/* <div className="px-4 flex justify-center flex-col md:flex-row">
           <img
-            src={student.pictureURL.replace("=s96-c", "=s1024-c")}
+            src={student.pictureUrl.replace("=s96-c", "=s1024-c")}
             loading="lazy"
             alt="Profile pic"
             className="w-44 rounded-full shadow-lg"
@@ -49,7 +49,7 @@ const StudentProfile = () => {
           <div className="flex flex-col md:flex-row mt-8">
             {student ? (
               <img
-                src={student.pictureURL?.replace("=s96-c", "=s1024-c")}
+                src={student.pictureUrl?.replace("=s96-c", "=s1024-c")}
                 loading="lazy"
                 alt="Profile pic"
                 className="w-44 rounded-full shadow-lg"

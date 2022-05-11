@@ -35,7 +35,7 @@ router.delete("/", isLoggedIn.isStudentLoggedIn, async (req, res) => {
     if (!req.student) {
         logger.error("req.student null with isLoggedIn middleware");
         return res.status(401).json({
-            err: "You need to be logged in to view this page"
+            err: "You need to be logged in to perform this operation"
         } as ResErr);
     }
     try {

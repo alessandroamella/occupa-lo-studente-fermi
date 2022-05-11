@@ -74,7 +74,7 @@ import { JobOfferClass } from "./JobOffer";
  *          agencyDescription:
  *            type: string
  *            minLength: 16
- *            maxLength: 1000
+ *            maxLength: 4000
  *            description: Exhaustive description of the agency
  *          agencyAddress:
  *            type: string
@@ -99,6 +99,9 @@ import { JobOfferClass } from "./JobOffer";
  *          logoUrl:
  *            type: string
  *            description: URL of the agency's logo
+ *          bannerUrl:
+ *            type: string
+ *            description: URL of the agency's banner
  *          jobOffers:
  *            type: array
  *            description: ObjectIds of the job offers for this agency
@@ -138,7 +141,7 @@ export class AgencyClass {
     @prop({ required: true, minlength: 1, maxlength: 100 })
     public agencyName!: string;
 
-    @prop({ required: true, minlength: 16, maxlength: 1000 })
+    @prop({ required: true, minlength: 16, maxlength: 4000 })
     public agencyDescription!: string;
 
     @prop({ required: true, minlength: 3 })
@@ -155,6 +158,9 @@ export class AgencyClass {
 
     @prop({ required: false })
     public logoUrl?: string;
+
+    @prop({ required: false })
+    public bannerUrl?: string;
 
     @prop({ required: true, ref: "JobOfferClass" })
     public jobOffers!: Ref<JobOfferClass>[];

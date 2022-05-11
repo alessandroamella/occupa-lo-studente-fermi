@@ -118,8 +118,8 @@ export const validatorSchema: Schema = {
         in: "body",
         errorMessage: "Agency description not specified",
         isLength: {
-            errorMessage: "Description must be 16-1000 characters long",
-            options: { min: 16, max: 1000 }
+            errorMessage: "Description must be 16-4000 characters long",
+            options: { min: 16, max: 4000 }
         },
         trim: {}
     },

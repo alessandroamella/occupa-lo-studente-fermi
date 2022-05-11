@@ -236,7 +236,7 @@ describe("Students", () => {
     lastName: surname,
     fiscalNumber: cf.toString(),
     email: `${name}.${surname}@fermi.mo.it`,
-    pictureURL: "https://picsum.photos/300",
+    pictureUrl: "https://picsum.photos/300",
     phoneNumber: "3924133359",
     fieldOfStudy: "it",
     hasDrivingLicense: faker.datatype.boolean(),

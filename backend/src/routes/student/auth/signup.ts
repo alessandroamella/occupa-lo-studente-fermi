@@ -209,7 +209,7 @@ router.post("/", checkSchema(schema), async (req: Request, res: Response) => {
             googleId: id as string,
             phoneNumber,
             fieldOfStudy,
-            pictureURL: picture as string,
+            pictureUrl: picture as string,
             curriculum,
             hasDrivingLicense,
             canTravel

@@ -61,11 +61,11 @@ const StudentNavbar = () => {
                   className="mr-5 flex items-center cursor-pointer hover:bg-gray-700 transition-colors rounded p-1"
                   onClick={() => navigate("/student/profile")}
                 >
-                  {student.pictureURL ? (
+                  {student.pictureUrl ? (
                     <img
                       className="w-8 mr-2 rounded-full"
                       loading="lazy"
-                      src={student.pictureURL}
+                      src={student.pictureUrl}
                       alt="Profile pic"
                     />
                   ) : (

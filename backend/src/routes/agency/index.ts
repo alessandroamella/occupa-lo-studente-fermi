@@ -68,7 +68,7 @@ import updateRoute from "./update";
  *          agencyDescription:
  *            type: string
  *            minLength: 16
- *            maxLength: 1000
+ *            maxLength: 4000
  *            description: Exhaustive description of the agency
  *          agencyAddress:
  *            type: string
@@ -84,7 +84,7 @@ import updateRoute from "./update";
  *            description: URL of the agency's logo
  *          bannerUrl:
  *            type: string
- *            description: URL of the agency's logo
+ *            description: URL of the agency's banner
  */
 
 const router = Router();
