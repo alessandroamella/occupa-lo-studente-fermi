@@ -82,6 +82,9 @@ import updateRoute from "./update";
  *          logoUrl:
  *            type: string
  *            description: URL of the agency's logo
+ *          bannerUrl:
+ *            type: string
+ *            description: URL of the agency's logo
  */
 
 const router = Router();

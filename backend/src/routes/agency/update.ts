@@ -79,7 +79,8 @@ router.put(
             agencyDescription,
             agencyAddress,
             vatCode,
-            logoUrl
+            logoUrl,
+            bannerUrl
         } = req.body;
 
         for (const prop in {
@@ -94,7 +95,8 @@ router.put(
             agencyDescription,
             agencyAddress,
             vatCode,
-            logoUrl
+            logoUrl,
+            bannerUrl
         }) {
             if (req.body[prop]) {
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any

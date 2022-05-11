@@ -168,6 +168,19 @@ export const validatorSchema: Schema = {
         optional: true,
         trim: {}
     },
+    bannerUrl: {
+        in: "body",
+        errorMessage: "Banner URL not specified",
+        isURL: {
+            errorMessage: "Banner URL must be an URL"
+        },
+        custom: {
+            errorMessage: "Banner URL doesn't exist",
+            options: async v => await urlExists(v)
+        },
+        optional: true,
+        trim: {}
+    },
     jobOffers: {
         in: "body",
         errorMessage: "Job offers not specified",

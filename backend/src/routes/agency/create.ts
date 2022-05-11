@@ -76,6 +76,7 @@ router.post("/", checkSchema(schema), async (req: Request, res: Response) => {
         agencyAddress,
         vatCode,
         logoUrl,
+        bannerUrl,
         captcha
         // approvalStatus,
         // jobOffers
@@ -138,6 +139,7 @@ router.post("/", checkSchema(schema), async (req: Request, res: Response) => {
         agencyAddress,
         vatCode,
         logoUrl,
+        bannerUrl,
         approvalStatus: "waiting",
         jobOffers: []
     });

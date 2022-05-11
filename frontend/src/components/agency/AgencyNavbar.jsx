@@ -36,7 +36,7 @@ const AgencyNavbar = () => {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             <Nav.Link as={Link} to="/agency">
-              Home
+              Home azienda
             </Nav.Link>
             {/* <Nav.Link as={Link} to="/agency">
               Offerte di lavoro

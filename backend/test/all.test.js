@@ -39,7 +39,8 @@ describe("Agencies", () => {
     agencyAddress:
       faker.address.city() + " " + faker.address.secondaryAddress(),
     vatCode: faker.datatype.string(10),
-    logoUrl: "https://picsum.photos/500"
+    logoUrl: "https://picsum.photos/500",
+    bannerUrl: "https://picsum.photos/2000"
   };
 
   let agencyDB;

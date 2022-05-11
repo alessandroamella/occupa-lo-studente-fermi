@@ -27,6 +27,7 @@ const AgencySignup = () => {
   const [agencyAddress, setAgencyAddress] = useState(""); // "string",
   const [vatCode, setVatCode] = useState(""); // "string",
   const [logoUrl, setLogoUrl] = useState(""); // "string"
+  const [bannerUrl, setBannerUrl] = useState(""); // "string"
 
   // const [value, setValue] = React.useState({ firstName, lastName, email });
   const [disabled, setDisabled] = React.useState(true);
@@ -50,6 +51,7 @@ const AgencySignup = () => {
       agencyAddress,
       vatCode,
       logoUrl: logoUrl || undefined,
+      bannerUrl: bannerUrl || undefined,
       captcha
     };
 
@@ -295,6 +297,21 @@ const AgencySignup = () => {
           />
           <Form.Text className="text-muted">
             URL del logo azienda (opzionale).
+          </Form.Text>
+        </Form.Group>
+
+        <Form.Group className="mb-3" controlId="phoneNumber">
+          <Form.Label>URL banner</Form.Label>
+          <Form.Control
+            type="text"
+            onChange={e => setBannerUrl(e.target.value)}
+            pattern="https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)"
+            disabled={disabled}
+            autoComplete="off"
+            value={bannerUrl}
+          />
+          <Form.Text className="text-muted">
+            Banner mostrato sopra il nome dell'azienda (opzionale).
           </Form.Text>
         </Form.Group>
 
