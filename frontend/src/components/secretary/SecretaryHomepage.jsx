@@ -51,9 +51,13 @@ const SecretaryHomepage = () => {
   async function approveAgency(action, _id) {
     if (!agencies) return alert("Agencies not loaded");
     try {
-      await axios.get(`/api/secretary/approve/${_id}`, {
-        params: { username, password, action }
-      });
+      await axios.post(
+        `/api/secretary/approve/${_id}`,
+        {},
+        {
+          params: { username, password, action }
+        }
+      );
 
       // Approval successful, update agencies array
       dispatch(

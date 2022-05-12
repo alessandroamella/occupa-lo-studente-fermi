@@ -6,6 +6,7 @@ import Navbar from "react-bootstrap/Navbar";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 import { logout } from "../../slices/agencyAuthSlice";
+import { BoxArrowLeft } from "react-bootstrap-icons";
 
 const selectAgency = state => state.agency;
 
@@ -29,12 +30,12 @@ const AgencyNavbar = () => {
             className="d-inline-block w-14"
             loading="lazy"
           />
-          <span className="ml-3">Occupa lo studente</span>
+          <span className="ml-3 hidden md:inline">Occupa lo studente</span>
         </Navbar.Brand>
 
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
+          <Nav className="me-auto hidden md:block">
             <Nav.Link as={Link} to="/agency">
               Home azienda
             </Nav.Link>
@@ -55,8 +56,13 @@ const AgencyNavbar = () => {
                   Ciao, <span className="underline">{agency.agencyName}</span>
                 </p>
                 {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-                <a href="#" onClick={dispatchLogout}>
-                  Logout
+                <a
+                  href="#"
+                  onClick={dispatchLogout}
+                  className="flex items-center"
+                >
+                  <BoxArrowLeft />
+                  <span className="ml-1">Logout</span>
                 </a>
               </div>
             ) : (

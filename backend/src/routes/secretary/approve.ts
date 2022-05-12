@@ -10,7 +10,7 @@ import { logger } from "@shared";
 /**
  * @openapi
  * /api/secretary/approve/{agencyId}:
- *  get:
+ *  post:
  *    summary: Approve or reject an agency
  *    parameters:
  *      - in: query
@@ -79,7 +79,7 @@ import { logger } from "@shared";
 
 const router = Router();
 
-router.get(
+router.post(
     "/:agencyId",
     param("agencyId").isMongoId(),
     query("action").isIn(["approve", "reject"]),

@@ -1,5 +1,6 @@
 import { Request, Response, Router } from "express";
 import { checkSchema, param, validationResult } from "express-validator";
+import moment from "moment";
 
 import { ResErr } from "@routes";
 import { JobOfferService } from "@services";
@@ -85,6 +86,13 @@ router.put(
             return res
                 .status(500)
                 .json({ err: "Error while finding job offer" } as ResErr);
+        }
+
+        if (moment().isAfter(moment(jobOffer.expiryDate))) {
+            logger.debug("Can't edit expired job offer" + jobOffer._id);
+            return res
+                .status(400)
+                .json({ err: "Job offer is expired" } as ResErr);
         }
 
         const {

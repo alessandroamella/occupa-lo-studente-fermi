@@ -12,7 +12,7 @@ const MainNavbar = () => {
           src="/img/fermi_trimmed_black.png"
           className="d-inline-block w-14"
         />
-        <span className="ml-3 text-2xl md:text-3xl uppercase font-semibold tracking-tight	">
+        <span className="ml-3 hidden md:inline text-2xl md:text-3xl uppercase font-semibold tracking-tight	">
           Occupa lo studente
         </span>
       </Container>

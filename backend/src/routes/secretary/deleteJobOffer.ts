@@ -8,8 +8,8 @@ import { logger } from "@shared";
 
 /**
  * @openapi
- * /api/secretary/deletejoboffer/{jobOfferId}:
- *  get:
+ * /api/secretary/joboffer/{jobOfferId}:
+ *  delete:
  *    summary: Deletes a jobOffer for an agency
  *    parameters:
  *      - in: query
@@ -72,7 +72,7 @@ import { logger } from "@shared";
 
 const router = Router();
 
-router.get(
+router.delete(
     "/:jobOfferId",
     param("jobOfferId").isMongoId(),
     query("notifyAgency").optional().isIn(["yes", "no"]),
@@ -104,7 +104,7 @@ router.get(
 
         await JobOfferService.delete(jobOffer);
 
-        logger.debug("deleteAgency notifyAgency=" + notifyAgency);
+        logger.debug("deleteJobOffer notifyAgency=" + notifyAgency);
         if (notifyAgency !== "no") {
             // DEBUG to be implemented
             logger.warn("DEBUG notifyAgency for JobOffer deletion!");

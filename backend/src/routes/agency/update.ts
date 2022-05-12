@@ -114,6 +114,7 @@ router.put(
 
         try {
             await AgencyService.update(req.agency);
+            await req.agency.populate("jobOffers");
         } catch (err) {
             if (err instanceof mongoose.Error.ValidationError) {
                 logger.debug("Agency update validation error");

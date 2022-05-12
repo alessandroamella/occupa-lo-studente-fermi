@@ -8,8 +8,8 @@ import { logger } from "@shared";
 
 /**
  * @openapi
- * /api/secretary/deleteagency/{agencyId}:
- *  get:
+ * /api/secretary/agency/{agencyId}:
+ *  delete:
  *    summary: Deletes an agency along with all its jobOffers
  *    parameters:
  *      - in: query
@@ -72,7 +72,7 @@ import { logger } from "@shared";
 
 const router = Router();
 
-router.get(
+router.delete(
     "/:agencyId",
     param("agencyId").isMongoId(),
     query("notifyAgency").optional().isIn(["yes", "no"]),

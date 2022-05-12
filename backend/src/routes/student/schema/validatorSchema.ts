@@ -79,7 +79,8 @@ export const studentValidatorSchema: Schema = {
                 }
                 return true;
             }
-        }
+        },
+        toLowerCase: {}
     },
     phoneNumber: {
         in: "body",

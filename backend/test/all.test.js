@@ -43,6 +43,8 @@ describe("Agencies", () => {
     bannerUrl: "https://picsum.photos/2000"
   };
 
+  console.log({ pw: rawAgency.password });
+
   let agencyDB;
 
   describe("Create an agency", () => {
@@ -99,6 +101,24 @@ describe("Agencies", () => {
       const res = await agent.get("/agency");
       expect(res).to.have.status(200);
       expect(res.body).to.be.an("object").with.property("_id");
+    });
+  });
+
+  describe("Edit agency without being approved", () => {
+    it("returns unauthorized", async () => {
+      const res = await agent
+        .put("/agency")
+        .send({ email: faker.internet.email() });
+      expect(res).to.have.status(401);
+    });
+  });
+
+  describe("Approves agency", () => {
+    it("approves it", async () => {
+      const res = await agent
+        .post("/secretary/approve/" + agencyDB?._id)
+        .query({ username: "fermi", password: "fermi", action: "approve" });
+      expect(res).to.have.status(200);
     });
   });
 
@@ -207,12 +227,12 @@ describe("Agencies", () => {
     });
   });
 
-  describe("Delete an agency", () => {
-    it("deletes it", async () => {
-      const res = await agent.delete("/agency");
-      expect(res).to.have.status(200);
-    });
-  });
+  // describe("Delete an agency", () => {
+  //   it("deletes it", async () => {
+  //     const res = await agent.delete("/agency");
+  //     expect(res).to.have.status(200);
+  //   });
+  // });
 });
 
 describe("Students", () => {
@@ -231,7 +251,7 @@ describe("Students", () => {
   });
 
   const rawStudent = {
-    googleId: faker.datatype.number({ min: 1000, max: 9999 }),
+    googleId: faker.datatype.number({ min: 1000, max: 9999 }).toString(),
     firstName: name,
     lastName: surname,
     fiscalNumber: cf.toString(),
@@ -273,6 +293,7 @@ describe("Students", () => {
     it("logs student in", async () => {
       // console.log(rawStudent);
       const res = await agent.post("/student/auth/testauth").send(rawStudent);
+
       expect(res).to.have.status(200);
       expect(res).to.have.cookie("studenttoken");
 

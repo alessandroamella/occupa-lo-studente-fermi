@@ -11,7 +11,7 @@ const router = Router();
 router.use("/check-credentials", checkCredentialsRoute);
 router.use("/agencies", listRoute);
 router.use("/approve", approveRoute);
-router.use("/deleteagency", deleteAgencyRoute);
-router.use("/deletejoboffer", deleteJobOfferRoute);
+router.use("/agency", deleteAgencyRoute);
+router.use("/joboffer", deleteJobOfferRoute);
 
 export default router;

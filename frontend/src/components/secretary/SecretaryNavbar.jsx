@@ -17,12 +17,12 @@ const SecretaryNavbar = () => {
             src="https://ssh.edu.it/images/logos/fermi.png"
             className="d-inline-block w-14"
           />
-          <span className="ml-3">Occupa lo studente</span>
+          <span className="ml-3 hidden md:inline">Occupa lo studente</span>
         </Navbar.Brand>
 
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
+          <Nav className="me-auto hidden md:block">
             <Nav.Link as={Link} to="/student">
               Home
             </Nav.Link>
