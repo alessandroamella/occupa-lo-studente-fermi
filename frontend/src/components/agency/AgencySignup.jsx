@@ -122,7 +122,7 @@ const AgencySignup = () => {
       </div>
 
       <Form onSubmit={submitForm}>
-        <Form.Group className="mb-3" controlId="email">
+        <Form.Group className="mb-3" controlId="responsibleFirstName">
           <Form.Label>Nome responsabile</Form.Label>
           <Form.Control
             type="text"
@@ -137,7 +137,7 @@ const AgencySignup = () => {
           />
         </Form.Group>
 
-        <Form.Group className="mb-3" controlId="lastName">
+        <Form.Group className="mb-3" controlId="responsibleLastName">
           <Form.Label>Cognome responsabile</Form.Label>
           <Form.Control
             type="text"
@@ -152,7 +152,7 @@ const AgencySignup = () => {
           />
         </Form.Group>
 
-        <Form.Group className="mb-3" controlId="fiscalNumber">
+        <Form.Group className="mb-3" controlId="responsibleFiscalNumber">
           <Form.Label>Codice fiscale</Form.Label>
           <Form.Control
             type="text"
@@ -166,7 +166,7 @@ const AgencySignup = () => {
           />
         </Form.Group>
 
-        <Form.Group className="mb-3" controlId="phoneNumber">
+        <Form.Group className="mb-3" controlId="email">
           <Form.Label>Email</Form.Label>
           <Form.Control
             type="email"
@@ -182,7 +182,7 @@ const AgencySignup = () => {
           </Form.Text>
         </Form.Group>
 
-        <Form.Group className="mb-3" controlId="phoneNumber">
+        <Form.Group className="mb-3" controlId="password">
           <Form.Label>Password</Form.Label>
           <Form.Control
             type="password"
@@ -199,7 +199,7 @@ const AgencySignup = () => {
           </Form.Text>
         </Form.Group>
 
-        <Form.Group className="mb-3" controlId="phoneNumber">
+        <Form.Group className="mb-3" controlId="websiteUrl">
           <Form.Label>Sito web</Form.Label>
           <Form.Control
             type="text"
@@ -233,7 +233,7 @@ const AgencySignup = () => {
           </Form.Text>
         </Form.Group>
 
-        <Form.Group className="mb-3" controlId="phoneNumber">
+        <Form.Group className="mb-3" controlId="agencyName">
           <Form.Label>Nome azienda</Form.Label>
           <Form.Control
             type="text"
@@ -241,14 +241,14 @@ const AgencySignup = () => {
             onChange={e => setAgencyName(e.target.value)}
             disabled={disabled}
             value={agencyName}
-            autoComplete="off"
+            autoComplete="agency-name"
             minLength={1}
             maxLength={100}
             required
           />
         </Form.Group>
 
-        <Form.Group className="mb-3" controlId="phoneNumber">
+        <Form.Group className="mb-3" controlId="agencyDescription">
           <Form.Label>Descrizione azienda</Form.Label>
           <Form.Control
             as="textarea"
@@ -266,7 +266,7 @@ const AgencySignup = () => {
           </Form.Text>
         </Form.Group>
 
-        <Form.Group className="mb-3" controlId="phoneNumber">
+        <Form.Group className="mb-3" controlId="agencyAddress">
           <Form.Label>Indirizzo azienda</Form.Label>
           <Form.Control
             type="text"
@@ -285,7 +285,7 @@ const AgencySignup = () => {
           </Form.Text>
         </Form.Group>
 
-        <Form.Group className="mb-3" controlId="phoneNumber">
+        <Form.Group className="mb-3" controlId="vatCode">
           <Form.Label>Partita IVA</Form.Label>
           <Form.Control
             type="text"
@@ -300,7 +300,7 @@ const AgencySignup = () => {
           />
         </Form.Group>
 
-        <Form.Group className="mb-3" controlId="phoneNumber">
+        <Form.Group className="mb-3" controlId="logoUrl">
           <Form.Label>URL logo</Form.Label>
           <Form.Control
             type="text"
@@ -315,7 +315,7 @@ const AgencySignup = () => {
           </Form.Text>
         </Form.Group>
 
-        <Form.Group className="mb-3" controlId="phoneNumber">
+        <Form.Group className="mb-3" controlId="bannerUrl">
           <Form.Label>URL banner</Form.Label>
           <Form.Control
             type="text"

@@ -28,7 +28,7 @@ export const loginSchema: Schema = {
         isEmail: {
             errorMessage: "Invalid email"
         },
-        normalizeEmail: {}
+        trim: {}
     },
     password: {
         in: "body",

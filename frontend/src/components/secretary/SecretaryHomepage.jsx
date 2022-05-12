@@ -9,6 +9,8 @@ import Col from "react-bootstrap/Col";
 import Placeholder from "react-bootstrap/Placeholder";
 import SecretaryAgencyView from "./SecretaryAgencyView";
 import SecretaryLogin from "./SecretaryLogin";
+import { useDispatch } from "react-redux";
+import { setMessage } from "../../slices/alertSlice";
 
 const SecretaryHomepage = () => {
   const [username, setUsername] = useState("");
@@ -17,6 +19,8 @@ const SecretaryHomepage = () => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [agencies, setAgencies] = useState(null);
   const [disabled, setDisabled] = useState(true);
+
+  const dispatch = useDispatch();
 
   const loaded = () => agencies && agencies.length > 0;
 
@@ -50,7 +54,17 @@ const SecretaryHomepage = () => {
       await axios.get(`/api/secretary/approve/${_id}`, {
         params: { username, password, action }
       });
+
       // Approval successful, update agencies array
+      dispatch(
+        setMessage({
+          color: "green",
+          title: "Approvazione",
+          text: `Azienda ${
+            action === "approve" ? "approvata" : "rifiutata"
+          } con successo`
+        })
+      );
       await fetchAgencies();
     } catch (err) {
       // DEBUG

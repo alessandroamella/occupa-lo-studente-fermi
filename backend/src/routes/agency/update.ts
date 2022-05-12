@@ -1,3 +1,4 @@
+import bcrypt from "bcrypt";
 import { Request, Response, Router } from "express";
 import { checkSchema, validationResult } from "express-validator";
 
@@ -100,8 +101,14 @@ router.put(
             bannerUrl
         }) {
             if (req.body[prop]) {
+                if (prop === "password") {
+                    const salt = await bcrypt.genSalt(10);
+                    const hashedPassword = await bcrypt.hash(password, salt);
+
+                    req.agency.hashedPassword = hashedPassword;
+                }
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                (req.agency as any)[prop] = req.body[prop];
+                else (req.agency as any)[prop] = req.body[prop];
             }
         }
 
