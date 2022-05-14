@@ -27,7 +27,9 @@ import AgencySignup from "./components/agency/AgencySignup";
 import AgencyLogin from "./components/agency/AgencyLogin";
 import AgencyDashboard from "./components/agency/AgencyDashboard";
 import StudentProfile from "./components/student/StudentProfile";
+import CreateJobOffer from "./components/jobOffer/CreateJobOffer";
 import Base from "./components/Base";
+import ViewJobOffer from "./components/jobOffer/ViewJobOffer";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -54,6 +56,10 @@ ReactDOM.render(
                 <Route path="signup" element={<AgencySignup />} />
                 <Route path="login" element={<AgencyLogin />} />
                 <Route path="dashboard" element={<AgencyDashboard />} />
+                <Route path="joboffer">
+                  <Route path="view/:id" element={<ViewJobOffer />} />
+                  <Route path="create" element={<CreateJobOffer />} />
+                </Route>
               </Route>
             </Route>
             <Route path="*" element={<Navigate to="/" replace />} />

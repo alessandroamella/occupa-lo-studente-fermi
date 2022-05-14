@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { format } from "date-fns";
 import { ArrowRight } from "react-bootstrap-icons";
+import { useNavigate } from "react-router-dom";
 
 const Separator = () => {
   return <div className="hidden md:block mx-2">-</div>;
@@ -10,11 +11,14 @@ const JobOfferCard = ({ jobOffer, className, ...rest }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
 
+  const navigate = useNavigate();
+
   return (
     <div
       className={`flex m-2 md:m-4 hover:bg-gray-100 transition-all hover:scale-105 cursor-pointer rounded-md border p-3 md:py-4 md:px-8 ${
         className || ""
       }`}
+      onClick={() => navigate("/agency/joboffer/view/" + jobOffer._id)}
       {...rest}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}

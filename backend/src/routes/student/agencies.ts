@@ -60,7 +60,9 @@ router.get(
     isLoggedIn.isStudentLoggedIn,
     query("field", "Invalid field query")
         .optional()
-        .isIn(["any", "it", "electronics", "chemistry"]),
+        .isIn(["any", "it", "electronics", "chemistry"])
+        .trim()
+        .toLowerCase(),
     async (req, res) => {
         try {
             const errors = validationResult(req);
@@ -70,7 +72,7 @@ router.get(
                     .json({ err: errors.array().join(", ") } as ResErr);
             }
 
-            const fieldOfStudy = req.query.field;
+            const fieldOfStudy = req.query.field || "any";
 
             const foundAgencies = await AgencyService.find(
                 { approvalStatus: "approved" },
@@ -79,6 +81,10 @@ router.get(
             let isErr = false; // in case a job offer isn't populated
 
             const agencies: LeanDocument<AgencyClass>[] = [];
+
+            logger.debug(
+                `Filtering agencies by field of study ${fieldOfStudy}`
+            );
 
             for (const agency of foundAgencies) {
                 if (!isDocumentArray(agency.jobOffers)) {
@@ -94,8 +100,10 @@ router.get(
                     jobOffers: agency.jobOffers
                         .filter(
                             j =>
-                                j.fieldOfStudy === fieldOfStudy &&
-                                moment(j.expiryDate).isBefore(moment())
+                                (fieldOfStudy === "any"
+                                    ? true
+                                    : j.fieldOfStudy === fieldOfStudy) &&
+                                moment(j.expiryDate).isAfter(moment())
                         )
                         .map(j => j.toObject())
                 };

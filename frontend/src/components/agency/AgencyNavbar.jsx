@@ -52,9 +52,9 @@ const AgencyNavbar = () => {
               <p>Caricamento...</p>
             ) : agency ? (
               <div className="flex">
-                <p className="mr-5">
+                <Link to="/agency/dashboard" className="mr-5">
                   Ciao, <span className="underline">{agency.agencyName}</span>
-                </p>
+                </Link>
                 {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                 <a
                   href="#"

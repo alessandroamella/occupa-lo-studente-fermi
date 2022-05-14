@@ -11,7 +11,6 @@ import { useDispatch, useSelector } from "react-redux";
 import ReactMarkdown from "react-markdown";
 import RequireStudentLogin from "./RequireStudentLogin";
 import { setMessage } from "../../slices/alertSlice";
-import StudentJobOfferCard from "./StudentJobOfferCard";
 
 const selectStudent = state => state.student;
 
@@ -52,6 +51,7 @@ const StudentHome = () => {
     if (student) {
       fetchAgencies();
       if (searchParams.get("loggedin")) {
+        console.log("LOGGEDIN SEARCH PARAM DEBUG");
         dispatch(
           setMessage({
             color: "green",
@@ -67,14 +67,10 @@ const StudentHome = () => {
   return (
     <RequireStudentLogin>
       <Container bg="dark" variant="dark" className="mt-8 mb-4">
-        <div className="col col-span-1 md:col-span-2">
-          <div className="flex flex-col">
-            {agencies?.map(a =>
-              a.jobOffers.map(j => (
-                <StudentJobOfferCard agency={a} jobOffer={j} key={j._id} />
-              ))
-            )}
-          </div>
+        <div>
+          <p>
+            Sono la <span className="font-semibold">student homepage!!</span>
+          </p>
         </div>
 
         {!loaded ? (

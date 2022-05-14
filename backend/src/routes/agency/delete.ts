@@ -4,8 +4,9 @@ import { Envs } from "@config";
 
 import { isLoggedIn } from "@middlewares";
 import { ResErr } from "@routes";
-import { AgencyService } from "@services";
+import { AgencyService, JobOfferService } from "@services";
 import { logger } from "@shared";
+import { isDocument } from "@typegoose/typegoose";
 
 /**
  * @openapi
@@ -50,6 +51,16 @@ router.delete("/", isLoggedIn.isAgencyLoggedIn, async (req, res) => {
     }
 
     try {
+        for (const j of req.agency.jobOffers) {
+            let jobOffer;
+            if (!isDocument(j)) {
+                jobOffer = await JobOfferService.findOne({ _id: j });
+            }
+            if (!jobOffer) {
+                throw new Error("JobOffer not found in delete agency service");
+            }
+            await JobOfferService.delete(jobOffer);
+        }
         await AgencyService.delete(req.agency);
         res.clearCookie(Envs.env.STUDENT_AUTH_COOKIE_NAME);
         res.sendStatus(200);

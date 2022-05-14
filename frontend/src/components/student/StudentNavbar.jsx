@@ -69,8 +69,8 @@ const StudentNavbar = () => {
                       alt="Profile pic"
                     />
                   ) : (
-                    "Ciao,"
-                  )}{" "}
+                    "Ciao, "
+                  )}
                   <span>{student.firstName}</span>
                 </div>
                 {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
