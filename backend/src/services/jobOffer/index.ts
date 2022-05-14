@@ -17,7 +17,7 @@ export class JobOfferService {
         populateAgency = false,
         skip = 0,
         limit = 100
-    ): Promise<JobOfferDoc[] | null> {
+    ): Promise<JobOfferDoc[]> {
         logger.debug("Finding jobOffers...");
         const query = JobOffer.find(fields).skip(skip).limit(limit);
         if (populateAgency) {

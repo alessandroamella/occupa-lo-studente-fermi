@@ -162,26 +162,26 @@ const ViewJobOffer = () => {
       // DEBUG
       return alert("ID jobOffer non specificato");
     }
-    if (agency) {
-      const _id = searchParams.get("id");
-      const j = agency.jobOffers.find(j => j._id === _id);
-      if (!j) {
-        // DEBUG
-        return alert("JobOffer non trovata");
-      }
-      setJobOffer(j);
-
-      setTitle(j.title);
-      // setDescriptionEnabled(true);
-      // setTitle(JSON.stringify(agency?.jobOffers));
-      // setAddress(agency?.agencyAddress);
-      // setEmail(agency?.email);
-      // setWebsiteUrl(agency?.websiteUrl);
-      // setPhoneNumber(agency?.phoneNumber);
-      // setLogoUrl(agency?.logoUrl);
-      // setBannerUrl(agency?.bannerUrl);
-      // setDisabled(false);
+    if (!agency) return;
+    const _id = searchParams.get("id");
+    const j = agency.jobOffers.find(j => j._id === _id);
+    if (!j) {
+      // DEBUG
+      return alert("JobOffer non trovata");
     }
+    setJobOffer(j);
+
+    setTitle(j.title);
+    // setDescriptionEnabled(true);
+    // setTitle(JSON.stringify(agency?.jobOffers));
+    // setAddress(agency?.agencyAddress);
+    // setEmail(agency?.email);
+    // setWebsiteUrl(agency?.websiteUrl);
+    // setPhoneNumber(agency?.phoneNumber);
+    // setLogoUrl(agency?.logoUrl);
+    // setBannerUrl(agency?.bannerUrl);
+    // setDisabled(false);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [!agency]);
 
@@ -202,7 +202,7 @@ const ViewJobOffer = () => {
                     <Placeholder animation="glow" xs={8} />
                   )}
                 </h3>
-                <p className="mb-2 w-full overflow-hidden whitespace-nowrap text-ellipsis">
+                <div className="mb-2 w-full overflow-hidden whitespace-nowrap text-ellipsis">
                   {agency?.agencyDescription ? (
                     <ReactMarkdown
                       children={
@@ -214,7 +214,7 @@ const ViewJobOffer = () => {
                   ) : (
                     <Placeholder xs={12} animation="glow" />
                   )}
-                </p>
+                </div>
 
                 <div className="flex items-center text-gray-600">
                   <p className="flex items-center italic">
@@ -298,8 +298,6 @@ const ViewJobOffer = () => {
                     <Placeholder xs={6} animation="glow" />
                   )}
                 </a>
-
-                {console.log(jobOffer)}
 
                 <p className="font-semibold mb-4">Indirizzo di studio</p>
                 <p className="mb-4">

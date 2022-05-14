@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { format } from "date-fns";
-import { ArrowRight } from "react-bootstrap-icons";
 import { useNavigate } from "react-router-dom";
+import PurpleRightArrow from "../PurpleRightArrow";
 
 const Separator = () => {
   return <div className="hidden md:block mx-2">-</div>;
@@ -63,13 +63,7 @@ const JobOfferCard = ({ jobOffer, className, ...rest }) => {
           </p>
         </div>
       </div>
-      <div className="float-right flex text-4xl items-center ml-4">
-        <ArrowRight
-          className={`p-2 rounded-full transition-all ${
-            isHovered || isFocused ? "bg-purple-500 text-white" : ""
-          }`}
-        />
-      </div>
+      <PurpleRightArrow isFocused={isFocused} isHovered={isHovered} />
     </div>
   );
 };

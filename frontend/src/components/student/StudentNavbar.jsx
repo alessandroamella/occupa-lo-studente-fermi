@@ -63,7 +63,7 @@ const StudentNavbar = () => {
                 >
                   {student.pictureUrl ? (
                     <img
-                      className="w-8 mr-2 rounded-full"
+                      className="w-8 mr-2 rounded-full aspect-square"
                       loading="lazy"
                       src={student.pictureUrl}
                       alt="Profile pic"

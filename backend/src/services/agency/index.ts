@@ -31,7 +31,8 @@ export class AgencyService {
         populateJobOffers = false,
         showHashedPassword = false,
         skip = 0,
-        limit = 100
+        limit = 100,
+        hidePersonalData = false
     ): Promise<AgencyDoc[]> {
         logger.debug("Finding all agencies...");
         const query = Agency.find(fields)
@@ -41,6 +42,11 @@ export class AgencyService {
 
         if (!showHashedPassword) {
             query.select("-hashedPassword");
+        }
+        if (hidePersonalData) {
+            query.select(
+                "-responsibleFirstName -responsibleLastName -responsibleFiscalNumber -approvalStatus -approvalDate"
+            );
         }
         if (populateJobOffers) {
             query.populate("jobOffers");

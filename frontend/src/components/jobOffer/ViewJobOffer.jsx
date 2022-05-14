@@ -32,20 +32,20 @@ const ViewJobOffer = () => {
       );
       return;
     }
-    if (agency) {
-      const j = agency.jobOffers.find(j => j._id === params.id);
-      if (!j) {
-        navigate("/agency/dashboard");
-        dispatch(
-          setMessage({
-            title: "404",
-            text: "Offerta di lavoro non trovata"
-          })
-        );
-        return;
-      }
-      setJobOffer(j);
+    if (!agency) return;
+    const j = agency.jobOffers.find(j => j._id === params.id);
+    if (!j) {
+      navigate("/agency/dashboard");
+      dispatch(
+        setMessage({
+          title: "404",
+          text: "Offerta di lavoro non trovata"
+        })
+      );
+      return;
     }
+    setJobOffer(j);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [!agency]);
 
@@ -58,7 +58,7 @@ const ViewJobOffer = () => {
               <img
                 src={agency?.logoUrl}
                 alt="Agency logo"
-                className="max-h-28 rounded-full shadow-xl mr-6"
+                className="max-h-28 rounded-full shadow-xl mr-6 aspect-square"
               />
               <div className="w-full overflow-hidden">
                 <h3 className="text-3xl tracking-tighter font-semibold">
@@ -66,7 +66,7 @@ const ViewJobOffer = () => {
                     <Placeholder animation="glow" xs={8} />
                   )}
                 </h3>
-                <p className="mb-2 w-full overflow-hidden whitespace-nowrap text-ellipsis">
+                <div className="mb-2 w-full overflow-hidden whitespace-nowrap text-ellipsis">
                   {agency?.agencyDescription ? (
                     <ReactMarkdown
                       children={
@@ -78,7 +78,7 @@ const ViewJobOffer = () => {
                   ) : (
                     <Placeholder xs={12} animation="glow" />
                   )}
-                </p>
+                </div>
 
                 <div className="flex items-center text-gray-600">
                   <p className="flex items-center italic">
@@ -106,7 +106,6 @@ const ViewJobOffer = () => {
               </div>
             </div>
           </div>
-          <Outlet />
         </div>
 
         <div className="rounded-xl overflow-hidden border w-full">
@@ -132,8 +131,6 @@ const ViewJobOffer = () => {
                     <Placeholder xs={6} animation="glow" />
                   )}
                 </a>
-
-                {console.log(jobOffer)}
 
                 <p className="font-semibold mb-4">Indirizzo di studio</p>
                 <p className="mb-4">

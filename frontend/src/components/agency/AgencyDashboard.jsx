@@ -214,17 +214,17 @@ const AgencyDashboard = () => {
   }
 
   useEffect(() => {
-    if (agency) {
-      setDescriptionEnabled(true);
-      setName(agency?.agencyName);
-      setAddress(agency?.agencyAddress);
-      setEmail(agency?.email);
-      setWebsiteUrl(agency?.websiteUrl);
-      setPhoneNumber(agency?.phoneNumber);
-      setLogoUrl(agency?.logoUrl);
-      setBannerUrl(agency?.bannerUrl);
-      setDisabled(false);
-    }
+    if (!agency) return;
+    setDescriptionEnabled(true);
+    setName(agency?.agencyName);
+    setAddress(agency?.agencyAddress);
+    setEmail(agency?.email);
+    setWebsiteUrl(agency?.websiteUrl);
+    setPhoneNumber(agency?.phoneNumber);
+    setLogoUrl(agency?.logoUrl);
+    setBannerUrl(agency?.bannerUrl);
+    setDisabled(false);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(agency)]);
 

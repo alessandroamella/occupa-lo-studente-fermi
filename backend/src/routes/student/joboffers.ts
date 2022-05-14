@@ -1,20 +1,21 @@
 import { Router } from "express";
 import { query, validationResult } from "express-validator";
+import lunr from "lunr";
 import moment from "moment";
-import { LeanDocument } from "mongoose";
+import { FilterQuery, LeanDocument } from "mongoose";
 
 import { isLoggedIn } from "@middlewares";
-import { AgencyClass } from "@models";
+import { AgencyClass, JobOfferDoc } from "@models";
 import { ResErr } from "@routes";
-import { AgencyService } from "@services";
+import { AgencyService, JobOfferService } from "@services";
 import { logger } from "@shared";
 import { isDocumentArray } from "@typegoose/typegoose";
 
 /**
  * @openapi
- * /api/student/agencies:
+ * /api/student/joboffers:
  *  get:
- *    summary: Find approved agencies along with available job offers
+ *    summary: Find joboffers from approved agencies
  *    parameters:
  *      - in: query
  *        name: field
@@ -27,6 +28,12 @@ import { isDocumentArray } from "@typegoose/typegoose";
  *              - chemistry
  *        required: false
  *        description: Field of study, defaults to 'any' if not specified
+ *      - in: query
+ *        name: q
+ *        schema:
+ *          type: string
+ *        required: false
+ *        description: Search query to find a job offer by title
  *    tags:
  *      - student
  *    responses:
@@ -63,6 +70,11 @@ router.get(
         .isIn(["any", "it", "electronics", "chemistry"])
         .trim()
         .toLowerCase(),
+    query("q", "Invalid search query")
+        .optional()
+        .isString()
+        .trim()
+        .toLowerCase(),
     async (req, res) => {
         try {
             const errors = validationResult(req);
@@ -73,6 +85,54 @@ router.get(
             }
 
             const fieldOfStudy = req.query.field || "any";
+            const searchQuery = req.query.q;
+
+            const query: FilterQuery<JobOfferDoc> = {};
+            if (fieldOfStudy !== "any") {
+                query.fieldOfStudy = fieldOfStudy;
+            }
+            // if (searchQuery) {
+            //     query.s
+            // }
+
+            const foundJobOffers = await JobOfferService.find(query, false);
+            for (const j of foundJobOffers) {
+            }
+
+            if (searchQuery) {
+                const idx = lunr(function () {
+                    this.ref("_id");
+                    this.field("title");
+                    this.field("description");
+
+                    foundJobOffers.forEach(j =>
+                        this.add({
+                            _id: j._id,
+                            title: j.title,
+                            description: j.description
+                        })
+                    );
+                });
+            }
+
+            // // Search query
+            // if (searchQuery) {
+            //     const idx = lunr(function () {
+            //         this.ref("agencyName");
+            //         this.field("agencyDescription");
+            //         this.field("agencyAddress");
+            //         this.field("phoneNumber");
+            //         this.field("vatCode");
+            //         this.field("websiteUrl");
+
+            //         this.add({
+            //             title: "Twelfth-Night",
+            //             body: "If music be the food of love, play on: Give me excess of it…",
+            //             author: "William Shakespeare",
+            //             id: "1"
+            //         });
+            //     });
+            // }
 
             const foundAgencies = await AgencyService.find(
                 { approvalStatus: "approved" },
@@ -118,6 +178,25 @@ router.get(
                 return res
                     .status(500)
                     .json({ err: "Error while finding job offers" } as ResErr);
+            }
+
+            // Search query
+            if (searchQuery) {
+                const idx = lunr(function () {
+                    this.ref("agencyName");
+                    this.field("agencyDescription");
+                    this.field("agencyAddress");
+                    this.field("phoneNumber");
+                    this.field("vatCode");
+                    this.field("websiteUrl");
+
+                    this.add({
+                        title: "Twelfth-Night",
+                        body: "If music be the food of love, play on: Give me excess of it…",
+                        author: "William Shakespeare",
+                        id: "1"
+                    });
+                });
             }
 
             return res.json(agencies);
