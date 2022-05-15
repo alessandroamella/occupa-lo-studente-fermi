@@ -1,4 +1,4 @@
-import { FilterQuery } from "mongoose";
+import { FilterQuery, LeanDocument, Types } from "mongoose";
 
 import { JobOffer, JobOfferClass, JobOfferDoc } from "@models";
 import { logger } from "@shared";
@@ -11,18 +11,23 @@ export class JobOfferService {
      * @param  {boolean} [populateAgency=false] - whether to populate agency field
      * @param  {number} [limit=100] - defaults to 100
      * @param  {number} [skip=0] - defaults to 0
+     * @param  {boolean} [lean=false]
      */
-    public static async find(
-        fields: FilterQuery<DocumentType<JobOfferClass>>,
-        populateAgency = false,
-        skip = 0,
-        limit = 100
-    ): Promise<JobOfferDoc[]> {
+    public static async find(params: {
+        fields: FilterQuery<DocumentType<JobOfferClass>>;
+        populateAgency?: boolean;
+        skip?: number;
+        limit?: number;
+        lean?: boolean;
+    }): Promise<JobOfferDoc[]> {
         logger.debug("Finding jobOffers...");
-        const query = JobOffer.find(fields).skip(skip).limit(limit);
-        if (populateAgency) {
-            query.populate("agency");
-        }
+        const query = JobOffer.find(params.fields);
+
+        if (params.skip) query.skip(params.skip);
+        if (params.limit) query.limit(params.limit);
+        if (params.populateAgency) query.populate("agency");
+        if (params.lean) query.lean();
+
         return await query.exec();
     }
 
@@ -100,5 +105,48 @@ export class JobOfferService {
 
         logger.debug(`Deleting job offer with _id ${jobOffer._id}...`);
         await jobOffer.deleteOne();
+    }
+    /**
+     * Query job offers
+     */
+    public static async searchQuery(params: {
+        fieldOfStudy?: string;
+        searchQuery?: string;
+        firstQuery?: boolean;
+        idsIn?: Types.ObjectId[];
+    }): Promise<LeanDocument<JobOfferDoc>[]> {
+        const obj: Parameters<typeof JobOffer.find>[0] = {
+            expiryDate: { $gt: new Date() }
+        };
+
+        if (params.idsIn) {
+            logger.debug("searchQuery idsIn=" + params.idsIn);
+            obj._id = { $in: params.idsIn };
+        }
+        if (params.searchQuery && params.firstQuery) {
+            logger.debug(`searchQuery $search="${params.searchQuery}"`);
+            obj.$text = {
+                $search: params.searchQuery,
+                $language: "it",
+                $caseSensitive: false
+            };
+        }
+        if (params.fieldOfStudy) {
+            logger.debug("searchQuery fieldOfStudy=" + params.fieldOfStudy);
+            obj.fieldOfStudy = params.fieldOfStudy;
+        }
+
+        const query = JobOffer.find(
+            obj,
+            params.searchQuery ? { score: { $meta: "textScore" } } : undefined
+        );
+        return await query
+            .lean()
+            .sort(
+                params.searchQuery
+                    ? { score: { $meta: "textScore" } }
+                    : { updatedAt: -1 }
+            )
+            .exec();
     }
 }

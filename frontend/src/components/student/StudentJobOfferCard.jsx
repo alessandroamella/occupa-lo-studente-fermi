@@ -1,6 +1,7 @@
 import { differenceInDays, formatDistance } from "date-fns";
 import { it } from "date-fns/locale";
 import React, { useState } from "react";
+import Placeholder from "react-bootstrap/Placeholder";
 import PurpleRightArrow from "../PurpleRightArrow";
 
 const StudentJobOfferCard = ({ agency, jobOffer, active, ...rest }) => {
@@ -19,9 +20,9 @@ const StudentJobOfferCard = ({ agency, jobOffer, active, ...rest }) => {
       onBlur={() => setIsFocused(false)}
       {...rest}
     >
-      {agency.logoUrl && (
+      {agency?.logoUrl && (
         <img
-          src={agency.logoUrl}
+          src={agency?.logoUrl}
           alt="Agency logo"
           className="max-h-24 aspect-square mr-4 object-cover"
           loading="lazy"
@@ -29,7 +30,7 @@ const StudentJobOfferCard = ({ agency, jobOffer, active, ...rest }) => {
       )}
       <div>
         <h4 className="text-xl font-semibold">{jobOffer.title}</h4>
-        <p>{agency.agencyName}</p>
+        <p>{agency?.agencyName || <Placeholder xs={8} animation="glow" />}</p>
         <div className="mt-1 text-gray-600">
           <p>
             {jobOffer.fieldOfStudy === "it"

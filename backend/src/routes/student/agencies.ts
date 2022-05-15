@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { query, validationResult } from "express-validator";
 import moment from "moment";
-import { LeanDocument } from "mongoose";
+import { LeanDocument, isValidObjectId } from "mongoose";
 
 import { isLoggedIn } from "@middlewares";
 import { AgencyClass } from "@models";
@@ -27,6 +27,14 @@ import { isDocumentArray } from "@typegoose/typegoose";
  *              - chemistry
  *        required: false
  *        description: Field of study, defaults to 'any' if not specified
+ *      - in: query
+ *        name: ids
+ *        schema:
+ *          type: array
+ *          items:
+ *              type: string
+ *        required: false
+ *        description: IDS of the agencies to find
  *    tags:
  *      - student
  *    responses:
@@ -63,6 +71,7 @@ router.get(
         .isIn(["any", "it", "electronics", "chemistry"])
         .trim()
         .toLowerCase(),
+    query("ids").optional().isArray(),
     async (req, res) => {
         try {
             const errors = validationResult(req);
@@ -73,15 +82,23 @@ router.get(
             }
 
             const fieldOfStudy = req.query.field || "any";
+            const ids = req.query.ids;
 
-            const foundAgencies = await AgencyService.find(
-                { approvalStatus: "approved" },
-                true,
-                false,
-                0,
-                100,
-                true
-            );
+            if (Array.isArray(ids) && ids.some(e => !isValidObjectId(e))) {
+                return res.status(400).json({ err: "Invalid ids array" });
+            }
+
+            const obj: Parameters<typeof AgencyService.find>[0] = {
+                fields: { approvalStatus: "approved" },
+                lean: false,
+                showPersonalData: false,
+                showHashedPassword: false,
+                populateJobOffers: true
+            };
+
+            if (Array.isArray(ids)) obj.fields._id = { $in: ids };
+
+            const foundAgencies = await AgencyService.find(obj);
             let isErr = false; // in case a job offer isn't populated
 
             const agencies: LeanDocument<AgencyClass>[] = [];

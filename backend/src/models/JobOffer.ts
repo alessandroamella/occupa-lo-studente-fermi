@@ -4,6 +4,7 @@ import {
     DocumentType,
     Ref,
     getModelForClass,
+    index,
     modelOptions,
     prop
 } from "@typegoose/typegoose";
@@ -56,6 +57,7 @@ import { AgencyClass } from "./Agency";
  */
 
 // MODEL: ADD MORE THINGS TO THIS MODEL
+@index({ title: "text", description: "text" })
 @modelOptions({ schemaOptions: { collection: "JobOffer", timestamps: true } })
 export class JobOfferClass {
     @prop({ required: true, ref: "AgencyClass" })

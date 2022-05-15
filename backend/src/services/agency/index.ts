@@ -11,7 +11,8 @@ export class AgencyService {
     public static async findOne(
         fields: FilterQuery<DocumentType<AgencyClass> | null>,
         populateJobOffers = false,
-        showHashedPassword = false
+        showHashedPassword = false,
+        lean = false
     ): Promise<DocumentType<AgencyClass> | null> {
         logger.debug("Finding single agency...");
 
@@ -23,34 +24,45 @@ export class AgencyService {
         if (populateJobOffers) {
             query.populate("jobOffers");
         }
+        if (lean) {
+            query.lean();
+        }
         return await query.exec();
     }
 
-    public static async find(
-        fields: FilterQuery<AgencyDoc | null>,
-        populateJobOffers = false,
-        showHashedPassword = false,
-        skip = 0,
-        limit = 100,
-        hidePersonalData = false
-    ): Promise<AgencyDoc[]> {
+    public static async find(params: {
+        fields: FilterQuery<AgencyDoc | null>;
+        populateJobOffers?: boolean;
+        showHashedPassword?: boolean;
+        skip?: number;
+        limit?: number;
+        showPersonalData?: boolean;
+        lean?: boolean;
+        projection?: any;
+        sortBy?: any;
+    }): Promise<AgencyDoc[]> {
         logger.debug("Finding all agencies...");
-        const query = Agency.find(fields)
-            .skip(skip)
-            .limit(limit)
-            .sort({ updatedAt: -1 });
+        const query = Agency.find(params.fields, params.projection);
 
-        if (!showHashedPassword) {
+        if (params.skip) query.skip(params.skip);
+        if (params.limit) query.limit(params.limit);
+
+        if (!params.showHashedPassword) {
             query.select("-hashedPassword");
         }
-        if (hidePersonalData) {
+        if (!params.showPersonalData) {
             query.select(
                 "-responsibleFirstName -responsibleLastName -responsibleFiscalNumber -approvalStatus -approvalDate"
             );
         }
-        if (populateJobOffers) {
+        if (params.populateJobOffers) {
             query.populate("jobOffers");
         }
+        if (params.lean) {
+            query.lean();
+        }
+
+        query.sort(params.sortBy || { updatedAt: -1 });
 
         return await query.exec();
     }

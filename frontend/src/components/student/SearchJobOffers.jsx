@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { Search } from "react-bootstrap-icons";
 import { useDispatch } from "react-redux";
+import { useSearchParams } from "react-router-dom";
 import { setMessage } from "../../slices/alertSlice";
 
-const SearchJobOffers = ({ fetchAgenciesFn }) => {
+const SearchJobOffers = () => {
   const [jobOfferInput, setJobOfferInput] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
   const [disabled, setDisabled] = useState(false);
 
   const dispatch = useDispatch();
@@ -13,7 +15,12 @@ const SearchJobOffers = ({ fetchAgenciesFn }) => {
     setDisabled(true);
 
     try {
-      await fetchAgenciesFn({ q: jobOfferInput });
+      if (jobOfferInput) {
+        searchParams.set("q", jobOfferInput);
+      } else {
+        searchParams.delete("q");
+      }
+      setSearchParams(searchParams);
     } catch (err) {
       console.log(err?.response?.data?.err || err);
       dispatch(

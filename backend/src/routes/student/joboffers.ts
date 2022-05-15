@@ -1,15 +1,12 @@
 import { Router } from "express";
 import { query, validationResult } from "express-validator";
-import lunr from "lunr";
-import moment from "moment";
-import { FilterQuery, LeanDocument } from "mongoose";
+import { LeanDocument, Types } from "mongoose";
 
 import { isLoggedIn } from "@middlewares";
-import { AgencyClass, JobOfferDoc } from "@models";
+import { AgencyDoc } from "@models";
 import { ResErr } from "@routes";
 import { AgencyService, JobOfferService } from "@services";
 import { logger } from "@shared";
-import { isDocumentArray } from "@typegoose/typegoose";
 
 /**
  * @openapi
@@ -84,122 +81,64 @@ router.get(
                     .json({ err: errors.array().join(", ") } as ResErr);
             }
 
-            const fieldOfStudy = req.query.field || "any";
-            const searchQuery = req.query.q;
+            const fieldOfStudy: string | undefined =
+                typeof req.query.field === "string" && req.query.field !== "any"
+                    ? req.query.field
+                    : undefined;
+            const searchQuery: string | undefined =
+                typeof req.query.q === "string" ? req.query.q : undefined;
 
-            const query: FilterQuery<JobOfferDoc> = {};
-            if (fieldOfStudy !== "any") {
-                query.fieldOfStudy = fieldOfStudy;
-            }
-            // if (searchQuery) {
-            //     query.s
-            // }
-
-            const foundJobOffers = await JobOfferService.find(query, false);
-            for (const j of foundJobOffers) {
-            }
-
-            if (searchQuery) {
-                const idx = lunr(function () {
-                    this.ref("_id");
-                    this.field("title");
-                    this.field("description");
-
-                    foundJobOffers.forEach(j =>
-                        this.add({
-                            _id: j._id,
-                            title: j.title,
-                            description: j.description
-                        })
-                    );
-                });
-            }
-
-            // // Search query
-            // if (searchQuery) {
-            //     const idx = lunr(function () {
-            //         this.ref("agencyName");
-            //         this.field("agencyDescription");
-            //         this.field("agencyAddress");
-            //         this.field("phoneNumber");
-            //         this.field("vatCode");
-            //         this.field("websiteUrl");
-
-            //         this.add({
-            //             title: "Twelfth-Night",
-            //             body: "If music be the food of love, play on: Give me excess of it…",
-            //             author: "William Shakespeare",
-            //             id: "1"
-            //         });
-            //     });
-            // }
-
-            const foundAgencies = await AgencyService.find(
-                { approvalStatus: "approved" },
-                true,
-                false,
-                0,
-                100,
-                true
-            );
-            let isErr = false; // in case a job offer isn't populated
-
-            const agencies: LeanDocument<AgencyClass>[] = [];
+            const jobOffers = await JobOfferService.searchQuery({
+                fieldOfStudy,
+                searchQuery,
+                firstQuery: true
+            });
 
             logger.debug(
-                `Filtering agencies by field of study ${fieldOfStudy}`
+                `First searchQuery returned ${jobOffers.length} documents`
             );
 
-            for (const agency of foundAgencies) {
-                if (!isDocumentArray(agency.jobOffers)) {
-                    logger.error(
-                        `Agency ${agency._id} jobOffers ${agency.jobOffers} is not populated in student jobOffers route`
-                    );
-                    isErr = true;
-                    return null;
-                }
-
-                const obj = {
-                    ...agency.toObject(),
-                    jobOffers: agency.jobOffers
-                        .filter(
-                            j =>
-                                (fieldOfStudy === "any"
-                                    ? true
-                                    : j.fieldOfStudy === fieldOfStudy) &&
-                                moment(j.expiryDate).isAfter(moment())
-                        )
-                        .map(j => j.toObject())
-                };
-                agencies.push(obj);
-            }
-
-            if (isErr) {
-                return res
-                    .status(500)
-                    .json({ err: "Error while finding job offers" } as ResErr);
-            }
-
-            // Search query
             if (searchQuery) {
-                const idx = lunr(function () {
-                    this.ref("agencyName");
-                    this.field("agencyDescription");
-                    this.field("agencyAddress");
-                    this.field("phoneNumber");
-                    this.field("vatCode");
-                    this.field("websiteUrl");
+                const agencies = (await AgencyService.find({
+                    fields: {
+                        approvalStatus: "approved",
+                        $text: {
+                            $search: searchQuery,
+                            $language: "it",
+                            $caseSensitive: false
+                        }
+                    },
+                    lean: true,
+                    projection: { score: { $meta: "textScore" } },
+                    sortBy: { score: { $meta: "textScore" } }
+                })) as LeanDocument<AgencyDoc[]>;
+                logger.debug(
+                    `JobOffers text search found ${agencies.length} matching agencies`
+                );
 
-                    this.add({
-                        title: "Twelfth-Night",
-                        body: "If music be the food of love, play on: Give me excess of it…",
-                        author: "William Shakespeare",
-                        id: "1"
+                for (const a of agencies) {
+                    // NO SEARCH QUERY (already performed on agency)
+                    // find agency jobOffers and push them if not already pushed
+                    const agencyJobOffers = await JobOfferService.searchQuery({
+                        fieldOfStudy,
+                        idsIn: a.jobOffers as Types.ObjectId[]
                     });
-                });
+                    for (const j of agencyJobOffers) {
+                        if (
+                            !jobOffers.find(
+                                e => e._id.toString() === j._id.toString()
+                            )
+                        ) {
+                            // JobOffer not in array, push it
+
+                            logger.debug(`Second searchQuery pushing ${j._id}`);
+                            jobOffers.push(j);
+                        }
+                    }
+                }
             }
 
-            return res.json(agencies);
+            return res.json(jobOffers);
         } catch (err) {
             logger.error("Error while finding job offers");
             logger.error(err);
