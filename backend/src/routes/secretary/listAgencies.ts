@@ -54,8 +54,14 @@ const router = Router();
 router.get("/", secretaryAuth, async (req, res) => {
     // DEBUG check authentication
     try {
-        const agencies = await AgencyService.find({ fields: {} });
-        return res.json(agencies?.map(a => a.toObject()));
+        const agencies = await AgencyService.find({
+            fields: {},
+            lean: true,
+            populateJobOffers: true,
+            showHashedPassword: false,
+            showPersonalData: true
+        });
+        return res.json(agencies);
     } catch (err) {
         logger.error("Error while finding agencies for secretary");
         logger.error(err);

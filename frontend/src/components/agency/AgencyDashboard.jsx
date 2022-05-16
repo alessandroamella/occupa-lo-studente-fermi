@@ -134,7 +134,7 @@ const AgencyDashboard = () => {
 
     setNameInputDisabled(false);
     setEditName(false);
-    if (!data) return;
+    if (!data) return setName(agency.agencyName);
 
     console.log("setAgency", data);
     dispatch(setAgency(data));
@@ -159,7 +159,7 @@ const AgencyDashboard = () => {
 
     setAddressInputDisabled(false);
     setEditAddress(false);
-    if (!data) return;
+    if (!data) return setAddress(agency.agencyAddress);
 
     console.log("setAgency", data);
     dispatch(setAgency(data));
@@ -267,7 +267,10 @@ const AgencyDashboard = () => {
                       required
                       className="text-3xl md:text-5xl font-semibold tracking-tighter mr-3 md:w-1/2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                       autoFocus
-                      onKeyDown={e => e.key === "Escape" && setEditName(false)}
+                      onKeyDown={e => {
+                        if (e.key === "Escape") setEditName(false);
+                        else if (e.key === "Enter") execEditName();
+                      }}
                     />
                     <EditButton purple showText onClick={execEditName} />
                   </>

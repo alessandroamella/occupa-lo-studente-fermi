@@ -85,11 +85,15 @@ router.get(
 
             const agencies = await AgencyService.find({
                 fields: { _id: req.params.id, approvalStatus: "approved" },
-                lean: true,
-                populateJobOffers: false,
+                lean: false,
+                populateJobOffers: true,
                 showHashedPassword: false,
                 showPersonalData: false
             });
+
+            for (const a of agencies) {
+                await AgencyService._fixJobOfferRef(a);
+            }
 
             return agencies.length > 0
                 ? res.json(agencies[0])

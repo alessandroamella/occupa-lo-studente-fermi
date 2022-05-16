@@ -1,5 +1,9 @@
+import { hashSync } from "bcrypt";
+import { parsePhoneNumber } from "libphonenumber-js";
+
 import { loadConfig } from "@config";
 
+import { Agency, JobOffer } from "@models";
 import { logger } from "@shared";
 
 import { app } from "./app";

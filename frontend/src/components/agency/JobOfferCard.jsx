@@ -18,7 +18,7 @@ const JobOfferCard = ({ jobOffer, className, ...rest }) => {
       className={`flex m-2 md:m-4 hover:bg-gray-100 transition-all hover:scale-105 cursor-pointer rounded-md border p-3 md:py-4 md:px-8 ${
         className || ""
       }`}
-      onClick={() => navigate("/agency/joboffer/view/" + jobOffer._id)}
+      onClick={() => navigate("/agency/joboffer?id=" + jobOffer._id)}
       {...rest}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}

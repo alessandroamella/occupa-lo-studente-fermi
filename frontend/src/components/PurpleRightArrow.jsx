@@ -3,7 +3,7 @@ import { ArrowRight } from "react-bootstrap-icons";
 
 const PurpleRightArrow = ({ active, isFocused, isHovered }) => {
   return (
-    <div className="float-right flex text-4xl items-center ml-4">
+    <div className="float-right flex text-4xl items-center ml-auto">
       <ArrowRight
         className={`p-2 rounded-full transition-all ${
           isHovered || isFocused || active

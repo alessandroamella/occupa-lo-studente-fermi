@@ -44,7 +44,7 @@ const SearchJobOffers = () => {
         disabled={disabled}
         value={jobOfferInput}
         required
-        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        className="shadow transition-colors hover:border-gray-300 focus:border-gray-700 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         autoFocus
         onKeyDown={e => e.key === "Enter" && searchJobOffer()}
       />

@@ -98,7 +98,10 @@ const SecretaryHomepage = () => {
         agencies && agencies.length < 0 && <p>Nessuna azienda nel database</p>
       )}
 
-      <h1 className="text-xl font-semibold">Aziende in attesa</h1>
+      <h1 className="text-xl font-semibold">
+        Aziende in attesa (
+        {agencies?.filter(e => e.approvalStatus === "waiting").length})
+      </h1>
       {!loggedIn ||
       (loaded() &&
         agencies.filter(e => e.approvalStatus === "waiting").length > 0) ? (
@@ -154,7 +157,10 @@ const SecretaryHomepage = () => {
         <p>Nessuna azienda approvata</p>
       )}
 
-      <h1 className="text-xl font-semibold mt-3">Aziende approvate</h1>
+      <h1 className="text-xl font-semibold mt-3">
+        Aziende approvate (
+        {agencies?.filter(e => e.approvalStatus === "approved").length})
+      </h1>
       {!loggedIn ||
       (loaded() &&
         agencies.filter(e => e.approvalStatus === "approved").length > 0) ? (
@@ -212,7 +218,10 @@ const SecretaryHomepage = () => {
         <p>Nessuna azienda approvata</p>
       )}
 
-      <h1 className="text-xl font-semibold mt-3">Aziende rifiutate</h1>
+      <h1 className="text-xl font-semibold mt-3">
+        Aziende rifiutate (
+        {agencies?.filter(e => e.approvalStatus === "rejected").length})
+      </h1>
       {!loggedIn ||
       (loaded() &&
         agencies.filter(e => e.approvalStatus === "rejected").length > 0) ? (

@@ -1,13 +1,45 @@
 import jwt from "jsonwebtoken";
-import { FilterQuery } from "mongoose";
+import { FilterQuery, LeanDocument } from "mongoose";
+import { JobOfferService } from "services/jobOffer";
 
 import { Envs } from "@config";
 
-import { Agency, AgencyClass, AgencyDoc, JobOffer } from "@models";
+import { Agency, AgencyClass, AgencyDoc, JobOffer, JobOfferDoc } from "@models";
 import { logger } from "@shared";
 import { DocumentType } from "@typegoose/typegoose";
 
 export class AgencyService {
+    // Fix jobOffers that are not ref in agency doc
+    public static async _fixJobOfferRef(agency: AgencyDoc) {
+        const jobOffers = (await JobOfferService.find({
+            fields: { agency: agency._id },
+            populateAgency: false,
+            lean: true
+        })) as LeanDocument<JobOfferDoc[]>;
+        let updated = false;
+        for (const j of jobOffers) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            if (
+                agency.jobOffers
+                    .map((e: any) => (e as AgencyDoc)._id.toString())
+                    .includes(j._id.toString())
+            )
+                continue;
+            logger.warn(
+                `Job Offer ${j._id} was not linked with agency ${agency._id}`
+            );
+            logger.warn(
+                "arr: " +
+                    agency.jobOffers.map((e: any) =>
+                        (e as AgencyDoc)._id.toString()
+                    )
+            );
+            agency.jobOffers.push(j._id);
+            updated = true;
+        }
+        if (updated) await agency.save();
+    }
+
     public static async findOne(
         fields: FilterQuery<DocumentType<AgencyClass> | null>,
         populateJobOffers = false,

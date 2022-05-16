@@ -159,7 +159,11 @@ export class AgencyClass {
     @prop({ required: true, minlength: 2, maxlength: 32 })
     public vatCode!: string;
 
-    @prop({ required: true, enum: ["waiting", "approved", "rejected"] })
+    @prop({
+        required: true,
+        default: "waiting",
+        enum: ["waiting", "approved", "rejected"]
+    })
     public approvalStatus!: string;
 
     @prop({ required: false, default: null })

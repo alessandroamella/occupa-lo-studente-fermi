@@ -78,8 +78,9 @@ const StudentHome = () => {
     console.log("Fetching agencies with ids", ids);
 
     try {
+      // DEBUG don't use ids
       const { data } = await axios.get("/api/student/agencies", {
-        params: { ids }
+        // params: { ids }
       });
       console.log(data);
       setAgencies(data);
@@ -111,7 +112,12 @@ const StudentHome = () => {
   }, [student]);
 
   useEffect(() => {
-    if (!jobOffers || jobOffers.length === 0) return;
+    if (!jobOffers || jobOffers.length === 0) {
+      if (!agencies) {
+        fetchAgencies();
+      }
+      return;
+    }
     // find first job offer to show
 
     if (!currentJobOffer) setCurrentJobOffer(jobOffers[0]);
@@ -167,7 +173,7 @@ const StudentHome = () => {
               ))}
             </div>
           )}
-          {!agencies ? (
+          {!jobOffers ? (
             loaded ? (
               <div className="w-full md:col-span-2">
                 <h1 className="font-semibold text-2xl md:text-3xl flex items-center justify-center">
@@ -192,8 +198,41 @@ const StudentHome = () => {
                 <span className="visually-hidden">Caricamento...</span>
               </Spinner>
             )
-          ) : !currentAgency ? (
-            <div>non c'è lavoro amegu DEBUG</div>
+          ) : jobOffers.length === 0 && loaded ? (
+            <div className="w-full md:col-span-2">
+              <h1 className="font-semibold text-2xl md:text-3xl flex items-center justify-center">
+                {/* <EmojiFrown /> */}
+                <span className="mx-2 mb-1">
+                  Nessun'offerta di lavoro trovata
+                </span>
+              </h1>
+              <p className="mb-10 text-center">
+                <span>
+                  Non ho trovato nessun'offerta di lavoro{" "}
+                  {fieldOfStudy &&
+                    fieldOfStudy !== "any" &&
+                    "di " +
+                      (fieldOfStudy === "it"
+                        ? "informatica"
+                        : fieldOfStudy === "electronics"
+                        ? "elettronica"
+                        : fieldOfStudy === "chemistry"
+                        ? "chimica"
+                        : "") +
+                      " "}
+                </span>
+                {searchQuery && (
+                  <span>
+                    che include i termini <i>{searchQuery}</i>
+                  </span>
+                )}
+              </p>
+              <img
+                src="/img/no_jobs.svg"
+                alt="Errore"
+                className="mx-auto max-h-96 object-contain"
+              />
+            </div>
           ) : (
             <div
               ref={currentJobOfferRef}
@@ -202,37 +241,37 @@ const StudentHome = () => {
               <div className="rounded-xl overflow-hidden border w-full mb-4">
                 <div className="p-3 md:p-6 md:px-9">
                   <img
-                    src={currentAgency.logoUrl}
+                    src={currentAgency?.logoUrl}
                     alt="Agency logo"
                     className="h-24 w-24 object-cover rounded-full mr-6"
                   />
                   <div className="flex items-center mt-3">
                     <div className="w-full overflow-hidden">
                       <h3 className="text-3xl tracking-tighter font-semibold">
-                        {currentAgency.agencyName || (
+                        {currentAgency?.agencyName || (
                           <Placeholder animation="glow" xs={8} />
                         )}
                       </h3>
                       <a
-                        href={currentAgency.websiteUrl || "#"}
+                        href={currentAgency?.websiteUrl || "#"}
                         target="_blank"
                         rel="noreferrer"
                         className="text-gray-600 hover:text-gray-800 transition-colors"
                       >
-                        {currentAgency.websiteUrl || (
+                        {currentAgency?.websiteUrl || (
                           <Placeholder xs={6} animation="glow" />
                         )}
                       </a>
                       <div className="mt-2 markdown mb-2 w-full overflow-hidden whitespace-nowrap text-ellipsis">
-                        {currentAgency.agencyDescription ? (
+                        {currentAgency?.agencyDescription ? (
                           <ReactMarkdown
                             children={
-                              currentAgency.agencyDescription.length > 100
-                                ? currentAgency.agencyDescription.substring(
+                              currentAgency?.agencyDescription.length > 100
+                                ? currentAgency?.agencyDescription.substring(
                                     0,
                                     100
                                   ) + "..."
-                                : currentAgency.agencyDescription
+                                : currentAgency?.agencyDescription
                             }
                           />
                         ) : (
@@ -248,16 +287,16 @@ const StudentHome = () => {
                 <div className="md:px-1 w-full mb-3">
                   <div className="mt-3 mb-5 flex flex-col md:flex-row items-center">
                     <h1 className="text-5xl font-semibold tracking-tighter">
-                      {currentJobOffer.title || <Placeholder xs={6} />}
+                      {currentJobOffer?.title || <Placeholder xs={6} />}
                     </h1>
                   </div>
 
-                  <ReactMarkdown children={currentJobOffer.description} />
+                  <ReactMarkdown children={currentJobOffer?.description} />
 
                   <div className="mt-8">
                     <Link
                       className="p-3 rounded-2xl transition-colors bg-purple-500 hover:bg-purple-600 text-white w-fit"
-                      to={`joboffer/` + currentJobOffer._id}
+                      to={`agency/${currentAgency?._id}?joboffer=${currentJobOffer?._id}`}
                     >
                       Visualizza offerta di lavoro
                     </Link>

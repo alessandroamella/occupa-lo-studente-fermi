@@ -1,7 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { Outlet } from "react-router-dom";
-import axios from "axios";
 import Container from "react-bootstrap/Container";
 import Placeholder from "react-bootstrap/Placeholder";
 import RequireStudentLogin from "./RequireStudentLogin";
