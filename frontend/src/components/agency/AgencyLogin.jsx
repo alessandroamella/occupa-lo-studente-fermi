@@ -3,12 +3,12 @@ import { Link, useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
-import { ArrowLeft } from "react-bootstrap-icons";
 
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setAgency } from "../../slices/agencyAuthSlice";
 import { setMessage } from "../../slices/alertSlice";
+import BackButton from "../BackButton";
 
 const AgencySignup = () => {
   const [email, setEmail] = useState(""); // "user@example.com",
@@ -27,7 +27,6 @@ const AgencySignup = () => {
     event.preventDefault();
 
     const formData = { email, password };
-    console.log(formData);
 
     setDisabled(true);
 
@@ -38,19 +37,20 @@ const AgencySignup = () => {
       agency = res.data;
     } catch (err) {
       console.log(err?.response?.data || err);
-      // DEBUG
       dispatch(
         setMessage({
-          color: "red",
           title: "Errore nel login",
-          text: err?.response?.data?.err || "Errore sconosciuto"
+          text:
+            err?.response?.status === 401
+              ? "Credenziali errate"
+              : err?.response?.data?.err || "Errore sconosciuto"
         })
       );
       setDisabled(false);
       return false;
     }
 
-    console.log({ agency });
+    console.log(agency);
     dispatch(setAgency(agency));
     navigate("/agency/dashboard");
     setDisabled(false);
@@ -59,11 +59,9 @@ const AgencySignup = () => {
 
   return (
     <Container bg="dark" variant="dark" className="mt-8 mb-20">
-      <Button as={Link} to="/agency" variant="outline-dark">
-        <ArrowLeft />
-      </Button>
+      <BackButton path="/agency" />
 
-      <h1 className="text-2xl font-light my-3">Login</h1>
+      <h1 className="text-2xl font-light my-3">Login azienda</h1>
 
       <Form onSubmit={submitForm}>
         <Form.Group className="mb-3" controlId="phoneNumber">
@@ -92,7 +90,10 @@ const AgencySignup = () => {
           />
         </Form.Group>
 
-        <Button variant="outline-primary" type="submit">
+        <Link to="/agency/signup" className="block text-xs">
+          Non sei ancora registrato?
+        </Link>
+        <Button variant="outline-primary" type="submit" className="mt-1">
           Login
         </Button>
       </Form>

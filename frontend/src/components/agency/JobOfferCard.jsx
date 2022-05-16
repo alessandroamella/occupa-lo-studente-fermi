@@ -7,18 +7,27 @@ const Separator = () => {
   return <div className="hidden md:block mx-2">-</div>;
 };
 
-const JobOfferCard = ({ jobOffer, className, ...rest }) => {
+const JobOfferCard = ({ jobOffer, clickable, className, ...rest }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
 
   const navigate = useNavigate();
 
+  function getPlural() {
+    return Number.isInteger(jobOffer?.numberOfPositions) &&
+      jobOffer.numberOfPositions === 1
+      ? "e"
+      : "i";
+  }
+
   return (
     <div
-      className={`flex m-2 md:m-4 hover:bg-gray-100 transition-all hover:scale-105 cursor-pointer rounded-md border p-3 md:py-4 md:px-8 ${
-        className || ""
-      }`}
-      onClick={() => navigate("/agency/joboffer?id=" + jobOffer._id)}
+      className={`flex m-2 md:m-4 hover:bg-gray-100 transition-all hover:scale-105 ${
+        clickable ? "cursor-pointer" : ""
+      } rounded-md border p-3 md:py-4 md:px-8 ${className || ""}`}
+      onClick={() =>
+        clickable && navigate("/agency/joboffer?id=" + jobOffer._id)
+      }
       {...rest}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -36,7 +45,7 @@ const JobOfferCard = ({ jobOffer, className, ...rest }) => {
         <div className="mt-2 text-gray-500 flex flex-col items-center md:flex-row justify-start">
           <p>
             <span className="font-medium">{jobOffer?.numberOfPositions}</span>{" "}
-            posizioni disponibili
+            posizion{getPlural()} disponibil{getPlural()}
           </p>
           <Separator />
           <p className="hidden md:block mx-2">
@@ -63,7 +72,9 @@ const JobOfferCard = ({ jobOffer, className, ...rest }) => {
           </p>
         </div>
       </div>
-      <PurpleRightArrow isFocused={isFocused} isHovered={isHovered} />
+      {clickable && (
+        <PurpleRightArrow isFocused={isFocused} isHovered={isHovered} />
+      )}
     </div>
   );
 };

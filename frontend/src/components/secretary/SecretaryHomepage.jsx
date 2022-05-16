@@ -7,10 +7,13 @@ import Spinner from "react-bootstrap/Spinner";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Placeholder from "react-bootstrap/Placeholder";
-import SecretaryAgencyView from "./SecretaryAgencyView";
+import { Check, X } from "react-bootstrap-icons";
 import SecretaryLogin from "./SecretaryLogin";
+import EditStudent from "./EditStudent";
 import { useDispatch } from "react-redux";
 import { setMessage } from "../../slices/alertSlice";
+import SecretaryAgencyView from "./SecretaryAgencyView";
+import EditButton from "../EditButton";
 
 const SecretaryHomepage = () => {
   const [username, setUsername] = useState("");
@@ -18,7 +21,10 @@ const SecretaryHomepage = () => {
   const [showLoginModal, setShowLoginModal] = useState(true);
   const [loggedIn, setLoggedIn] = useState(false);
   const [agencies, setAgencies] = useState(null);
+  const [students, setStudents] = useState(null);
   const [disabled, setDisabled] = useState(true);
+
+  const [editStudent, setEditStudent] = useState(null);
 
   const dispatch = useDispatch();
 
@@ -34,22 +40,64 @@ const SecretaryHomepage = () => {
       setAgencies(data);
       setDisabled(false);
     } catch (err) {
-      // DEBUG
       console.log(err);
-      alert(err?.response?.data?.err || "Errore sconosciuto");
+      dispatch(
+        setMessage({
+          title: "Errore nel caricamento delle aziende",
+          text: err?.response?.data?.err || "Errore sconosciuto"
+        })
+      );
+    }
+  }
+
+  async function fetchStudents() {
+    setStudents(null);
+    try {
+      const { data } = await axios.get("/api/secretary/students", {
+        params: { username, password }
+      });
+      console.log(data);
+      setStudents(data);
+      setDisabled(false);
+    } catch (err) {
+      console.log(err);
+      dispatch(
+        setMessage({
+          title: "Errore nel caricamento degli studenti",
+          text: err?.response?.data?.err || "Errore sconosciuto"
+        })
+      );
     }
   }
 
   useEffect(() => {
     if (loggedIn) {
       fetchAgencies();
+      fetchStudents();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loggedIn]);
 
   /** @param {"approve" | "reject"} action */
-  async function approveAgency(action, _id) {
-    if (!agencies) return alert("Agencies not loaded");
+  async function approveAgency(action, _id, name) {
+    if (!agencies) {
+      return dispatch(
+        setMessage({
+          title: "errore",
+          text: "Aziende non ancora caricate"
+        })
+      );
+    }
+
+    if (
+      !window.confirm(
+        `Vuoi davvero ${
+          action === "approve" ? "approvare" : "rifiutare"
+        } l'azienda "${name}"?`
+      )
+    )
+      return;
+
     try {
       await axios.post(
         `/api/secretary/approve/${_id}`,
@@ -71,10 +119,52 @@ const SecretaryHomepage = () => {
       );
       await fetchAgencies();
     } catch (err) {
-      // DEBUG
-      alert(err?.response?.data?.err || "Errore sconosciuto");
+      setMessage({
+        title: "errore",
+        text: err?.response?.data?.err || "Errore sconosciuto"
+      });
     }
   }
+
+  async function deleteAgency(_id, name) {
+    if (!agencies) {
+      return dispatch(
+        setMessage({
+          title: "errore",
+          text: "Aziende non ancora caricate"
+        })
+      );
+    }
+
+    if (!window.confirm(`Vuoi davvero eliminare l'azienda "${name}"?`)) return;
+
+    try {
+      await axios.delete(`/api/secretary/agency/${_id}`, {
+        params: { username, password }
+      });
+
+      // Approval successful, update agencies array
+      dispatch(
+        setMessage({
+          color: "green",
+          title: "Eliminazione",
+          text: "Azienda eliminata con successo"
+        })
+      );
+      await fetchAgencies();
+    } catch (err) {
+      dispatch(
+        setMessage({
+          title: "errore",
+          text: err?.response?.data?.err || "Errore sconosciuto"
+        })
+      );
+    }
+  }
+
+  const waiting = agencies?.filter(e => e.approvalStatus === "waiting");
+  const approved = agencies?.filter(e => e.approvalStatus === "approved");
+  const rejected = agencies?.filter(e => e.approvalStatus === "rejected");
 
   return (
     <Container bg="dark" variant="dark" className="mt-8 mb-3">
@@ -89,6 +179,15 @@ const SecretaryHomepage = () => {
           setLoggedIn={setLoggedIn}
         />
       )}
+      {loggedIn && (
+        <EditStudent
+          editStudent={editStudent}
+          setEditStudent={setEditStudent}
+          setStudents={setStudents}
+          username={username}
+          password={password}
+        />
+      )}
 
       {loggedIn && !Array.isArray(agencies) ? (
         <Spinner animation="border" role="status">
@@ -99,43 +198,42 @@ const SecretaryHomepage = () => {
       )}
 
       <h1 className="text-xl font-semibold">
-        Aziende in attesa (
-        {agencies?.filter(e => e.approvalStatus === "waiting").length})
+        Aziende in attesa ({waiting?.length || "0"})
       </h1>
-      {!loggedIn ||
-      (loaded() &&
-        agencies.filter(e => e.approvalStatus === "waiting").length > 0) ? (
+      {!loggedIn || (loaded() && waiting.length > 0) ? (
         <Accordion defaultActiveKey="0" className="mt-2">
           <Row>
             {loggedIn ? (
-              agencies
-                .filter(e => e.approvalStatus === "waiting")
-                .map((e, i) => (
-                  <Col key={e._id} xs={12} md={6}>
-                    <Accordion.Item eventKey={i}>
-                      <Accordion.Header>{e.agencyName}</Accordion.Header>
-                      <Accordion.Body>
-                        <SecretaryAgencyView agency={e}>
-                          <Button
-                            variant="outline-success"
-                            className="mr-3"
-                            onClick={() => approveAgency("approve", e._id)}
-                            disabled={disabled}
-                          >
-                            Accetta
-                          </Button>
-                        </SecretaryAgencyView>
+              waiting.map((e, i) => (
+                <Col key={e._id} xs={12} md={6}>
+                  <Accordion.Item eventKey={i}>
+                    <Accordion.Header>{e.agencyName}</Accordion.Header>
+                    <Accordion.Body>
+                      <SecretaryAgencyView agency={e}>
                         <Button
-                          variant="outline-danger"
-                          onClick={() => approveAgency("reject", e._id)}
+                          variant="outline-success"
+                          className="mr-3"
+                          onClick={() =>
+                            approveAgency("approve", e._id, e.agencyName)
+                          }
                           disabled={disabled}
                         >
-                          Rifiuta
+                          Accetta
                         </Button>
-                      </Accordion.Body>
-                    </Accordion.Item>
-                  </Col>
-                ))
+                      </SecretaryAgencyView>
+                      <Button
+                        variant="outline-danger"
+                        onClick={() =>
+                          approveAgency("reject", e._id, e.agencyName)
+                        }
+                        disabled={disabled}
+                      >
+                        Rifiuta
+                      </Button>
+                    </Accordion.Body>
+                  </Accordion.Item>
+                </Col>
+              ))
             ) : (
               <Col xs={12} md={6}>
                 <Accordion.Item>
@@ -158,45 +256,29 @@ const SecretaryHomepage = () => {
       )}
 
       <h1 className="text-xl font-semibold mt-3">
-        Aziende approvate (
-        {agencies?.filter(e => e.approvalStatus === "approved").length})
+        Aziende approvate ({approved?.length || "0"})
       </h1>
-      {!loggedIn ||
-      (loaded() &&
-        agencies.filter(e => e.approvalStatus === "approved").length > 0) ? (
+      {!loggedIn || (loaded() && approved.length > 0) ? (
         <Accordion defaultActiveKey="0" className="mt-2">
           <Row>
             {loggedIn ? (
-              agencies
-                .filter(e => e.approvalStatus === "approved")
-                .map((e, i) => (
-                  <Col key={e._id} xs={12} md={6}>
-                    <Accordion.Item eventKey={i}>
-                      <Accordion.Header>{e.agencyName}</Accordion.Header>
-                      <Accordion.Body>
-                        <SecretaryAgencyView agency={e}>
-                          <Button
-                            variant="outline-success"
-                            className="mr-3"
-                            onClick={() =>
-                              alert(
-                                "DEBUG apri popup offerte di lavoro azienda"
-                              )
-                            }
-                          >
-                            Visualizza offerte di lavoro
-                          </Button>
-                        </SecretaryAgencyView>
-                        <Button
-                          variant="outline-danger"
-                          onClick={() => alert("DEBUG elimina azienda")}
-                        >
-                          Elimina
-                        </Button>
-                      </Accordion.Body>
-                    </Accordion.Item>
-                  </Col>
-                ))
+              approved.map((e, i) => (
+                <Col key={e._id} xs={12} md={6}>
+                  <Accordion.Item eventKey={i}>
+                    <Accordion.Header>{e.agencyName}</Accordion.Header>
+                    <Accordion.Body>
+                      <SecretaryAgencyView agency={e} />
+                      <Button
+                        className="mt-3"
+                        variant="outline-danger"
+                        onClick={() => deleteAgency(e._id, e.agencyName)}
+                      >
+                        Elimina
+                      </Button>
+                    </Accordion.Body>
+                  </Accordion.Item>
+                </Col>
+              ))
             ) : (
               <Col xs={12} md={6}>
                 <Accordion.Item>
@@ -219,27 +301,30 @@ const SecretaryHomepage = () => {
       )}
 
       <h1 className="text-xl font-semibold mt-3">
-        Aziende rifiutate (
-        {agencies?.filter(e => e.approvalStatus === "rejected").length})
+        Aziende rifiutate ({rejected?.length || "0"})
       </h1>
-      {!loggedIn ||
-      (loaded() &&
-        agencies.filter(e => e.approvalStatus === "rejected").length > 0) ? (
+      {!loggedIn || (loaded() && rejected.length > 0) ? (
         <Accordion defaultActiveKey="0" className="mt-2" alwaysOpen={!loggedIn}>
           <Row>
             {loggedIn ? (
-              agencies
-                .filter(e => e.approvalStatus === "rejected")
-                .map((e, i) => (
-                  <Col key={e._id} xs={12} md={6}>
-                    <Accordion.Item eventKey={i}>
-                      <Accordion.Header>{e.agencyName}</Accordion.Header>
-                      <Accordion.Body>
-                        <SecretaryAgencyView agency={e} />
-                      </Accordion.Body>
-                    </Accordion.Item>
-                  </Col>
-                ))
+              rejected.map((e, i) => (
+                <Col key={e._id} xs={12} md={6}>
+                  <Accordion.Item eventKey={i}>
+                    <Accordion.Header>{e.agencyName}</Accordion.Header>
+                    <Accordion.Body>
+                      <SecretaryAgencyView agency={e}>
+                        <Button
+                          variant="outline-danger"
+                          className="mt-3"
+                          onClick={() => deleteAgency(e._id, e.agencyName)}
+                        >
+                          Elimina
+                        </Button>
+                      </SecretaryAgencyView>
+                    </Accordion.Body>
+                  </Accordion.Item>
+                </Col>
+              ))
             ) : (
               <Col xs={12} md={6}>
                 <Accordion.Item>
@@ -260,6 +345,80 @@ const SecretaryHomepage = () => {
       ) : (
         <p>Nessuna azienda rifiutata</p>
       )}
+
+      <h1 className="text-xl font-semibold mt-5 mb-2">
+        Studenti ({students?.length || "0"})
+      </h1>
+
+      <Accordion defaultActiveKey="0">
+        {students?.map(s => (
+          <Accordion.Item key={s._id} eventKey={s._id}>
+            <Accordion.Header>
+              {s.lastName} {s.firstName}
+            </Accordion.Header>
+            <Accordion.Body>
+              <div className="mb-3 grid grid-cols-2">
+                <p>Nome</p>
+                <p>{s.firstName}</p>
+              </div>
+
+              <div className="mb-3 grid grid-cols-2">
+                <p>Cognome</p>
+                <p>{s.lastName}</p>
+              </div>
+
+              <div className="mb-3 grid grid-cols-2">
+                <p>Email</p>
+                <a href={`mailto:${s.email}`}>{s.email}</a>
+              </div>
+
+              <div className="mb-3 grid grid-cols-2">
+                <p>Indirizzo di studio</p>
+                <p>
+                  {s.fieldOfStudy === "it"
+                    ? "Informatica"
+                    : s.fieldOfStudy === "electronics"
+                    ? "Elettronica"
+                    : s.fieldOfStudy === "chemistry"
+                    ? "Chimica"
+                    : "Altro (errore)"}
+                </p>
+              </div>
+
+              <div className="mb-3 grid grid-cols-2">
+                <p>Numero di telefono</p>
+                <a href={`tel:${s.phoneNumber}`}>{s.phoneNumber}</a>
+              </div>
+
+              <div className="mb-3 grid grid-cols-2">
+                <p>Codice fiscale</p>
+                <p>{s.fiscalNumber}</p>
+              </div>
+
+              <div className="mb-3 grid grid-cols-2">
+                <p>Spostamenti</p>
+                <div>
+                  <p className="flex items-center">
+                    {s.hasDrivingLicense ? <Check /> : <X />} patente
+                  </p>
+                  <p className="flex items-center">
+                    {s.canTravel ? <Check /> : <X />} viaggiare in autonomia
+                  </p>
+                </div>
+              </div>
+
+              <EditButton
+                onClick={() => {
+                  setEditStudent(s);
+                  console.log(editStudent);
+                }}
+                showText
+                purple
+              />
+            </Accordion.Body>
+          </Accordion.Item>
+        ))}
+      </Accordion>
     </Container>
   );
 };

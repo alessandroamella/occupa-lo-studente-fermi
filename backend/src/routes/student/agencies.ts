@@ -4,7 +4,7 @@ import moment from "moment";
 import { LeanDocument, isValidObjectId } from "mongoose";
 
 import { isLoggedIn } from "@middlewares";
-import { AgencyClass, AgencyDoc } from "@models";
+import { AgencyClass } from "@models";
 import { ResErr } from "@routes";
 import { AgencyService } from "@services";
 import { logger } from "@shared";

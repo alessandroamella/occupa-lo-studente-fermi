@@ -8,7 +8,16 @@ import { logger } from "@shared";
 
 export class StudentService {
     public static async create(data: CreateStudentData): Promise<StudentDoc> {
+        logger.info(`Create student "${data.firstName} ${data.lastName}"`);
         return await Student.create(data);
+    }
+
+    public static async find(
+        fields: FilterQuery<StudentDoc | null>
+    ): Promise<StudentDoc[]> {
+        return await Student.find(fields)
+            .sort({ lastName: 1, firstName: 1 })
+            .exec();
     }
 
     public static async findOne(
@@ -22,7 +31,10 @@ export class StudentService {
         await student.deleteOne();
     }
 
-    // Auth
+    public static async update(studentDoc: StudentDoc) {
+        logger.debug("Updating student with _id " + studentDoc._id);
+        return await studentDoc.save();
+    }
 
     public static createAuthCookie(student: StudentDoc): Promise<string> {
         return new Promise((resolve, reject) => {

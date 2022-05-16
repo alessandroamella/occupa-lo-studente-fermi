@@ -102,11 +102,7 @@ router.get(
                 const agencies = (await AgencyService.find({
                     fields: {
                         approvalStatus: "approved",
-                        $text: {
-                            $search: searchQuery,
-                            $language: "it",
-                            $caseSensitive: false
-                        }
+                        $text: { $search: searchQuery }
                     },
                     lean: true,
                     projection: { score: { $meta: "textScore" } },
@@ -135,6 +131,38 @@ router.get(
                             jobOffers.push(j);
                         }
                     }
+                }
+            }
+
+            const agencies = await AgencyService.find({
+                fields: {
+                    _id: {
+                        $in: jobOffers.map(j => j.agency)
+                    },
+                    approvalStatus: "approved"
+                },
+                lean: true,
+                populateJobOffers: false,
+                showHashedPassword: false,
+                showPersonalData: false
+            });
+
+            for (let i = 0; i < jobOffers.length; i++) {
+                if (
+                    !agencies.find(
+                        a =>
+                            a._id.toString() === jobOffers[i].agency?.toString()
+                    )
+                ) {
+                    logger.debug(
+                        "Agency with _id " +
+                            jobOffers[i].agency +
+                            " not in array " +
+                            agencies.map(a => a._id.toString()).join(", ")
+                    );
+                    // Agency is not approved, remove jobOffer
+                    jobOffers.splice(i, 1);
+                    i--;
                 }
             }
 

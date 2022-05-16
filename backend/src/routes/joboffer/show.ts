@@ -58,9 +58,8 @@ const router = Router();
 
 router.get(
     "/:_id",
-    param("_id").isMongoId(),
     isLoggedIn.isAgencyLoggedIn,
-
+    param("_id").isMongoId(),
     async (req: Request, res: Response) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {

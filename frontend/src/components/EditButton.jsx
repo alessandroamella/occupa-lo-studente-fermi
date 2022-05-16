@@ -1,7 +1,15 @@
 import React from "react";
-import { Pencil } from "react-bootstrap-icons";
+import { Pencil, X } from "react-bootstrap-icons";
 
-const EditButton = ({ showText, disabled, purple, className, ...rest }) => {
+const EditButton = ({
+  showText,
+  isClose,
+  disabled,
+  purple,
+  text,
+  className,
+  ...rest
+}) => {
   return (
     <button
       disabled={disabled}
@@ -16,8 +24,12 @@ const EditButton = ({ showText, disabled, purple, className, ...rest }) => {
       }`}
       {...rest}
     >
-      <Pencil />
-      {showText && <span className="ml-1">Modifica</span>}
+      {isClose ? <X /> : <Pencil />}
+      {showText && (
+        <span className="ml-1">
+          {text || (isClose ? "Chiudi" : "Modifica")}
+        </span>
+      )}
     </button>
   );
 };

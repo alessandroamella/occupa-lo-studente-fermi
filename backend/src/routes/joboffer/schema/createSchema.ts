@@ -1,32 +1,9 @@
 import { Schema } from "express-validator";
 import moment from "moment";
 
-import { AgencyService } from "@services";
-import { logger } from "@shared";
-
+// Same as validatorSchema but without agency
+// (isLoggedIn middleware, no need to check)
 export const validatorSchema: Schema = {
-    agency: {
-        in: "body",
-        errorMessage: "Agency ObjectId not specified",
-        isMongoId: {
-            errorMessage: "Agency ObjectId is not a valid ObjectId"
-        },
-        custom: {
-            errorMessage: "Agency must be approved",
-            options: async _id => {
-                try {
-                    const doc = await AgencyService.findOne({ _id });
-                    return doc?.approvalStatus === "approved";
-                } catch (err) {
-                    logger.error(
-                        "Error while finding agency in jobOffer validator schema"
-                    );
-                    logger.error(err);
-                    return false;
-                }
-            }
-        }
-    },
     title: {
         in: "body",
         errorMessage: "Title not specified",
@@ -63,7 +40,8 @@ export const validatorSchema: Schema = {
                 !!v &&
                 moment(v).isValid() &&
                 moment(v).diff(moment(), "months") <= 12
-        }
+        },
+        optional: true
     },
     mustHaveDiploma: {
         in: "body",

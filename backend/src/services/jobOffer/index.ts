@@ -53,7 +53,9 @@ export class JobOfferService {
      * @param  {JobOfferDoc} jobOffer
      */
     public static async create(jobOffer: JobOfferDoc) {
-        logger.debug(`Creating job offer from agency ${jobOffer.agency}...`);
+        logger.info(
+            `Create job offer "${jobOffer.title}" from agency ${jobOffer.agency}`
+        );
         await JobOffer.create(jobOffer);
 
         await jobOffer.populate("agency");
@@ -125,11 +127,7 @@ export class JobOfferService {
         }
         if (params.searchQuery && params.firstQuery) {
             logger.debug(`searchQuery $search="${params.searchQuery}"`);
-            obj.$text = {
-                $search: params.searchQuery,
-                $language: "it",
-                $caseSensitive: false
-            };
+            obj.$text = { $search: params.searchQuery };
         }
         if (params.fieldOfStudy) {
             logger.debug("searchQuery fieldOfStudy=" + params.fieldOfStudy);

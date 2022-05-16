@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { Outlet, useSearchParams } from "react-router-dom";
+import React, { useEffect, useRef, useState } from "react";
+import { Link, Outlet, useSearchParams } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Check,
   Clock,
+  EmojiFrown,
   GeoAlt,
   PlusCircleDotted,
   X
@@ -13,8 +14,6 @@ import Placeholder from "react-bootstrap/Placeholder";
 import MarkdownIt from "markdown-it";
 import MdEditor from "react-markdown-editor-lite";
 import Form from "react-bootstrap/Form";
-import Tabs from "react-bootstrap/Tabs";
-import Tab from "react-bootstrap/Tab";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
 import axios from "axios";
@@ -39,6 +38,8 @@ const AgencyDashboard = () => {
   const { agency } = useSelector(selectAgency);
   const dispatch = useDispatch();
 
+  const jobOffersRef = useRef(null);
+
   function handleEditorChange({ text }) {
     setAgencyDescription(text);
 
@@ -46,14 +47,12 @@ const AgencyDashboard = () => {
     if (l < 16) {
       return dispatch(
         setMessage({
-          color: "red",
           text: "La descrizione deve essere lunga almeno 16 caratteri"
         })
       );
     } else if (l > 4000) {
       return dispatch(
         setMessage({
-          color: "red",
           text: `Hai raggiunto la lunghezza massima di 4000 caratteri (${l})`
         })
       );
@@ -228,7 +227,15 @@ const AgencyDashboard = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(agency)]);
 
+  // eslint-disable-next-line no-unused-vars
   const [searchParams, setSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    if (searchParams.get("view") === "joboffers") {
+      jobOffersRef.current.scrollIntoView();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <RequireAgencyLogin>
@@ -336,214 +343,225 @@ const AgencyDashboard = () => {
               </div>
             </div>
 
-            <Tabs
-              activeKey={searchParams.get("view") || "agency"}
-              onSelect={k => setSearchParams({ view: k })}
-            >
-              <Tab eventKey="agency" title="Azienda" className="md:p-5">
-                <div>
-                  <h3 className="mt-3 flex items-center mb-3 font-semibold text-3xl">
-                    Descrizione
-                  </h3>
-                  {agency?.agencyDescription ? (
+            <div>
+              <h3 className="mt-3 flex items-center mb-3 font-semibold justify-center text-3xl">
+                Descrizione
+              </h3>
+              {agency?.agencyDescription ? (
+                <>
+                  <MdEditor
+                    style={{ height: "500px" }}
+                    renderHTML={text => mdParser.render(text)}
+                    onChange={handleEditorChange}
+                    defaultValue={agency.agencyDescription}
+                    allowPasteImage={false}
+                    imageAccept={false}
+                    readOnly={!descriptionEnabled}
+                  />
+                  <div className="mt-5 w-full flex justify-center">
+                    <EditButton
+                      purple
+                      showText
+                      text="Modifica descrizione"
+                      disabled={
+                        !descriptionEnabled ||
+                        !agencyDescription ||
+                        agencyDescription.trim().length < 16 ||
+                        agencyDescription.trim().length > 4000
+                      }
+                      onClick={execEditDescription}
+                    />
+                  </div>
+                </>
+              ) : (
+                <Placeholder className="w-96 h-96" />
+              )}
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 items-start">
+              <div className="flex flex-col justify-center items-center w-full">
+                <h3 className="flex mb-3 font-semibold text-3xl">Posizione</h3>
+                {address ? (
+                  <iframe
+                    title="Agency position"
+                    width="500"
+                    height="430"
+                    className="max-w-full mr-3 border-8 border-orange-400 shadow-lg"
+                    src={
+                      "https://maps.google.com/maps?t=&z=13&ie=UTF8&iwloc=&output=embed&q=" +
+                      encodeURIComponent(address)
+                    }
+                  ></iframe>
+                ) : (
+                  <Placeholder className="w-96 h-96" />
+                )}
+                <div className="mt-3 flex justify-center items-center w-full">
+                  {editAddress ? (
                     <>
-                      <MdEditor
-                        style={{ height: "500px" }}
-                        renderHTML={text => mdParser.render(text)}
-                        onChange={handleEditorChange}
-                        defaultValue={agency.agencyDescription}
-                        allowPasteImage={false}
-                        imageAccept={false}
-                        readOnly={!descriptionEnabled}
+                      <input
+                        type="text"
+                        placeholder="17 Largo G. Garibaldi, 41121 Modena"
+                        onChange={e => setAddress(e.target.value)}
+                        disabled={addressInputDisabled}
+                        value={address}
+                        // autoComplete="street-address"
+                        autoComplete="street-address"
+                        minLength={3}
+                        required
+                        className="mr-3 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        autoFocus
+                        onKeyDown={e =>
+                          e.key === "Escape" && setEditAddress(false)
+                        }
                       />
-                      <div className="mt-5 w-full flex justify-center">
-                        <EditButton
-                          purple
-                          showText
-                          disabled={
-                            !descriptionEnabled ||
-                            !agencyDescription ||
-                            agencyDescription.trim().length < 16 ||
-                            agencyDescription.trim().length > 4000
-                          }
-                          onClick={execEditDescription}
-                        />
-                      </div>
+                      <EditButton
+                        purple
+                        showText
+                        onClick={execEditAddress}
+                        text="Modifica indirizzo"
+                      />
                     </>
                   ) : (
-                    <Placeholder className="w-96 h-96" />
+                    <>
+                      <p
+                        onClick={() => setEditAddress(true)}
+                        className="cursor-pointer flex items-center text-gray-700 italic mr-3"
+                      >
+                        <GeoAlt /> <span className="ml-1">{address}</span>
+                      </p>
+                      <EditButton
+                        className="ml-3"
+                        onClick={() => setEditAddress(true)}
+                      />
+                    </>
                   )}
                 </div>
+              </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 items-start">
-                  <div className="flex flex-col justify-center items-center w-full">
-                    <h3 className="flex mb-3 font-semibold text-3xl">
-                      Posizione
-                    </h3>
-                    {address ? (
-                      <iframe
-                        title="Agency position"
-                        width="500"
-                        height="430"
-                        className="max-w-full mr-3 border-8 border-orange-400 shadow-lg"
-                        src={
-                          "https://maps.google.com/maps?t=&z=13&ie=UTF8&iwloc=&output=embed&q=" +
-                          encodeURIComponent(address)
-                        }
-                      ></iframe>
-                    ) : (
-                      <Placeholder className="w-96 h-96" />
-                    )}
-                    <div className="mt-3 flex justify-center items-center w-full">
-                      {editAddress ? (
-                        <>
-                          <input
-                            type="text"
-                            placeholder="38 Largo G. Garibaldi, 41121 Modena"
-                            onChange={e => setAddress(e.target.value)}
-                            disabled={addressInputDisabled}
-                            value={address}
-                            // autoComplete="street-address"
-                            autoComplete="street-address"
-                            minLength={3}
-                            required
-                            className="mr-3 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            autoFocus
-                            onKeyDown={e =>
-                              e.key === "Escape" && setEditAddress(false)
-                            }
-                          />
-                          <EditButton
-                            purple
-                            showText
-                            onClick={execEditAddress}
-                          />
-                        </>
-                      ) : (
-                        <>
-                          <p
-                            onClick={() => setEditAddress(true)}
-                            className="cursor-pointer flex items-center text-gray-700 italic mr-3"
-                          >
-                            <GeoAlt /> <span className="ml-1">{address}</span>
-                          </p>
-                          <EditButton
-                            className="ml-3"
-                            onClick={() => setEditAddress(true)}
-                          />
-                        </>
-                      )}
-                    </div>
+              <div className="flex flex-col justify-center items-center w-full">
+                <h3 className="flex mb-3 font-semibold text-3xl">Dati</h3>
+
+                <Form
+                  onSubmit={submitForm}
+                  className="text-gray-700 w-full md:px-5"
+                >
+                  <div className="mb-3">
+                    <p>Email</p>
+                    <input
+                      className="col-span-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      type="email"
+                      required
+                      disabled={disabled}
+                      value={email}
+                      onChange={e => setEmail(e.target.value)}
+                    />
                   </div>
 
-                  <div className="flex flex-col justify-center items-center w-full">
-                    <h3 className="flex mb-3 font-semibold text-3xl">Dati</h3>
-
-                    <Form
-                      onSubmit={submitForm}
-                      className="text-gray-700 w-full md:px-5"
-                    >
-                      <div className="mb-3">
-                        <p>Email</p>
-                        <input
-                          className="col-span-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                          type="email"
-                          required
-                          disabled={disabled}
-                          value={email}
-                          onChange={e => setEmail(e.target.value)}
-                        />
-                      </div>
-
-                      <div className="mb-3">
-                        <p>Password</p>
-                        <input
-                          className="col-span-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                          type="password"
-                          disabled={disabled}
-                          value={password}
-                          onChange={e => {
-                            setHasChangedPassword(true);
-                            setPassword(e.target.value);
-                          }}
-                        />
-                      </div>
-
-                      <div className="mb-3">
-                        <p>Numero di telefono</p>
-                        <input
-                          className="col-span-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                          type="tel"
-                          required
-                          disabled={disabled}
-                          value={phoneNumber}
-                          onChange={e => setPhoneNumber(e.target.value)}
-                        />
-                      </div>
-
-                      <div className="mb-3">
-                        <p>Sito web</p>
-                        <input
-                          className="col-span-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                          type="text"
-                          pattern="https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)"
-                          required
-                          disabled={disabled}
-                          value={websiteUrl}
-                          onChange={e => setWebsiteUrl(e.target.value)}
-                        />
-                      </div>
-
-                      <div className="mb-3">
-                        <p>URL logo</p>
-                        <input
-                          className="col-span-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                          type="text"
-                          pattern="https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)"
-                          disabled={disabled}
-                          value={logoUrl}
-                          onChange={e => setLogoUrl(e.target.value)}
-                        />
-                      </div>
-
-                      <div className="mb-3">
-                        <p>URL banner</p>
-                        <input
-                          className="col-span-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                          type="text"
-                          pattern="https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)"
-                          disabled={disabled}
-                          value={bannerUrl}
-                          onChange={e => setBannerUrl(e.target.value)}
-                        />
-                      </div>
-
-                      <div className="col-span-3 w-full flex justify-center mt-3">
-                        <EditButton
-                          type="submit"
-                          purple
-                          showText
-                          disabled={disabled}
-                        />
-                      </div>
-                    </Form>
-                  </div>
-                </div>
-              </Tab>
-
-              <Tab eventKey="joboffers" title="Offerte di lavoro">
-                <div className="mt-4 flex flex-col md:px-5">
-                  <div className="font-semibold tracking-tight text-xl flex justify-center bg-purple-500 text-white m-3 mb-5 p-5 items-center hover:bg-purple-600 transition-all hover:scale-105 cursor-pointer rounded-md border">
-                    <PlusCircleDotted />{" "}
-                    <span className="ml-2">Nuova offerta di lavoro</span>
+                  <div className="mb-3">
+                    <p>Password</p>
+                    <input
+                      className="col-span-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      type="password"
+                      disabled={disabled}
+                      value={password}
+                      onChange={e => {
+                        setHasChangedPassword(true);
+                        setPassword(e.target.value);
+                      }}
+                    />
                   </div>
 
-                  {agency?.jobOffers.map((j, i) => (
-                    <JobOfferCard key={j?._id || i} jobOffer={j} />
-                  ))}
-                </div>
-              </Tab>
-            </Tabs>
+                  <div className="mb-3">
+                    <p>Numero di telefono</p>
+                    <input
+                      className="col-span-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      type="tel"
+                      required
+                      disabled={disabled}
+                      value={phoneNumber}
+                      onChange={e => setPhoneNumber(e.target.value)}
+                    />
+                  </div>
+
+                  <div className="mb-3">
+                    <p>Sito web</p>
+                    <input
+                      className="col-span-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      type="text"
+                      pattern="https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)"
+                      required
+                      disabled={disabled}
+                      value={websiteUrl}
+                      onChange={e => setWebsiteUrl(e.target.value)}
+                    />
+                  </div>
+
+                  <div className="mb-3">
+                    <p>URL logo</p>
+                    <input
+                      className="col-span-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      type="text"
+                      pattern="https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)"
+                      disabled={disabled}
+                      value={logoUrl}
+                      onChange={e => setLogoUrl(e.target.value)}
+                    />
+                  </div>
+
+                  <div className="mb-3">
+                    <p>URL banner</p>
+                    <input
+                      className="col-span-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      type="text"
+                      pattern="https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)"
+                      disabled={disabled}
+                      value={bannerUrl}
+                      onChange={e => setBannerUrl(e.target.value)}
+                    />
+                  </div>
+
+                  <div className="col-span-3 w-full flex justify-center mt-3">
+                    <EditButton
+                      type="submit"
+                      purple
+                      showText
+                      disabled={disabled}
+                    />
+                  </div>
+                </Form>
+              </div>
+            </div>
+
+            {/* ELIMINA */}
+
+            <div ref={jobOffersRef} className="mt-10 flex flex-col md:px-5">
+              <h3 className="mt-3 flex items-center mb-3 font-semibold justify-center text-3xl">
+                Offerte di lavoro
+              </h3>
+              {agency?.approvalStatus === "approved" && (
+                <Link
+                  to="/agency/joboffer"
+                  className="font-semibold tracking-tight text-xl flex justify-center bg-purple-500 text-white m-3 mb-5 p-5 items-center hover:bg-purple-600 transition-all hover:scale-105 cursor-pointer rounded-md border"
+                >
+                  <PlusCircleDotted />{" "}
+                  <span className="ml-2">Nuova offerta di lavoro</span>
+                </Link>
+              )}
+
+              {agency?.jobOffers.map((j, i) => (
+                <JobOfferCard clickable key={j?._id || i} jobOffer={j} />
+              ))}
+              {agency?.jobOffers.length === 0 && (
+                <p className="flex items-center justify-center my-3 text-xl">
+                  <span className="mr-1">
+                    {agency?.approvalStatus === "approved"
+                      ? "Non hai ancora pubblicato nessun'offerta di lavoro"
+                      : "La segreteria deve approvare la tua azienda prima che tu possa creare offerte di lavoro"}
+                  </span>
+                  <EmojiFrown />
+                </p>
+              )}
+            </div>
           </div>
         </div>
         <Outlet />

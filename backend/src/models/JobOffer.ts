@@ -53,10 +53,11 @@ import { AgencyClass } from "./Agency";
  *            description: Whether the student must have a diploma. Defaults to false
  *          numberOfPositions:
  *            type: integer
+ *            min: 1
+ *            max: 10
  *            description: Number of this position available. Defaults to 1
  */
 
-// MODEL: ADD MORE THINGS TO THIS MODEL
 @index({ title: "text", description: "text" })
 @modelOptions({ schemaOptions: { collection: "JobOffer", timestamps: true } })
 export class JobOfferClass {
@@ -88,7 +89,7 @@ export class JobOfferClass {
     @prop({ required: true, default: false })
     public mustHaveDiploma!: boolean;
 
-    @prop({ required: true, default: 1 })
+    @prop({ required: true, default: 1, min: 1, max: 10 })
     public numberOfPositions!: number;
 }
 

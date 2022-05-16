@@ -4,7 +4,8 @@ import { Outlet } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Placeholder from "react-bootstrap/Placeholder";
 import RequireStudentLogin from "./RequireStudentLogin";
-import { Envelope, Telephone } from "react-bootstrap-icons";
+import { Check, Envelope, Telephone, X } from "react-bootstrap-icons";
+import { format } from "date-fns";
 
 const selectStudent = state => state.student;
 
@@ -16,42 +17,18 @@ const StudentProfile = () => {
   return (
     <RequireStudentLogin>
       <Container bg="dark" variant="dark" className="mt-12 mb-4">
-        {/* <div className="px-4 flex justify-center flex-col md:flex-row">
-          <img
-            src={student.pictureUrl.replace("=s96-c", "=s1024-c")}
-            loading="lazy"
-            alt="Profile pic"
-            className="w-44 rounded-full shadow-lg"
-          />
-          <div className="md:ml-12">
-            <h1 className="text-5xl font-semibold uppercase mb-2 tracking-tighter">
-              {student.firstName} {student.lastName}
-            </h1>
-            <p className="text-gray-700">
-              Studente di{" "}
-              <span className="font-medium">
-                {student.fieldOfStudy === "it"
-                  ? "informatica"
-                  : student.fieldOfStudy === "electronics"
-                  ? "elettronica"
-                  : "chimica"}
-              </span>
-            </p>
-          </div>
-        </div> */}
-
         <div>
-          <h1 className="text-5xl font-semibold uppercase mb-2 tracking-tighter">
-            Il tuo profilo
+          <h1 className="text-5xl font-semibold  mb-2 tracking-tighter">
+            {student ? `Ciao, ${student.firstName}!` : "Il tuo profilo"}{" "}
           </h1>
 
-          <div className="flex flex-col md:flex-row mt-8">
+          <div className="flex justify-center flex-col md:flex-row mt-8">
             {student ? (
               <img
-                src={student.pictureUrl?.replace("=s96-c", "=s1024-c")}
+                src={student?.pictureUrl?.replace("=s96-c", "=s1024-c")}
                 loading="lazy"
                 alt="Profile pic"
-                className="w-44 rounded-full shadow-lg"
+                className="w-44 rounded-full aspect-square shadow-lg"
               />
             ) : (
               <Placeholder as={"img"} animation="glow" />
@@ -104,9 +81,49 @@ const StudentProfile = () => {
               </div>
             </div>
           </div>
-        </div>
 
-        <div>{JSON.stringify(student, null, 4)}</div>
+          <h2 className="text-3xl mt-5 mb-3 font-semibold tracking-tighter">
+            I tuoi dati
+          </h2>
+
+          <div className="text-gray-700 w-full md:px-5">
+            <div className="mb-3 grid grid-cols-2">
+              <p>Nome</p>
+              <p>{student?.firstName}</p>
+            </div>
+
+            <div className="mb-3 grid grid-cols-2">
+              <p>Cognome</p>
+              <p>{student?.lastName}</p>
+            </div>
+
+            <div className="mb-3 grid grid-cols-2">
+              <p>Codice fiscale</p>
+              <p>{student?.fiscalNumber}</p>
+            </div>
+
+            <div className="mb-3 grid grid-cols-2">
+              <p>Spostamenti</p>
+              <div>
+                <p className="flex items-center">
+                  {student?.hasDrivingLicense ? <Check /> : <X />} patente
+                </p>
+                <p className="flex items-center">
+                  {student?.canTravel ? <Check /> : <X />} viaggiare in
+                  autonomia
+                </p>
+              </div>
+            </div>
+
+            <div className="mb-3 grid grid-cols-2">
+              <p>Data di iscrizione</p>
+              <p>
+                {student?.createdAt &&
+                  format(new Date(student.createdAt), "dd/MM/yyyy")}
+              </p>
+            </div>
+          </div>
+        </div>
 
         <Outlet />
       </Container>

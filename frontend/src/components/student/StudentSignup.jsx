@@ -79,19 +79,20 @@ const StudentSignup = () => {
           text: `Benvenuto, ${res.data.firstName}, su Occupa lo Studente!`
         })
       );
-      // DEBUG
-      // alert(JSON.stringify(data));
     } catch (err) {
       if (err?.response?.status === 510) {
         // client needs to login again
-        alert(
-          "Si è verificato un errore e devi fare nuovamente il login con Google"
+        dispatch(
+          setMessage({
+            text: "Si è verificato un errore e devi fare nuovamente il login con Google"
+          })
         );
         return (window.location = err.response.data.url);
       }
-      // DEBUG
-      alert(err?.response?.data?.err || err?.response?.data);
       console.log(err);
+      dispatch(
+        setMessage({ text: err?.response?.data?.err || "Errore sconosciuto" })
+      );
       setDisabled(false);
     }
     return false;

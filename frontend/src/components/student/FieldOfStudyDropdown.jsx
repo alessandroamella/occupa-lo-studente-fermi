@@ -7,7 +7,6 @@ const FieldOfStudyDropdown = () => {
 
   const field = searchParams.get("field");
 
-  // DEBUG non usare Bootstrap
   return (
     <Dropdown>
       <Dropdown.Toggle

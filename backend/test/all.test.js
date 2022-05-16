@@ -33,7 +33,7 @@ describe("Agencies", () => {
     email: faker.internet.email(name, surname),
     websiteUrl: "https://www.google.com",
     phoneNumber: "3924133359",
-    password: faker.internet.password(16),
+    password: "diocaneporco",
     agencyName: faker.company.companyName(),
     agencyDescription: faker.lorem.paragraphs(3),
     agencyAddress:
@@ -179,6 +179,179 @@ describe("Agencies", () => {
       });
 
       it("uses valid data", async () => {
+        const rawJobOffer = {
+          agency: agencyDB?._id,
+          title: faker.lorem.word(10),
+          description: faker.lorem.sentences(10),
+          fieldOfStudy: faker.random.arrayElement([
+            "it",
+            "electronics",
+            "chemistry"
+          ]),
+          expiryDate: faker.date.between(
+            moment().add(1, "week").toISOString(),
+            moment().add(10, "months").toISOString()
+          ),
+          mustHaveDiploma: faker.datatype.boolean(),
+          numberOfPositions: faker.datatype.number({ min: 1, max: 10 })
+        };
+
+        const res = await agent.post("/joboffer").send(rawJobOffer);
+
+        expect(res).to.have.status(200);
+        expect(res.body).to.be.an("object").with.property("_id");
+
+        jobOfferDB = res.body;
+      });
+
+      it("uses valid data", async () => {
+        const rawJobOffer = {
+          agency: agencyDB?._id,
+          title: faker.lorem.word(10),
+          description: faker.lorem.sentences(10),
+          fieldOfStudy: faker.random.arrayElement([
+            "it",
+            "electronics",
+            "chemistry"
+          ]),
+          expiryDate: faker.date.between(
+            moment().add(1, "week").toISOString(),
+            moment().add(10, "months").toISOString()
+          ),
+          mustHaveDiploma: faker.datatype.boolean(),
+          numberOfPositions: faker.datatype.number({ min: 1, max: 10 })
+        };
+
+        const res = await agent.post("/joboffer").send(rawJobOffer);
+
+        expect(res).to.have.status(200);
+        expect(res.body).to.be.an("object").with.property("_id");
+
+        jobOfferDB = res.body;
+      });
+
+      it("uses valid data", async () => {
+        const rawJobOffer = {
+          agency: agencyDB?._id,
+          title: faker.lorem.word(10),
+          description: faker.lorem.sentences(10),
+          fieldOfStudy: faker.random.arrayElement([
+            "it",
+            "electronics",
+            "chemistry"
+          ]),
+          expiryDate: faker.date.between(
+            moment().add(1, "week").toISOString(),
+            moment().add(10, "months").toISOString()
+          ),
+          mustHaveDiploma: faker.datatype.boolean(),
+          numberOfPositions: faker.datatype.number({ min: 1, max: 10 })
+        };
+
+        const res = await agent.post("/joboffer").send(rawJobOffer);
+
+        expect(res).to.have.status(200);
+        expect(res.body).to.be.an("object").with.property("_id");
+
+        jobOfferDB = res.body;
+      });
+
+      it("uses valid data", async () => {
+        const rawJobOffer = {
+          agency: agencyDB?._id,
+          title: faker.lorem.word(10),
+          description: faker.lorem.sentences(10),
+          fieldOfStudy: faker.random.arrayElement([
+            "it",
+            "electronics",
+            "chemistry"
+          ]),
+          expiryDate: faker.date.between(
+            moment().add(1, "week").toISOString(),
+            moment().add(10, "months").toISOString()
+          ),
+          mustHaveDiploma: faker.datatype.boolean(),
+          numberOfPositions: faker.datatype.number({ min: 1, max: 10 })
+        };
+
+        const res = await agent.post("/joboffer").send(rawJobOffer);
+
+        expect(res).to.have.status(200);
+        expect(res.body).to.be.an("object").with.property("_id");
+
+        jobOfferDB = res.body;
+      });
+
+      it("uses valid data", async () => {
+        const rawJobOffer = {
+          agency: agencyDB?._id,
+          title: faker.lorem.word(10),
+          description: faker.lorem.sentences(10),
+          fieldOfStudy: faker.random.arrayElement([
+            "it",
+            "electronics",
+            "chemistry"
+          ]),
+          expiryDate: faker.date.between(
+            moment().add(1, "week").toISOString(),
+            moment().add(10, "months").toISOString()
+          ),
+          mustHaveDiploma: faker.datatype.boolean(),
+          numberOfPositions: faker.datatype.number({ min: 1, max: 10 })
+        };
+
+        const res = await agent.post("/joboffer").send(rawJobOffer);
+
+        expect(res).to.have.status(200);
+        expect(res.body).to.be.an("object").with.property("_id");
+
+        jobOfferDB = res.body;
+      });
+
+      it("uses valid data", async () => {
+        const rawJobOffer = {
+          agency: agencyDB?._id,
+          title: faker.lorem.word(10),
+          description: faker.lorem.sentences(10),
+          fieldOfStudy: faker.random.arrayElement([
+            "it",
+            "electronics",
+            "chemistry"
+          ]),
+          expiryDate: faker.date.between(
+            moment().add(1, "week").toISOString(),
+            moment().add(10, "months").toISOString()
+          ),
+          mustHaveDiploma: faker.datatype.boolean(),
+          numberOfPositions: faker.datatype.number({ min: 1, max: 10 })
+        };
+
+        const res = await agent.post("/joboffer").send(rawJobOffer);
+
+        expect(res).to.have.status(200);
+        expect(res.body).to.be.an("object").with.property("_id");
+
+        jobOfferDB = res.body;
+      });
+
+      it("uses valid data", async () => {
+        const rawJobOffer = {
+          agency: agencyDB?._id,
+          title: faker.lorem.word(10),
+          description: faker.lorem.sentences(10),
+          fieldOfStudy: faker.random.arrayElement([
+            "it",
+            "electronics",
+            "chemistry"
+          ]),
+          expiryDate: faker.date.between(
+            moment().add(1, "week").toISOString(),
+            moment().add(10, "months").toISOString()
+          ),
+          mustHaveDiploma: faker.datatype.boolean(),
+          numberOfPositions: faker.datatype.number({ min: 1, max: 10 })
+        };
+
         const res = await agent.post("/joboffer").send(rawJobOffer);
 
         expect(res).to.have.status(200);

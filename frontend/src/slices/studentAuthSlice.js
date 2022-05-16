@@ -4,13 +4,9 @@ import axios from "axios";
 export const login = createAsyncThunk("/student/login", async () => {
     try {
         const { data } = await axios.get("/api/student");
-        // DEBUG
-        // console.log("Student logged in", data);
         return data;
     } catch (err) {
-        // console.log("Student not logged in");
         return null;
-        // setStudent(null);
     }
 });
 

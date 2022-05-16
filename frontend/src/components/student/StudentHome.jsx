@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Link, Outlet, useSearchParams } from "react-router-dom";
+import { Link, Outlet, useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
-import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
 import Spinner from "react-bootstrap/Spinner";
@@ -14,7 +13,7 @@ import RequireStudentLogin from "./RequireStudentLogin";
 import { setMessage } from "../../slices/alertSlice";
 import StudentJobOfferCard from "./StudentJobOfferCard";
 import SearchJobOffers from "./SearchJobOffers";
-import { Heartbreak } from "react-bootstrap-icons";
+import { ArrowRight, Heartbreak } from "react-bootstrap-icons";
 import FieldOfStudyDropdown from "./FieldOfStudyDropdown";
 
 const selectStudent = state => state.student;
@@ -40,6 +39,8 @@ const StudentHome = () => {
   const [currentJobOffer, setCurrentJobOffer] = useState(null);
 
   const currentJobOfferRef = useRef(null);
+
+  const navigate = useNavigate();
 
   const dispatch = useDispatch();
   const { student } = useSelector(selectStudent);
@@ -116,11 +117,12 @@ const StudentHome = () => {
       if (!agencies) {
         fetchAgencies();
       }
-      return;
+      return console.log("fetching agencies");
     }
     // find first job offer to show
 
     if (!currentJobOffer) setCurrentJobOffer(jobOffers[0]);
+    else console.log("current job offer already set");
 
     // Set agency
     if (!agencies) {
@@ -129,8 +131,12 @@ const StudentHome = () => {
     const a = agencies.find(a => a._id === jobOffers[0].agency);
 
     if (!a) {
-      return console.error("Agency not found with current jobOffer");
+      return console.error(
+        "Agency not found with current jobOffer",
+        jobOffers[0].agency
+      );
     }
+    console.log("set current agency to", a);
     setCurrentAgency(a);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [jobOffers?.length, agencies?.length]);
@@ -142,6 +148,23 @@ const StudentHome = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [!jobOffers, loaded, err?.toString()]);
+
+  useEffect(() => {
+    if (
+      agencies &&
+      currentAgency &&
+      currentJobOffer.agency !== currentAgency._id
+    ) {
+      const agency = agencies.find(a => a._id === currentJobOffer.agency);
+      if (!agency) {
+        console.error("Agency to show not found");
+        dispatch(setMessage({ title: "Errore", text: "Azienda non trovata" }));
+        return setCurrentAgency(null);
+      }
+      setCurrentAgency(agency);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentJobOffer]);
 
   return (
     <RequireStudentLogin>
@@ -156,20 +179,39 @@ const StudentHome = () => {
           {jobOffers && loaded && (
             <div className="flex flex-col md:border-r-2">
               {jobOffers.map(j => (
-                <div
-                  key={j._id}
-                  className="border-b"
-                  onClick={() => {
-                    setCurrentJobOffer(j);
-                    currentJobOfferRef.current.scrollIntoView();
-                  }}
-                >
-                  <StudentJobOfferCard
-                    active={currentJobOffer?._id === j._id}
-                    agency={agencies && agencies.find(a => a._id === j.agency)}
-                    jobOffer={j}
-                  />
-                </div>
+                <>
+                  <div
+                    key={j._id}
+                    className="border-b hidden md:block"
+                    onClick={() => {
+                      setCurrentJobOffer(j);
+                      currentJobOfferRef.current.scrollIntoView();
+                    }}
+                  >
+                    <StudentJobOfferCard
+                      active={currentJobOffer?._id === j._id}
+                      agency={
+                        agencies && agencies.find(a => a._id === j.agency)
+                      }
+                      jobOffer={j}
+                    />
+                  </div>
+                  <div
+                    key={j._id + "b"}
+                    className="border-b block md:hidden"
+                    onClick={() =>
+                      navigate(`agency/${j.agency}?joboffer=${j._id}`)
+                    }
+                  >
+                    <StudentJobOfferCard
+                      active={currentJobOffer?._id === j._id}
+                      agency={
+                        agencies && agencies.find(a => a._id === j.agency)
+                      }
+                      jobOffer={j}
+                    />
+                  </div>
+                </>
               ))}
             </div>
           )}
@@ -236,14 +278,24 @@ const StudentHome = () => {
           ) : (
             <div
               ref={currentJobOfferRef}
-              className="p-3 md:px-8 hidden md:block"
+              className="p-3 pt-0 md:px-8 hidden md:block"
             >
-              <div className="rounded-xl overflow-hidden border w-full mb-4">
+              <p className="text-gray-600 mb-3 tracking-tight text-xl">
+                Anteprima
+              </p>
+              <div
+                className="rounded-xl overflow-hidden border w-full mb-4 cursor-pointer hover:bg-gray-50 transition-colors"
+                onClick={() =>
+                  navigate(
+                    `agency/${currentJobOffer?.agency}?showagency=true&joboffer=${currentJobOffer._id}`
+                  )
+                }
+              >
                 <div className="p-3 md:p-6 md:px-9">
                   <img
                     src={currentAgency?.logoUrl}
                     alt="Agency logo"
-                    className="h-24 w-24 object-cover rounded-full mr-6"
+                    className="h-24 mr-6"
                   />
                   <div className="flex items-center mt-3">
                     <div className="w-full overflow-hidden">
@@ -291,14 +343,21 @@ const StudentHome = () => {
                     </h1>
                   </div>
 
-                  <ReactMarkdown children={currentJobOffer?.description} />
+                  <div
+                    className="markdown text-ellipsis overflow-hidden"
+                    style={{ lineClamp: 5 }}
+                  >
+                    <ReactMarkdown>
+                      {currentJobOffer?.description}
+                    </ReactMarkdown>
+                  </div>
 
                   <div className="mt-8">
                     <Link
-                      className="p-3 rounded-2xl transition-colors bg-purple-500 hover:bg-purple-600 text-white w-fit"
+                      className="flex items-center p-3 rounded-2xl transition-colors bg-purple-500 hover:bg-purple-600 text-white w-fit"
                       to={`agency/${currentAgency?._id}?joboffer=${currentJobOffer?._id}`}
                     >
-                      Visualizza offerta di lavoro
+                      <span className="mr-1">Visualizza</span> <ArrowRight />
                     </Link>
                   </div>
                 </div>
@@ -324,18 +383,39 @@ const StudentHome = () => {
                     {/* <pre>
                       <code>{JSON.stringify(e, null, 4)}</code>
                     </pre> */}
-                    <Card>
+                    <Card
+                      onClick={() =>
+                        navigate(`/student/agency/${e._id}?showagency=true`)
+                      }
+                      className="hover:bg-gray-100 transition-all hover:scale-105 cursor-pointer"
+                    >
                       <div className="flex flex-col">
-                        {e.logoUrl && (
+                        {e.bannerUrl ? (
+                          <img
+                            loading="lazy"
+                            src={e.bannerUrl}
+                            alt="Agency logo"
+                            className="relative w-full m-0 p-0 max-h-32 object-cover"
+                          />
+                        ) : (
                           <img
                             loading="lazy"
                             src={e.logoUrl}
                             alt="Agency logo"
-                            className="max-w-xs mx-auto sm:p-2 md:p-3 lg:p-4 min-w-[4rem] object-contain"
+                            className="max-h-32 object-cover text-center"
                           />
                         )}
                         <Card.Body>
                           <Card.Title>{e.agencyName}</Card.Title>
+
+                          {e.bannerUrl && (
+                            <img
+                              loading="lazy"
+                              src={e.logoUrl}
+                              alt="Agency logo"
+                              className="bg-white absolute top-14 right-2 max-h-32 aspect-square object-cover rounded-full shadow-lg"
+                            />
+                          )}
                           <Card.Subtitle>
                             <a
                               href={e.websiteUrl}
@@ -358,19 +438,16 @@ const StudentHome = () => {
                           </div>
                           {/* </Card.Text> */}
                           <Card.Text>
-                            <strong>{e.jobOffers.length}</strong> offerte di
-                            lavoro
+                            <strong>{e.jobOffers.length}</strong> offert
+                            {e.jobOffers.length === 1 ? "a" : "e"} di lavoro
                           </Card.Text>
-                          <Button className="mt-2" variant="outline-primary">
-                            Visualizza
-                          </Button>
                         </Card.Body>
                       </div>
                     </Card>
                   </Col>
                 ))
               ) : (
-                <div>Nessuna offerta di lavoro disponibile :(</div>
+                <div>Nessun'azienda trovata :(</div>
               )}
             </Row>
           </div>

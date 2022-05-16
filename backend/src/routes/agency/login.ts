@@ -82,6 +82,16 @@ router.post("/", checkSchema(schema), async (req: Request, res: Response) => {
         logger.error(err);
     }
 
+    try {
+        await agency.populate("jobOffers");
+    } catch (err) {
+        logger.error("Error while populating agency jobOffers");
+        logger.error(err);
+        return res
+            .status(500)
+            .json({ err: "Error while loading job offers" } as ResErr);
+    }
+
     const _pojo = agency.toObject();
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { hashedPassword, ...pojo } = _pojo;

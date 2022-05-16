@@ -1,4 +1,4 @@
-import http from "http";
+// import http from "http";
 
 export async function urlExists(url: string) {
     if (typeof url !== "string") {
@@ -8,21 +8,24 @@ export async function urlExists(url: string) {
     const valid_url = validURL(url);
     if (!valid_url) return false;
 
-    const { host, pathname } = valid_url;
-    const opt = {
-        method: "HEAD",
-        host: host,
-        path: pathname
-    };
+    // Sometimes, websites don't support HEAD so return true
+    return true;
 
-    return await new Promise(resolve => {
-        const req = http.request(opt, r =>
-            resolve(/4\d\d/.test(`${r.statusCode}`) === false)
-        );
+    // const { host, pathname } = valid_url;
+    // const opt = {
+    //     method: "HEAD",
+    //     host: host,
+    //     path: pathname
+    // };
 
-        req.on("error", () => resolve(false));
-        req.end();
-    });
+    // return await new Promise(resolve => {
+    //     const req = http.request(opt, r =>
+    //         resolve(/4\d\d/.test(`${r.statusCode}`) === false)
+    //     );
+
+    //     req.on("error", () => resolve(false));
+    //     req.end();
+    // });
 }
 
 // inspired by https://github.com/sindresorhus/is-url-superb/blob/main/index.js

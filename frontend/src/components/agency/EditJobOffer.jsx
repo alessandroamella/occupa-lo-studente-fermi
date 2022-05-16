@@ -1,41 +1,25 @@
 import React, { useEffect, useState } from "react";
-import { Outlet, useSearchParams } from "react-router-dom";
+import { Outlet, useNavigate, useSearchParams } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  Check,
-  Clock,
-  Dot,
-  Envelope,
-  GeoAlt,
-  PlusCircleDotted,
-  Telephone,
-  X
-} from "react-bootstrap-icons";
 import Dropdown from "react-bootstrap/Dropdown";
 import Placeholder from "react-bootstrap/Placeholder";
 import MarkdownIt from "markdown-it";
 import MdEditor from "react-markdown-editor-lite";
 import Form from "react-bootstrap/Form";
-import Tabs from "react-bootstrap/Tabs";
-import Tab from "react-bootstrap/Tab";
-import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import Tooltip from "react-bootstrap/Tooltip";
+import { Trash } from "react-bootstrap-icons";
 import axios from "axios";
 import "react-markdown-editor-lite/lib/index.css";
 import RequireAgencyLogin from "./RequireAgencyLogin";
 import EditButton from "../EditButton";
 import { setMessage } from "../../slices/alertSlice";
-// import JobOfferCard from "./JobOfferCard";
-import { addMonths, format } from "date-fns";
-import ReactMarkdown from "react-markdown";
+import { setAgency } from "../../slices/agencyAuthSlice";
+import BackButton from "../BackButton";
 
 const mdParser = new MarkdownIt({
   linkify: true,
   typographer: true
 });
-
-// Finish!
 
 const selectAgency = state => state.agency;
 
@@ -47,18 +31,18 @@ const ViewJobOffer = () => {
     setDescription(text);
 
     const l = text.trim().length;
-    if (l < 16) {
+    if (l < 50) {
       return dispatch(
         setMessage({
           color: "red",
-          text: "La descrizione deve essere lunga almeno 16 caratteri"
+          text: "La descrizione deve essere lunga almeno 50 caratteri"
         })
       );
-    } else if (l > 4000) {
+    } else if (l > 3000) {
       return dispatch(
         setMessage({
           color: "red",
-          text: `Hai raggiunto la lunghezza massima di 4000 caratteri (${l})`
+          text: `Hai raggiunto la lunghezza massima di 3000 caratteri (${l})`
         })
       );
     }
@@ -68,29 +52,66 @@ const ViewJobOffer = () => {
 
   const [jobOffer, setJobOffer] = useState(null);
 
-  const [title, setTitle] = useState(null);
+  const [title, setTitle] = useState("Titolo offerta di lavoro");
   const [editTitle, setEditTitle] = useState(false);
   const [titleInputDisabled, setTitleInputDisabled] = useState(false);
 
+  const navigate = useNavigate();
+
   async function editField(body) {
+    setDisabled(true);
+
     try {
-      const { data } = await axios.put("/api/joboffer/" + jobOffer?._id, body);
+      const { data } = isEditing
+        ? await axios.put(
+            "/api/joboffer/" + jobOffer?._id,
+            body || {
+              fieldOfStudy,
+              mustHaveDiploma,
+              numberOfPositions
+            }
+          )
+        : await axios.post("/api/joboffer", {
+            title,
+            description,
+            fieldOfStudy,
+            mustHaveDiploma,
+            numberOfPositions
+          });
+
+      // Update agency by re-fetching it
+      const agency = (await axios.get("/api/agency")).data;
+      dispatch(setAgency(agency));
+
+      if (!isEditing) {
+        navigate("/agency/dashboard?view=joboffers");
+      }
+
+      dispatch(
+        setMessage({
+          title: "Successo",
+          text:
+            (isEditing ? "Modifica" : "Creazione offerta di lavoro") +
+            " avvenuta con successo!",
+          color: "green"
+        })
+      );
+      setDisabled(false);
       return data;
     } catch (err) {
+      console.log(err?.response?.data || err);
       dispatch(
         setMessage({
           color: "error",
-          title: "Errore nella modifica",
+          title: "Errore",
           text: err?.response?.data?.err || "Errore sconosciuto"
         })
       );
-      return null;
+      setDisabled(false);
     }
   }
 
   async function execEditTitle() {
-    setTitleInputDisabled(true);
-
     let data;
     try {
       data = await editField({ title });
@@ -102,17 +123,13 @@ const ViewJobOffer = () => {
     setEditTitle(false);
     if (!data) return;
 
-    // console.log("setAgency", data);
-    // dispatch(setAgency(data));
-
     dispatch(
       setMessage({
         color: "green",
-        text: "Titolo offerta di lavoro modificata con successo!"
+        text: "Titolo modificato con successo!"
       })
     );
     setTitle(title);
-    // setDescription(null);
   }
 
   async function execEditDescription() {
@@ -128,8 +145,7 @@ const ViewJobOffer = () => {
     setDescriptionEnabled(true);
     if (!data) return;
 
-    // console.log("setAgency", data);
-    // dispatch(setAgency(data));
+    setDescription(null);
 
     dispatch(
       setMessage({
@@ -137,95 +153,73 @@ const ViewJobOffer = () => {
         text: "Descrizione modificata con successo!"
       })
     );
-    setDescription(null);
   }
 
-  //   async function submitForm(e) {
-  //     e.preventDefault();
+  async function deleteJobOffer() {
+    if (!jobOffer || !isEditing) return;
 
-  //     setDisabled(true);
+    if (!window.confirm("Vuoi eliminare quest'offerta di lavoro?")) return;
 
-  //     const obj = {
-  //       email,
-  //       websiteUrl,
-  //       phoneNumber,
-  //       logoUrl,
-  //       bannerUrl
-  //     };
-  //     if (hasChangedPassword) {
-  //       obj.password = password;
-  //     }
+    setDisabled(true);
 
-  //     let data;
-  //     try {
-  //       data = await editField(obj);
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
+    try {
+      await axios.delete("/api/joboffer/" + jobOffer._id);
+      navigate("/agency/dashboard?view=joboffers");
 
-  //     setDisabled(false);
-  //     setPassword("");
-  //     if (!data) return;
+      // Update agency by re-fetching it
+      const agency = (await axios.get("/api/agency")).data;
+      dispatch(setAgency(agency));
+      dispatch(
+        setMessage({
+          color: "green",
+          text: "Offerta di lavoro eliminata con successo"
+        })
+      );
+    } catch (err) {
+      dispatch(
+        setMessage({
+          title: "Errore nell'eliminazione",
+          text: err?.response?.data?.err || "Errore sconosciuto"
+        })
+      );
+      setDisabled(false);
+    }
+  }
 
-  //     console.log("setAgency", data);
-  //     dispatch(setAgency(data));
-
-  //     dispatch(
-  //       setMessage({
-  //         color: "green",
-  //         text:
-  //           "Dati modificati con successo!" +
-  //           (hasChangedPassword ? " (anche la password)" : "")
-  //       })
-  //     );
-  //     setHasChangedPassword(false);
-  //   }
-
-  const [websiteUrl, setWebsiteUrl] = useState("https://miaazienda.it");
   const [fieldOfStudy, setFieldOfStudy] = useState("it");
   const [mustHaveDiploma, setMustHaveDiploma] = useState(false);
   const [numberOfPositions, setNumberOfPositions] = useState(1);
-  const [expiryDate, setExpiryDate] = useState(addMonths(new Date(), 3));
+  // const [expiryDate, setExpiryDate] = useState(addMonths(new Date(), 3));
 
   const [disabled, setDisabled] = useState(true);
 
   const [searchParams, setSearchParams] = useSearchParams();
-  const isEditing = searchParams.get("id");
+
+  const [isEditing, setIsEditing] = useState(true);
 
   useEffect(() => {
-    if (!searchParams.get("id")) {
-      // DEBUG
-      return alert("ID jobOffer non specificato");
-    }
+    // Still loading
     if (!agency) return;
     const _id = searchParams.get("id");
     const j = agency.jobOffers.find(j => j._id === _id);
     if (!j) {
-      // DEBUG
-      return alert("JobOffer non trovata");
+      // Creating new job offer, not editing one
+      setIsEditing(false);
+      setEditTitle(true);
+      setDisabled(false);
+      return;
     }
     console.log("JobOffer trovata:", j);
     setJobOffer(j);
 
     setTitle(j.title);
 
-    setWebsiteUrl(agency.websiteUrl || "");
     setFieldOfStudy(j.fieldOfStudy);
     setMustHaveDiploma(j.mustHaveDiploma);
     setNumberOfPositions(j.numberOfPositions);
-    setExpiryDate(j.expiryDate);
+    // setExpiryDate(j.expiryDate);
 
     setDisabled(false);
-
-    // setDescriptionEnabled(true);
-    // setTitle(JSON.stringify(agency?.jobOffers));
-    // setAddress(agency?.agencyAddress);
-    // setEmail(agency?.email);
-    // setWebsiteUrl(agency?.websiteUrl);
-    // setPhoneNumber(agency?.phoneNumber);
-    // setLogoUrl(agency?.logoUrl);
-    // setBannerUrl(agency?.bannerUrl);
-    // setDisabled(false);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [!agency]);
@@ -233,89 +227,38 @@ const ViewJobOffer = () => {
   return (
     <RequireAgencyLogin>
       <Container bg="dark" variant="dark" className="mt-8 mb-4">
-        <div className="rounded-xl overflow-hidden border w-full mb-8">
-          <div className="p-3 md:p-6">
-            <div className="flex items-center md:px-3">
-              <img
-                src={agency?.logoUrl}
-                alt="Agency logo"
-                className="max-h-28 rounded-full shadow-xl mr-6"
-              />
-              <div className="w-full overflow-hidden">
-                <h3 className="text-3xl tracking-tighter font-semibold">
-                  {agency?.agencyName || (
-                    <Placeholder animation="glow" xs={8} />
-                  )}
-                </h3>
-
-                <div className="flex flex-col mb-2 w-full overflow-hidden whitespace-nowrap text-ellipsis">
-                  {agency?.agencyDescription ? (
-                    <ReactMarkdown
-                      children={
-                        agency.agencyDescription.length > 100
-                          ? agency.agencyDescription.substring(0, 100) + "..."
-                          : agency.agencyDescription
-                      }
-                    />
-                  ) : (
-                    <Placeholder xs={12} animation="glow" />
-                  )}
-                </div>
-
-                <div className="flex items-center text-gray-600">
-                  <p className="flex items-center italic">
-                    <GeoAlt />{" "}
-                    <span className="ml-1">
-                      {agency?.agencyAddress || (
-                        <Placeholder xs={6} animation="glow" />
-                      )}
-                    </span>
-                  </p>
-
-                  <Dot className="mx-1" />
-
-                  <a
-                    href={agency?.websiteUrl || "#"}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-gray-600 hover:text-gray-800 transition-colors"
-                  >
-                    {agency?.websiteUrl || (
-                      <Placeholder xs={6} animation="glow" />
-                    )}
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-          <Outlet />
+        <div className="mb-3">
+          <BackButton />
         </div>
-
         <div className="rounded-xl overflow-hidden border w-full">
           <div className="p-3 md:p-6">
             <div className="md:px-3 w-full mb-5">
-              <div className="mt-3 mb-5 flex flex-col md:flex-row items-center">
+              <div className="mt-3 mb-5">
+                <p className="text-gray-700 font-semibold">Titolo</p>
                 {editTitle ? (
-                  <>
+                  <div className="flex flex-col md:flex-row items-center">
                     <input
                       type="text"
                       placeholder="Programmatore Node.js"
                       onChange={e => setTitle(e.target.value)}
                       autoComplete="joboffer-title"
-                      disabled={titleInputDisabled}
+                      disabled={titleInputDisabled || disabled}
                       value={title}
                       required
                       className="text-3xl md:text-5xl font-semibold tracking-tighter mr-3 md:w-1/2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                       autoFocus
                       onKeyDown={e => {
-                        if (e.key === "Escape") setEditTitle(false);
+                        if (!isEditing) return;
+                        else if (e.key === "Escape") setEditTitle(false);
                         else if (e.key === "Enter") execEditTitle();
                       }}
                     />
-                    <EditButton purple showText onClick={execEditTitle} />
-                  </>
+                    {isEditing && (
+                      <EditButton purple showText onClick={execEditTitle} />
+                    )}
+                  </div>
                 ) : (
-                  <>
+                  <div className="flex flex-col md:flex-row items-center">
                     <h1
                       onClick={() => setEditTitle(true)}
                       className="cursor-pointer text-5xl font-semibold tracking-tighter"
@@ -326,65 +269,61 @@ const ViewJobOffer = () => {
                       className="ml-3"
                       onClick={() => setEditTitle(true)}
                     />
-                  </>
+                  </div>
                 )}
               </div>
 
-              {jobOffer?.description ? (
+              <p className="text-gray-700 mt-3 mb-2 font-semibold">
+                Descrizione
+              </p>
+              {jobOffer?.description || !isEditing ? (
                 <>
                   <MdEditor
                     style={{ height: "500px" }}
                     renderHTML={text => mdParser.render(text)}
                     onChange={handleEditorChange}
-                    defaultValue={jobOffer?.description}
+                    defaultValue={
+                      jobOffer?.description ||
+                      "La **descrizione** di quest'offerta di lavoro che stai creando.\n\nProva ad essere il più esaustivo possibile!"
+                    }
                     allowPasteImage={false}
                     imageAccept={false}
-                    readOnly={!descriptionEnabled}
+                    readOnly={!descriptionEnabled || disabled}
                   />
-                  <div className="mt-5 w-full flex justify-center">
-                    <EditButton
-                      purple
-                      showText
-                      disabled={
-                        !descriptionEnabled ||
-                        !description ||
-                        description.trim().length < 16 ||
-                        description.trim().length > 4000
-                      }
-                      onClick={execEditDescription}
-                    />
-                  </div>
+                  {isEditing && (
+                    <div className="mt-5 w-full flex justify-center">
+                      <EditButton
+                        purple
+                        showText
+                        disabled={
+                          disabled ||
+                          !descriptionEnabled ||
+                          !description ||
+                          description.trim().length < 16 ||
+                          description.trim().length > 4000
+                        }
+                        onClick={execEditDescription}
+                        text="Modifica descrizione"
+                      />
+                    </div>
+                  )}
                 </>
               ) : (
                 <Placeholder xs={12} animation="glow" />
               )}
 
-              <div className="px-5 md:px-20 lg:px-36 mt-10 grid grid-cols-2">
-                <p className="mb-3 font-semibold">Sito web</p>
+              <p className="text-gray-700 text-center mt-8 mb-3 font-semibold">
+                Altri dati
+              </p>
 
-                <input
-                  className="mb-3 transition-colors hover:border-gray-300 focus:border-gray-700 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  type="text"
-                  disabled={disabled}
-                  pattern="https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)"
-                  value={websiteUrl}
-                  onChange={e => setWebsiteUrl(e.target.value)}
-                />
-                {/* <a
-                  href={agency?.websiteUrl || "#"}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="mb-4 font-semibold text-blue-600 hover:text-blue-700 transition-colors"
-                >
-                  {agency?.websiteUrl || (
-                    <Placeholder xs={6} animation="glow" />
-                  )}
-                </a> */}
-
+              <div className="px-5 md:px-20 lg:px-36 grid grid-cols-2">
                 <p className="font-semibold mb-3">Indirizzo di studio</p>
-
-                <Dropdown className="mb-3" disabled={disabled}>
-                  <Dropdown.Toggle variant="outline-dark" id="dropdown-basic">
+                <Dropdown className="mb-3">
+                  <Dropdown.Toggle
+                    disabled={disabled}
+                    variant="outline-dark"
+                    id="dropdown-basic"
+                  >
                     {fieldOfStudy === "it"
                       ? "Informatica"
                       : fieldOfStudy === "electronics"
@@ -411,18 +350,14 @@ const ViewJobOffer = () => {
                     </Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
-
                 <p className="font-semibold mb-4">Diploma richiesto</p>
-
                 <Form.Check
                   type="checkbox"
                   checked={mustHaveDiploma}
                   onChange={() => setMustHaveDiploma(!mustHaveDiploma)}
                   disabled={disabled}
                 />
-
                 <p className="mb-3 font-semibold">Posizioni disponibili</p>
-
                 <input
                   className="mb-3 transition-colors hover:border-gray-300 focus:border-gray-700 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   type="number"
@@ -432,7 +367,6 @@ const ViewJobOffer = () => {
                   value={numberOfPositions}
                   onChange={e => setNumberOfPositions(e.target.value)}
                 />
-
                 {/* <p className="font-semibold mb-4">Data di scadenza</p>
                 <p className="mb-4">
                   {jobOffer?.expiryDate ? (
@@ -442,7 +376,39 @@ const ViewJobOffer = () => {
                   )}
                 </p> */}
               </div>
+              {isEditing && (
+                <EditButton
+                  disabled={disabled}
+                  purple
+                  showText
+                  className="mx-auto"
+                  onClick={() => editField()}
+                  text="Modifica altri dati"
+                />
+              )}
             </div>
+            {isEditing ? (
+              <div className="flex justify-center mt-10">
+                <button
+                  disabled={disabled}
+                  className="flex bg-red-500 hover:bg-red-600 active:bg-red-600 text-white p-2 items-center transition-all rounded-md border"
+                  onClick={deleteJobOffer}
+                >
+                  <Trash />
+                  <span className="ml-2">Elimina</span>
+                </button>
+              </div>
+            ) : (
+              <div className="flex justify-center">
+                <button
+                  disabled={disabled}
+                  className="font-semibold tracking-tight text-xl flex justify-center bg-purple-500 text-white m-3 mb-5 p-5 items-center hover:bg-purple-600 transition-all hover:scale-105 cursor-pointer rounded-md border"
+                  onClick={editField}
+                >
+                  <span className="ml-2">Crea offerta di lavoro</span>
+                </button>
+              </div>
+            )}
           </div>
           <Outlet />
         </div>

@@ -1,4 +1,6 @@
 import React from "react";
+import ReactMarkdown from "react-markdown";
+import JobOfferCard from "../agency/JobOfferCard";
 
 const SecretaryAgencyView = ({ agency, children }) => {
   return (
@@ -19,7 +21,9 @@ const SecretaryAgencyView = ({ agency, children }) => {
       )}
 
       <p className="font-medium text-lg">Descrizione</p>
-      <p className="mb-2">{agency.agencyDescription}</p>
+      <div className="mb-2">
+        {<ReactMarkdown>{agency.agencyDescription}</ReactMarkdown>}
+      </div>
 
       <p className="font-medium text-lg">Indirizzo</p>
       <p className="mb-2">{agency.agencyAddress}</p>
@@ -54,6 +58,18 @@ const SecretaryAgencyView = ({ agency, children }) => {
 
       <p className="font-medium text-lg">Partita IVA</p>
       <p className="mb-2">{agency.vatCode}</p>
+
+      {agency.approvalStatus !== "waiting" && (
+        <div>
+          {/* jobOffers.length */}
+          <p className="font-medium text-lg">Offerte di lavoro</p>
+          {agency.jobOffers.length === 0 ? (
+            <p>Nessun'offerta di lavoro</p>
+          ) : (
+            agency.jobOffers.map(j => <JobOfferCard key={j._id} jobOffer={j} />)
+          )}
+        </div>
+      )}
 
       {children}
     </>

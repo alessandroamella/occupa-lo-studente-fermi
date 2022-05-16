@@ -22,7 +22,6 @@ const SecretaryLogin = ({
 
   /** @param {React.FormEvent<HTMLFormElement>} e */
   function handleSubmit(e) {
-    console.log("submit");
     e.preventDefault();
     setDisabled(true);
     login();

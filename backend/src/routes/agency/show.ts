@@ -22,7 +22,7 @@ import { isDocumentArray } from "@typegoose/typegoose";
  *            schema:
  *              $ref: '#/components/schemas/Agency'
  *      '401':
- *        description: Not signed in
+ *        description: Not logged in
  *        content:
  *          application/json:
  *            schema:

@@ -14,7 +14,7 @@ function getWindowSize() {
 function Homepage() {
   const studentAreaRef = useRef(null);
   const agencyAreaRef = useRef(null);
-  const [windowSize, setWindowSize] = useState(getWindowSize());
+  const [windowSize] = useState(getWindowSize());
   const navigate = useNavigate();
 
   function scroll(element) {
@@ -30,7 +30,6 @@ function Homepage() {
   }
 
   return (
-    // <HomepageTest />
     <div>
       <section className="text-center px-4">
         <div className="my-8 md:my-0 h-min-fit md:h-[75vh] grid grid-cols-1 md:grid-cols-2 items-center">
@@ -210,30 +209,30 @@ function Homepage() {
             <h2 className="mb-2 text-3xl font-semibold uppercase tracking-tighter">
               ITIS <span className="text-purple-600">Fermi</span> di Modena
             </h2>
-
             <p>
-              Istituto tecnico tecnologico con specializzazione in informatica,
-              elettronica e chimica.
+              Istituto tecnico tecnologico con specializzazione in informatica
+              (telecomunicazioni), elettronica e chimica.
             </p>
             <p className="mt-2">
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quaerat
-              maxime possimus quasi consequuntur, illo accusamus aut
-              exercitationem culpa amet saepe voluptatum rem, aperiam corrupti
-              sunt doloribus nostrum quod ipsa soluta?
+              Attorno alla metà di gennaio, l'attività didattica di laboratorio
+              di sistemi e telecomunicazioni delle classi quinte si trasforma
+              puntando alla preparazione dell'esame di maturità.
             </p>
+            <p className="mt-2"></p>Gli studenti hanno già buoni strumenti
+            tecnologici acquisiti nel percorso scolastico ormai quasi al termine
+            e, spesso, sono motivati e pronti nell'offrire le loro competenze
+            professionali ad interlocutori esterni all'istituto che li caricano
+            di responsabilità ma anche di opportunità per crescere sviluppando
+            progetti di spessore.
             <p className="mt-2">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel,
-              sapiente beatae doloribus placeat aliquam esse officia voluptates
-              enim vitae repellat eligendi dicta quidem alias ab id facere sunt
-              possimus odit.
+              Questa attività è chiamata "Students Software House" o SSH, e
+              questo sito è il progetto di Alessandro Amella e Yaroslav Pavlik
+              della 5ªF (A.S. 2021-2022).
             </p>
-
             <div className="w-full border-b h-2 my-8"></div>
-
             <h3 className="mb-1 text-xl font-semibold uppercase tracking-tighter">
               Contatti
             </h3>
-
             <div className="mb-6 md:mb-0">
               <div className="flex items-center">
                 <Telephone />{" "}

@@ -1,15 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
-import { ArrowLeft } from "react-bootstrap-icons";
 import ReCAPTCHA from "react-google-recaptcha";
-
+import MdEditor from "react-markdown-editor-lite";
+import MarkdownIt from "markdown-it";
 import axios from "axios";
 import { setAgency } from "../../slices/agencyAuthSlice";
 import { useDispatch } from "react-redux";
 import { setMessage } from "../../slices/alertSlice";
+import BackButton from "../BackButton";
+
+const mdParser = new MarkdownIt({
+  linkify: true,
+  typographer: true
+});
 
 const AgencySignup = () => {
   const navigate = useNavigate();
@@ -36,6 +42,27 @@ const AgencySignup = () => {
   // Ensure form is loaded
   useEffect(() => setDisabled(false), []);
 
+  function handleEditorChange({ text }) {
+    setAgencyDescription(text);
+
+    const l = text.trim().length;
+    if (l < 16) {
+      return dispatch(
+        setMessage({
+          color: "red",
+          text: "La descrizione deve essere lunga almeno 16 caratteri"
+        })
+      );
+    } else if (l > 4000) {
+      return dispatch(
+        setMessage({
+          color: "red",
+          text: `Hai raggiunto la lunghezza massima di 4000 caratteri (${l})`
+        })
+      );
+    }
+  }
+
   async function submitForm(event) {
     event.preventDefault();
 
@@ -56,8 +83,6 @@ const AgencySignup = () => {
       captcha
     };
 
-    console.log(formData);
-
     setDisabled(true);
 
     let agency;
@@ -67,10 +92,8 @@ const AgencySignup = () => {
       agency = res.data;
     } catch (err) {
       console.log(err?.response?.data || err);
-      // DEBUG
       dispatch(
         setMessage({
-          color: "red",
           title: "Errore nella registrazione",
           text: err?.response?.data?.err || "Errore sconosciuto"
         })
@@ -100,14 +123,11 @@ const AgencySignup = () => {
 
   return (
     <Container bg="dark" variant="dark" className="mt-8 mb-4">
-      <Button as={Link} to="/agency" variant="outline-dark">
-        <ArrowLeft />
-      </Button>
+      <BackButton path="/agency" />
 
       <div className="my-3">
-        <h1 className="text-2xl font-light">Registrazione</h1>
+        <h1 className="text-2xl font-light">Registrazione azienda</h1>
 
-        {/* DEBUG scrivi meglio, magari facendo Terms and Conditions */}
         <p>In questa pagina dovrai inserire i dati della tua azienda.</p>
         <p>
           Tutti i dati inseriti in questa pagina (ad eccezione della password){" "}
@@ -117,7 +137,7 @@ const AgencySignup = () => {
         </p>
         <p>
           Una volta approvata l'azienda, potrai creare <u>offerte di lavoro</u>{" "}
-          alle quali gli studenti possono candidarsi.
+          alle quali gli studenti potranno candidarsi.
         </p>
       </div>
 
@@ -250,11 +270,14 @@ const AgencySignup = () => {
 
         <Form.Group className="mb-3" controlId="agencyDescription">
           <Form.Label>Descrizione azienda</Form.Label>
-          <Form.Control
-            as="textarea"
-            onChange={e => setAgencyDescription(e.target.value)}
-            disabled={disabled}
-            value={agencyDescription}
+
+          <MdEditor
+            style={{ height: "500px" }}
+            renderHTML={text => mdParser.render(text)}
+            onChange={handleEditorChange}
+            defaultValue={""}
+            allowPasteImage={false}
+            imageAccept={false}
             autoComplete="off"
             minLength={16}
             maxLength={4000}
@@ -270,7 +293,7 @@ const AgencySignup = () => {
           <Form.Label>Indirizzo azienda</Form.Label>
           <Form.Control
             type="text"
-            placeholder="38 Largo G. Garibaldi, 41121 Modena"
+            placeholder="17 Largo G. Garibaldi, 41121 Modena"
             onChange={e => setAgencyAddress(e.target.value)}
             disabled={disabled}
             value={agencyAddress}
@@ -311,7 +334,8 @@ const AgencySignup = () => {
             value={logoUrl}
           />
           <Form.Text className="text-muted">
-            URL del logo azienda (opzionale).
+            URL del logo azienda (opzionale, è consigliato utilizzare
+            un'immagine quadrata).
           </Form.Text>
         </Form.Group>
 
@@ -337,7 +361,7 @@ const AgencySignup = () => {
           onChange={captchaChange}
         />
 
-        <Button variant="outline-primary" type="submit">
+        <Button variant="outline-primary" type="submit" className="mt-3">
           Registra
         </Button>
       </Form>

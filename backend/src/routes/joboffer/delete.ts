@@ -9,7 +9,7 @@ import { isDocument } from "@typegoose/typegoose";
 
 /**
  * @openapi
- * /api/jobOffer/{jobOfferId}:
+ * /api/joboffer/{jobOfferId}:
  *  delete:
  *    summary: Delete a job offer
  *    parameters:
@@ -31,7 +31,7 @@ import { isDocument } from "@typegoose/typegoose";
  *            schema:
  *              $ref: '#/components/schemas/ResErr'
  *      '401':
- *        description: Not signed in
+ *        description: Not logged in
  *        content:
  *          application/json:
  *            schema:
@@ -68,9 +68,10 @@ router.delete(
 
         try {
             jobOffer = await JobOfferService.findOne({ _id }, false);
-            if (!jobOffer) throw new Error("jobOffer validated but not found");
+            if (!jobOffer)
+                throw new Error(`jobOffer ${_id} validated but not found`);
         } catch (err) {
-            logger.error("Error while finding jobOffer in update route");
+            logger.error("Error while finding jobOffer in delete route");
             logger.error(err);
             return res
                 .status(500)
