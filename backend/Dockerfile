@@ -19,4 +19,6 @@ EXPOSE 5000
 ENV IP 0.0.0.0
 ENV PORT 5000
 
-CMD [ "npm", "run", "dev" ]
+ENV NODE_ENV production
+
+CMD [ "npm", "run", "start" ]

@@ -54,7 +54,11 @@ export class JobOfferService {
      */
     public static async create(jobOffer: JobOfferDoc) {
         logger.info(
-            `Create job offer "${jobOffer.title}" from agency ${jobOffer.agency}`
+            `Create job offer "${jobOffer.title}" from agency ${
+                isDocument(jobOffer.agency)
+                    ? jobOffer.agency._id
+                    : jobOffer.agency
+            }`
         );
         await JobOffer.create(jobOffer);
 

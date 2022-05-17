@@ -356,9 +356,7 @@ const AgencySignup = () => {
         </Form.Group>
 
         <ReCAPTCHA
-          // sitekey="6LcPZrMfAAAAAGfknvhtuFNoBPinIM3snOr-Am5z"
-          // DEBUG viene usata chiave di testing
-          sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+          sitekey="6LcPZrMfAAAAAGfknvhtuFNoBPinIM3snOr-Am5z"
           onChange={captchaChange}
         />
 

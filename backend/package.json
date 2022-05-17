@@ -6,7 +6,7 @@
     "scripts": {
         "dev": "nodemon",
         "build": "rimraf ./build && tsc",
-        "start": "npm run build && node build/index.js",
+        "start": "npm run build && node -r ./tsconfig-paths-bootstrap.js build/index.js",
         "lint": "eslint . --ext .ts",
         "lint-fix": "eslint . --ext .ts --fix",
         "test": "mocha --timeout 5000 -b --reporter spec"
