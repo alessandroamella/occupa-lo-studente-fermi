@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import { Request, Response, Router } from "express";
 import { checkSchema, validationResult } from "express-validator";
 
-import { isAgencyApproved, isLoggedIn } from "@middlewares";
+import { isLoggedIn } from "@middlewares";
 import { ResErr } from "@routes";
 import { AgencyService } from "@services";
 import { logger } from "@shared";
@@ -53,7 +53,6 @@ const router = Router();
 router.put(
     "/",
     isLoggedIn.isAgencyLoggedIn,
-    isAgencyApproved,
     checkSchema(schema),
     async (req: Request, res: Response) => {
         const errors = validationResult(req);

@@ -3,6 +3,7 @@ import { Request, Response, Router } from "express";
 import { checkSchema, validationResult } from "express-validator";
 import Mail from "nodemailer/lib/mailer";
 import CaptchaService from "services/captcha";
+import { agencyRegistration, secretaryNewAgency } from "services/email/emails";
 
 import { Envs } from "@config";
 
@@ -13,7 +14,6 @@ import { logger } from "@shared";
 import { mongoose } from "@typegoose/typegoose";
 
 import { AgencyAuthCookieManager } from "./helpers";
-import generateEmail from "./helpers/generateEmail";
 import schema from "./schema/createSchema";
 
 /**
@@ -160,19 +160,26 @@ router.post("/", checkSchema(schema), async (req: Request, res: Response) => {
             .json({ err: "Error while creating agency" } as ResErr);
     }
 
-    // DEBUG write better
-    const message: Mail.Options = {
+    const secretaryEmail: Mail.Options = {
         from: `"Occupa lo Studente" ${Envs.env.SEND_EMAIL_FROM}`,
         to: Envs.env.SECRETARY_EMAIL,
         subject: `Nuova azienda "${agencyDoc.agencyName}" da approvare`,
-        html: generateEmail(agencyDoc)
+        html: secretaryNewAgency(agencyDoc)
+    };
+
+    const agencyEmail: Mail.Options = {
+        from: `"Occupa lo Studente" ${Envs.env.SEND_EMAIL_FROM}`,
+        to: agencyDoc.email,
+        subject: `Registrazione di "${agencyDoc.agencyName}" su Occupa lo studente`,
+        html: agencyRegistration(agencyDoc)
     };
 
     try {
-        // DEBUG decomment this
-        // logger.warn("DEBUG not sending email in agency create route");
-        await EmailService.sendMail(message);
+        await EmailService.sendMail(secretaryEmail);
         logger.info(`Email sent to secretary for new agency "${agencyName}"`);
+
+        await EmailService.sendMail(agencyEmail);
+        logger.info(`Email sent to agency for new agency "${agencyName}"`);
     } catch (err) {
         logger.error("Error while sending email");
         logger.error(err);

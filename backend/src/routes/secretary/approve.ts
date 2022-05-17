@@ -1,10 +1,14 @@
 import { Router } from "express";
 import { param, query, validationResult } from "express-validator";
 import moment from "moment";
+import Mail from "nodemailer/lib/mailer";
+import { agencyApproved, agencyRejected } from "services/email/emails";
+
+import { Envs } from "@config";
 
 import { secretaryAuth } from "@middlewares";
 import { ResErr } from "@routes";
-import { AgencyService } from "@services";
+import { AgencyService, EmailService } from "@services";
 import { logger } from "@shared";
 
 /**
@@ -139,6 +143,29 @@ router.post(
                 .status(500)
                 .json({ err: "Error while validating action" });
         }
+
+        const email: Mail.Options = {
+            from: `"Occupa lo Studente" ${Envs.env.SEND_EMAIL_FROM}`,
+            to: agency.email,
+            subject: `Approvazione di "${agency.agencyName}" su Occupa lo studente`,
+            html:
+                action === "approve"
+                    ? agencyApproved(agency)
+                    : agencyRejected(agency)
+        };
+
+        try {
+            await EmailService.sendMail(email);
+            logger.info(
+                `Email sent to agency for approved/rejected agency "${agency.agencyName}"`
+            );
+        } catch (err) {
+            logger.error("Error while sending email");
+            logger.error(err);
+        }
+
+        // DEBUG to be implemented
+        logger.warn("DEBUG notifyAgency for Agency deletion!");
 
         return res.sendStatus(200);
     }

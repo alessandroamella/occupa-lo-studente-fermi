@@ -198,7 +198,8 @@ const AgencySignup = () => {
             required
           />
           <Form.Text className="text-muted">
-            Email utilizzata per il login e per ogni comunicazione di servizio.
+            Email pubblicamente visibile agli studenti utilizzata per il login e
+            per ogni comunicazione di servizio.
           </Form.Text>
         </Form.Group>
 

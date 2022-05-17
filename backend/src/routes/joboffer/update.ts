@@ -2,7 +2,7 @@ import { Request, Response, Router } from "express";
 import { checkSchema, param, validationResult } from "express-validator";
 import moment from "moment";
 
-import { isLoggedIn } from "@middlewares";
+import { isAgencyApproved, isLoggedIn } from "@middlewares";
 import { ResErr } from "@routes";
 import { JobOfferService } from "@services";
 import { logger } from "@shared";
@@ -62,6 +62,7 @@ const router = Router();
 router.put(
     "/:_id",
     isLoggedIn.isAgencyLoggedIn,
+    isAgencyApproved,
     param("_id").isMongoId(),
     checkSchema(schema),
     async (req: Request, res: Response) => {

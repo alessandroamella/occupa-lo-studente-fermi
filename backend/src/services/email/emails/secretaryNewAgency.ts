@@ -7,9 +7,9 @@ const md = new MarkdownIt({
     typographer: true
 });
 
-function generateEmail(agency: AgencyDoc) {
+export function secretaryNewAgency(agency: AgencyDoc) {
     return `<!DOCTYPE html>
-  <html lang="en">
+  <html lang="it">
     <head>
       <meta charset="UTF-8" />
       <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -305,15 +305,13 @@ function generateEmail(agency: AgencyDoc) {
           </p>
         </div>
         <div>
-          Per supporto contattare
-          <a
-            class="dotted-url"
-            target="_blank"
-            rel="noopener noreferrer"
-            href="mailto:alessandro.amella@live.it"
-            style="color: inherit; text-decoration: underline dotted"
-          >
-            alessandro.amella@live.it
+            Per supporto contattare la segreteria al numero
+            <a
+              class="dotted-url"
+              href="tel:+39059211092"
+              style="color: inherit; text-decoration: underline dotted"
+            >
+              059211092
           </a>
         </div>
       </footer>
@@ -321,5 +319,3 @@ function generateEmail(agency: AgencyDoc) {
   </html>
   `;
 }
-
-export default generateEmail;

@@ -225,9 +225,12 @@ function Homepage() {
             di responsabilità ma anche di opportunità per crescere sviluppando
             progetti di spessore.
             <p className="mt-2">
-              Questa attività è chiamata "Students Software House" o SSH, e
-              questo sito è il progetto di Alessandro Amella e Yaroslav Pavlik
-              della 5ªF (A.S. 2021-2022).
+              Questa attività è chiamata{" "}
+              <a href="https://ssh.edu.it/" target="_blank" rel="noreferrer">
+                "Students Software House" o SSH
+              </a>
+              , e questo sito è il progetto di Alessandro Amella e Yaroslav
+              Pavlik della 5ªF (A.S. 2021-2022).
             </p>
             <div className="w-full border-b h-2 my-8"></div>
             <h3 className="mb-1 text-xl font-semibold uppercase tracking-tighter">

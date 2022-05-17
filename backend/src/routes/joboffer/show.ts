@@ -1,7 +1,7 @@
 import { Request, Response, Router } from "express";
 import { param, validationResult } from "express-validator";
 
-import { isLoggedIn } from "@middlewares";
+import { isAgencyApproved, isLoggedIn } from "@middlewares";
 import { ResErr } from "@routes";
 import { JobOfferService } from "@services";
 import { logger } from "@shared";
@@ -59,6 +59,7 @@ const router = Router();
 router.get(
     "/:_id",
     isLoggedIn.isAgencyLoggedIn,
+    isAgencyApproved,
     param("_id").isMongoId(),
     async (req: Request, res: Response) => {
         const errors = validationResult(req);

@@ -131,7 +131,7 @@ export class JobOfferService {
         }
         if (params.fieldOfStudy) {
             logger.debug("searchQuery fieldOfStudy=" + params.fieldOfStudy);
-            obj.fieldOfStudy = params.fieldOfStudy;
+            obj.fieldOfStudy = { $in: [params.fieldOfStudy, "any"] };
         }
 
         const query = JobOffer.find(

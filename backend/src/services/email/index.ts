@@ -41,7 +41,7 @@ export class EmailService {
                 logger.error("EmailService.transporter null in sendMail");
                 return reject("EmailService.transporter null");
             }
-            EmailService.transporter.sendMail(message, (err, info) => {
+            EmailService.transporter.sendMail(message, err => {
                 if (err) {
                     logger.error("Error while sending email");
                     logger.error(err);

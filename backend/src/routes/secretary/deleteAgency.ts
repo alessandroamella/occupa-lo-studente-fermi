@@ -1,9 +1,13 @@
 import { Router } from "express";
 import { param, query, validationResult } from "express-validator";
+import Mail from "nodemailer/lib/mailer";
+import { agencyElimination } from "services/email/emails";
+
+import { Envs } from "@config";
 
 import { secretaryAuth } from "@middlewares";
 import { ResErr } from "@routes";
-import { AgencyService } from "@services";
+import { AgencyService, EmailService } from "@services";
 import { logger } from "@shared";
 
 /**
@@ -97,13 +101,30 @@ router.delete(
             return res.status(404).json({ err: "Agency not found" } as ResErr);
         }
 
-        await AgencyService.delete(agency);
+        const email: Mail.Options = {
+            from: `"Occupa lo Studente" ${Envs.env.SEND_EMAIL_FROM}`,
+            to: agency.email,
+            subject: `Eliminazione di "${agency.agencyName}" su Occupa lo studente`,
+            html: agencyElimination(agency)
+        };
 
         logger.debug("deleteAgency notifyAgency=" + notifyAgency);
         if (notifyAgency !== "no") {
+            try {
+                await EmailService.sendMail(email);
+                logger.info(
+                    `Email sent to agency for delete agency "${agency.agencyName}"`
+                );
+            } catch (err) {
+                logger.error("Error while sending email");
+                logger.error(err);
+            }
+
             // DEBUG to be implemented
             logger.warn("DEBUG notifyAgency for Agency deletion!");
         }
+
+        await AgencyService.delete(agency);
 
         return res.sendStatus(200);
     }

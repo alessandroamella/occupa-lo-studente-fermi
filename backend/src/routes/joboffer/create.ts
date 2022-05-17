@@ -1,7 +1,7 @@
 import { Request, Response, Router } from "express";
 import { checkSchema, validationResult } from "express-validator";
 
-import { isLoggedIn } from "@middlewares";
+import { isAgencyApproved, isLoggedIn } from "@middlewares";
 import { JobOffer } from "@models";
 import { ResErr } from "@routes";
 import { JobOfferService } from "@services";
@@ -55,6 +55,7 @@ const router = Router();
 router.post(
     "/",
     isLoggedIn.isAgencyLoggedIn,
+    isAgencyApproved,
     checkSchema(schema),
     async (req: Request, res: Response) => {
         const errors = validationResult(req);

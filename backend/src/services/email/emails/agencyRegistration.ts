@@ -1,4 +1,8 @@
-<!DOCTYPE html>
+import { AgencyDoc } from "@models";
+
+export function agencyRegistration(agency: AgencyDoc) {
+    return `
+    <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -53,56 +57,56 @@
     >
       <h1 style="font-weight: 500; margin-bottom: 0">
         La tua azienda
-        <strong>${agency.agencyName}</strong>
-        è stata approvata
+        <strong>"${agency.agencyName}"</strong>
+        è in fase di revisione
       </h1>
 
-      <section>
-        <p>Buone notizie!</p>
-        <p>
-          <strong>${agency.agencyName}</strong>
-          è ora visibile agli studenti su
+      <section style="margin-bottom: 2rem">
+        <h2 style="margin-top: 2rem; margin-bottom: 0">Azienda registrata!</h2>
+        <p style="margin-top: 0.5rem">
+          La segreteria deciderà a breve se approvarla o rifiutarla sul portale
           <a
+            class="dotted-url"
             href="https://occupalostudente.bitrey.it/secretary"
             target="_blank"
             rel="noopener noreferrer"
+            style="color: inherit; text-decoration: underline dotted"
           >
-            occupalostudente.bitrey.it
-          </a>
+            Occupa lo Studente
+          </a>.
         </p>
         <p>
-          Manca solo una cosa! Crea una o più
-          <strong>offerte di lavoro</strong>
-          alle quali gli studenti si possono candidare!
+          È possibile che verrai contattato dal personale scolastico per email (<strong>${agency.email}</strong>) o per telefono (<strong>${agency.phoneNumber}</strong>).
         </p>
-
-        <div style="margin-top: 3rem; margin-bottom: 2rem; text-align: center">
+        <p style="margin-top: 2rem">
+          Nota che, finché la tua azienda non verrà approvata, gli studenti non
+          potranno visualizzarla e non potrai creare offerte di lavoro.
+        </p>
+        <p>
+          In caso di dubbi puoi contattare la segreteria al numero
           <a
-            style="
-              padding: 1rem;
-              outline: none;
-              border: none;
-              border-radius: 5px;
-              cursor: pointer;
-              background-color: #fe3c00;
-              color: white;
-              font-size: 1.5rem;
-              -webkit-appearance: none;
-              text-decoration: none;
-            "
-            href="https://occupalostudente.bitrey.it/secretary"
+            class="dotted-url"
+            href="tel:+39059211092"
+            style="color: inherit; text-decoration: underline dotted"
+          >
+            059211092
+          </a>
+          o via email all'indirizzo
+          <a
+            class="dotted-url"
             target="_blank"
             rel="noopener noreferrer"
+            href="mailto:motf080005@istruzione.it"
+            style="color: inherit; text-decoration: underline dotted"
           >
-            Crea offerta di lavoro
+            motf080005@istruzione.it
           </a>
-        </div>
+        </p>
       </section>
     </div>
     <footer
       class="container"
       style="
-        margin-top: auto;
         background-color: #f7f7f7;
         text-align: center;
         color: #5e5e5e;
@@ -131,3 +135,6 @@
     </footer>
   </body>
 </html>
+
+  `;
+}

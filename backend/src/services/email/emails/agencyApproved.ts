@@ -1,5 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
+import { AgencyDoc } from "@models";
+
+export function agencyApproved(agency: AgencyDoc) {
+    return `
+    <!DOCTYPE html>
+<html lang="it">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -53,56 +57,52 @@
     >
       <h1 style="font-weight: 500; margin-bottom: 0">
         La tua azienda
-        <strong>${agency.agencyName}</strong>
-        è stata approvata
+        <strong>"${agency.agencyName}"</strong>
+        è stata approvata!
       </h1>
 
       <section>
-        <p>Buone notizie!</p>
-        <p>
-          <strong>${agency.agencyName}</strong>
-          è ora visibile agli studenti su
+        <h2 style="margin-top: 2rem; margin-bottom: 0">Buone notizie!</h2>
+        <p style="margin-top: 0.5rem">
+          La tua azienda è stata approvata su
           <a
+            class="dotted-url"
             href="https://occupalostudente.bitrey.it/secretary"
             target="_blank"
             rel="noopener noreferrer"
+            style="color: inherit; text-decoration: underline dotted"
           >
-            occupalostudente.bitrey.it
-          </a>
+            Occupa lo Studente
+          </a>.
         </p>
-        <p>
-          Manca solo una cosa! Crea una o più
-          <strong>offerte di lavoro</strong>
-          alle quali gli studenti si possono candidare!
-        </p>
-
-        <div style="margin-top: 3rem; margin-bottom: 2rem; text-align: center">
-          <a
-            style="
-              padding: 1rem;
-              outline: none;
-              border: none;
-              border-radius: 5px;
-              cursor: pointer;
-              background-color: #fe3c00;
-              color: white;
-              font-size: 1.5rem;
-              -webkit-appearance: none;
-              text-decoration: none;
-            "
-            href="https://occupalostudente.bitrey.it/secretary"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Crea offerta di lavoro
-          </a>
-        </div>
+        <p>Crea la tua prima offerta di lavoro accedendo alla dashboard!</p>
       </section>
+
+      <div style="margin-top: 2rem; margin-bottom: 2rem; text-align: center">
+        <a
+          style="
+            padding: 1rem;
+            outline: none;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #fe3c00;
+            color: white;
+            font-size: 1.5rem;
+            -webkit-appearance: none;
+            text-decoration: none;
+          "
+          href="https://occupalostudente.bitrey.it/agency/dashboard"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Apri dashboard
+        </a>
+      </div>
     </div>
     <footer
       class="container"
       style="
-        margin-top: auto;
         background-color: #f7f7f7;
         text-align: center;
         color: #5e5e5e;
@@ -131,3 +131,6 @@
     </footer>
   </body>
 </html>
+
+  `;
+}

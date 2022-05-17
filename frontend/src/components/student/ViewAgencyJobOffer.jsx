@@ -223,6 +223,8 @@ const ViewJobOffer = () => {
                           "Elettronica"
                         ) : j.fieldOfStudy === "chemistry" ? (
                           "Chimica"
+                        ) : j.fieldOfStudy === "any" ? (
+                          "Altro"
                         ) : (
                           <Placeholder xs={6} animation="glow" />
                         )}
@@ -285,6 +287,8 @@ const ViewJobOffer = () => {
                         <a
                           className="ml-3 flex items-center p-3 rounded-2xl transition-colors bg-[#F89A05] hover:bg-[#e68f05] text-white"
                           href={`mailto:${agency?.email}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
                         >
                           <Envelope className="mr-1" />
                           {agency?.email || <Placeholder xs={6} />}
