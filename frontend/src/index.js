@@ -3,6 +3,8 @@ import ReactDOM from "react-dom";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Provider } from "react-redux";
 
+import ReactGA from "react-ga4";
+
 import "./index.css";
 // import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -30,6 +32,9 @@ import StudentProfile from "./components/student/StudentProfile";
 import EditJobOffer from "./components/agency/EditJobOffer";
 import Base from "./components/Base";
 import ViewAgencyJobOffer from "./components/student/ViewAgencyJobOffer";
+
+ReactGA.initialize("G-LT3ETY1REP");
+ReactGA.send("pageview");
 
 ReactDOM.render(
   <React.StrictMode>

@@ -32,6 +32,7 @@ const StudentLogin = () => {
 
   useEffect(() => {
     getLoginURL();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

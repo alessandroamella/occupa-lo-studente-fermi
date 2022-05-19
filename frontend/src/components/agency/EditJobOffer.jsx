@@ -193,7 +193,7 @@ const ViewJobOffer = () => {
 
   const [disabled, setDisabled] = useState(true);
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   const [isEditing, setIsEditing] = useState(true);
 
