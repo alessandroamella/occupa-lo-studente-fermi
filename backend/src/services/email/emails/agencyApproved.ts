@@ -67,7 +67,7 @@ export function agencyApproved(agency: AgencyDoc) {
           La tua azienda è stata approvata su
           <a
             class="dotted-url"
-            href="https://occupalostudente.bitrey.it/secretary"
+            href="https://occupalostudente.bitrey.it/"
             target="_blank"
             rel="noopener noreferrer"
             style="color: inherit; text-decoration: underline dotted"

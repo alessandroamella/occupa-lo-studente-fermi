@@ -66,7 +66,7 @@ export function agencyElimination(agency: AgencyDoc) {
           La segreteria ha provveduto all'eliminazione dell'azienda dal portale
           <a
             class="dotted-url"
-            href="https://occupalostudente.bitrey.it/secretary"
+            href="https://occupalostudente.bitrey.it/"
             target="_blank"
             rel="noopener noreferrer"
             style="color: inherit; text-decoration: underline dotted"

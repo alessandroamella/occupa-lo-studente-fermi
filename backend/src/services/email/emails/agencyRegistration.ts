@@ -67,7 +67,7 @@ export function agencyRegistration(agency: AgencyDoc) {
           La segreteria deciderà a breve se approvarla o rifiutarla sul portale
           <a
             class="dotted-url"
-            href="https://occupalostudente.bitrey.it/secretary"
+            href="https://occupalostudente.bitrey.it/"
             target="_blank"
             rel="noopener noreferrer"
             style="color: inherit; text-decoration: underline dotted"
