@@ -11,7 +11,7 @@ const StudentJobOfferCard = ({ agency, jobOffer, active, ...rest }) => {
   return (
     //   FILTER BY FIELD OF STUDY
     <div
-      className={`flex py-8 w-full items-center bg-white transition-all hover:bg-gray-100 cursor-pointer ${
+      className={`flex pl-4 py-8 w-full items-center bg-white transition-all hover:bg-gray-100 cursor-pointer ${
         active ? "bg-gray-100" : ""
       }`}
       onMouseEnter={() => setIsHovered(true)}
