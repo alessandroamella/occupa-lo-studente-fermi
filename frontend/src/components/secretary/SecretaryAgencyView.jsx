@@ -1,6 +1,6 @@
 import React from "react";
-import ReactMarkdown from "react-markdown";
 import JobOfferCard from "../agency/JobOfferCard";
+import TextEditor from "../textEditor";
 
 const SecretaryAgencyView = ({ agency, children }) => {
   return (
@@ -22,7 +22,7 @@ const SecretaryAgencyView = ({ agency, children }) => {
 
       <p className="font-medium text-lg">Descrizione</p>
       <div className="mb-2">
-        {<ReactMarkdown>{agency.agencyDescription}</ReactMarkdown>}
+        {<TextEditor content={agency.agencyDescription} readOnly />}
       </div>
 
       <p className="font-medium text-lg">Indirizzo</p>

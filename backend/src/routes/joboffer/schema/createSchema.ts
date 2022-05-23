@@ -1,5 +1,6 @@
 import { Schema } from "express-validator";
 import moment from "moment";
+import sanitizeHtml from "sanitize-html";
 
 // Same as validatorSchema but without agency
 // (isLoggedIn middleware, no need to check)
@@ -18,6 +19,9 @@ export const validatorSchema: Schema = {
         isLength: {
             errorMessage: "Description must be 50-3000 characters long",
             options: { min: 50, max: 3000 }
+        },
+        customSanitizer: {
+            options: html => sanitizeHtml(html)
         }
     },
     fieldOfStudy: {

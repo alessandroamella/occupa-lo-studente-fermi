@@ -16,15 +16,14 @@ import {
   ArrowRight
 } from "react-bootstrap-icons";
 import Placeholder from "react-bootstrap/Placeholder";
-import "react-markdown-editor-lite/lib/index.css";
 import { format } from "date-fns";
-import ReactMarkdown from "react-markdown";
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import { setMessage } from "../../slices/alertSlice";
 import RequireStudentLogin from "./RequireStudentLogin";
 import ViewFullAgency from "./ViewFullAgency";
 import BackButton from "../BackButton";
+import TextEditor from "../textEditor";
 
 const ViewJobOffer = () => {
   const [agency, setAgency] = useState(null);
@@ -115,8 +114,9 @@ const ViewJobOffer = () => {
                   </h3>
                   <div className="mb-2 w-full overflow-hidden whitespace-nowrap text-ellipsis">
                     {agency?.agencyDescription ? (
-                      <ReactMarkdown
-                        children={
+                      <TextEditor
+                        readOnly
+                        content={
                           agency.agencyDescription.length > 100
                             ? agency.agencyDescription.substring(0, 100) + "..."
                             : agency.agencyDescription
@@ -199,7 +199,7 @@ const ViewJobOffer = () => {
                     </div>
 
                     <div className="markdown">
-                      <ReactMarkdown>{j.description}</ReactMarkdown>
+                      <TextEditor readOnly content={j.description} />
                     </div>
 
                     <div className="px-5 md:px-20 lg:px-36 mt-10 grid grid-cols-2">

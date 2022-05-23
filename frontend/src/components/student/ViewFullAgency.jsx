@@ -2,9 +2,9 @@ import React from "react";
 import Container from "react-bootstrap/Container";
 import { GeoAlt } from "react-bootstrap-icons";
 import Placeholder from "react-bootstrap/Placeholder";
-import ReactMarkdown from "react-markdown";
 import { format } from "date-fns";
 import RequireStudentLogin from "./RequireStudentLogin";
+import TextEditor from "../textEditor";
 
 const ViewFullAgency = ({ agency }) => {
   return (
@@ -41,7 +41,7 @@ const ViewFullAgency = ({ agency }) => {
             <div className="md:p-5">
               <div className="mb-5">
                 {agency?.agencyDescription ? (
-                  <ReactMarkdown>{agency.agencyDescription}</ReactMarkdown>
+                  <TextEditor content={agency.agencyDescription} readOnly />
                 ) : (
                   <Placeholder className="w-96 h-96" />
                 )}

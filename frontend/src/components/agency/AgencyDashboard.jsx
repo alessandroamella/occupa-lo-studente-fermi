@@ -11,26 +11,17 @@ import {
   X
 } from "react-bootstrap-icons";
 import Placeholder from "react-bootstrap/Placeholder";
-import MarkdownIt from "markdown-it";
-import MdEditor from "react-markdown-editor-lite";
 import Form from "react-bootstrap/Form";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
 import axios from "axios";
-import "react-markdown-editor-lite/lib/index.css";
 import RequireAgencyLogin from "./RequireAgencyLogin";
 import EditButton from "../EditButton";
 import { setMessage } from "../../slices/alertSlice";
 import { setAgency } from "../../slices/agencyAuthSlice";
 import JobOfferCard from "./JobOfferCard";
 import { format } from "date-fns";
-
-const mdParser = new MarkdownIt({
-  linkify: true,
-  typographer: true
-});
-
-// Finish!
+import TextEditor from "../textEditor";
 
 const selectAgency = state => state.agency;
 
@@ -40,25 +31,8 @@ const AgencyDashboard = () => {
 
   const jobOffersRef = useRef(null);
 
-  function handleEditorChange({ text }) {
-    setAgencyDescription(text);
-
-    const l = text.trim().length;
-    if (l < 16) {
-      return dispatch(
-        setMessage({
-          text: "La descrizione deve essere lunga almeno 16 caratteri"
-        })
-      );
-    } else if (l > 4000) {
-      return dispatch(
-        setMessage({
-          text: `Hai raggiunto la lunghezza massima di 4000 caratteri (${l})`
-        })
-      );
-    }
-  }
   const [agencyDescription, setAgencyDescription] = useState(null);
+  const [agencyDescriptionText, setAgencyDescriptionText] = useState("");
   const [descriptionEnabled, setDescriptionEnabled] = useState(true);
 
   const [name, setName] = useState(null);
@@ -97,6 +71,16 @@ const AgencyDashboard = () => {
   }
 
   async function execEditDescription() {
+    const l = agencyDescriptionText.length;
+    if (l < 16 || l > 3000) {
+      return dispatch(
+        setMessage({
+          title: "Errore nella registrazione",
+          text: `La descrizione deve essere lunga da 16 a 3000 caratteri (attuali: ${l})`
+        })
+      );
+    }
+
     setDescriptionEnabled(false);
 
     let data;
@@ -214,6 +198,7 @@ const AgencyDashboard = () => {
 
   useEffect(() => {
     if (!agency) return;
+    setAgencyDescription(agency?.agencyDescription);
     setDescriptionEnabled(true);
     setName(agency?.agencyName);
     setAddress(agency?.agencyAddress);
@@ -347,15 +332,12 @@ const AgencyDashboard = () => {
               <h3 className="mt-3 flex items-center mb-3 font-semibold justify-center text-3xl">
                 Descrizione
               </h3>
-              {agency?.agencyDescription ? (
+              {agencyDescription ? (
                 <>
-                  <MdEditor
-                    style={{ height: "500px" }}
-                    renderHTML={text => mdParser.render(text)}
-                    onChange={handleEditorChange}
-                    defaultValue={agency.agencyDescription}
-                    allowPasteImage={false}
-                    imageAccept={false}
+                  <TextEditor
+                    content={agencyDescription}
+                    setContent={setAgencyDescription}
+                    setText={setAgencyDescriptionText}
                     readOnly={!descriptionEnabled}
                   />
                   <div className="mt-5 w-full flex justify-center">
@@ -364,6 +346,7 @@ const AgencyDashboard = () => {
                       showText
                       text="Modifica descrizione"
                       disabled={
+                        !agencyDescriptionText ||
                         !descriptionEnabled ||
                         !agencyDescription ||
                         agencyDescription.trim().length < 16 ||

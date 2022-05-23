@@ -2,6 +2,7 @@ import CodiceFiscale from "codice-fiscale-js";
 import { Schema } from "express-validator";
 import { isValidPhoneNumber, parsePhoneNumber } from "libphonenumber-js";
 import moment from "moment";
+import sanitizeHtml from "sanitize-html";
 
 import { logger, urlExists } from "@shared";
 
@@ -121,7 +122,10 @@ export const validatorSchema: Schema = {
             errorMessage: "Description must be 16-4000 characters long",
             options: { min: 16, max: 4000 }
         },
-        trim: {}
+        trim: {},
+        customSanitizer: {
+            options: html => sanitizeHtml(html)
+        }
     },
     agencyAddress: {
         in: "body",

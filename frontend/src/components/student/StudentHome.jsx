@@ -8,13 +8,13 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Placeholder from "react-bootstrap/Placeholder";
 import { useDispatch, useSelector } from "react-redux";
-import ReactMarkdown from "react-markdown";
+import { ArrowRight, Heartbreak } from "react-bootstrap-icons";
 import RequireStudentLogin from "./RequireStudentLogin";
 import { setMessage } from "../../slices/alertSlice";
 import StudentJobOfferCard from "./StudentJobOfferCard";
 import SearchJobOffers from "./SearchJobOffers";
-import { ArrowRight, Heartbreak } from "react-bootstrap-icons";
 import FieldOfStudyDropdown from "./FieldOfStudyDropdown";
+import TextEditor from "../textEditor";
 
 const selectStudent = state => state.student;
 
@@ -316,14 +316,15 @@ const StudentHome = () => {
                       </a>
                       <div className="mt-2 markdown mb-2 w-full overflow-hidden whitespace-nowrap text-ellipsis">
                         {currentAgency?.agencyDescription ? (
-                          <ReactMarkdown
-                            children={
-                              currentAgency?.agencyDescription.length > 100
-                                ? currentAgency?.agencyDescription.substring(
+                          <TextEditor
+                            readOnly
+                            content={
+                              currentAgency.agencyDescription.length > 100
+                                ? currentAgency.agencyDescription.substring(
                                     0,
                                     100
                                   ) + "..."
-                                : currentAgency?.agencyDescription
+                                : currentAgency.agencyDescription
                             }
                           />
                         ) : (
@@ -347,9 +348,9 @@ const StudentHome = () => {
                     className="markdown text-ellipsis overflow-hidden"
                     style={{ lineClamp: 5 }}
                   >
-                    <ReactMarkdown>
-                      {currentJobOffer?.description}
-                    </ReactMarkdown>
+                    {currentJobOffer?.description && (
+                      <TextEditor content={currentJobOffer.description} />
+                    )}
                   </div>
 
                   <div className="mt-8">
@@ -427,8 +428,9 @@ const StudentHome = () => {
                           </Card.Subtitle>
                           {/* <Card.Text className="mb-2 text-muted"> */}
                           <div className="mb-2 text-muted">
-                            <ReactMarkdown
-                              children={
+                            <TextEditor
+                              readOnly
+                              content={
                                 e.agencyDescription.length > 100
                                   ? e.agencyDescription.substring(0, 100) +
                                     "..."

@@ -7,7 +7,6 @@ import ReactGA from "react-ga4";
 
 import "./index.css";
 // import "bootstrap/dist/css/bootstrap.min.css";
-import "material-icons/iconfont/material-icons.css";
 
 import App from "./App";
 

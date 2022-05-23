@@ -4,22 +4,15 @@ import Container from "react-bootstrap/Container";
 import { useDispatch, useSelector } from "react-redux";
 import Dropdown from "react-bootstrap/Dropdown";
 import Placeholder from "react-bootstrap/Placeholder";
-import MarkdownIt from "markdown-it";
-import MdEditor from "react-markdown-editor-lite";
 import Form from "react-bootstrap/Form";
 import { Trash } from "react-bootstrap-icons";
 import axios from "axios";
-import "react-markdown-editor-lite/lib/index.css";
 import RequireAgencyLogin from "./RequireAgencyLogin";
 import EditButton from "../EditButton";
 import { setMessage } from "../../slices/alertSlice";
 import { setAgency } from "../../slices/agencyAuthSlice";
 import BackButton from "../BackButton";
-
-const mdParser = new MarkdownIt({
-  linkify: true,
-  typographer: true
-});
+import TextEditor from "../textEditor";
 
 const selectAgency = state => state.agency;
 
@@ -48,6 +41,7 @@ const ViewJobOffer = () => {
     }
   }
   const [description, setDescription] = useState(null);
+  const [descriptionText, setDescriptionText] = useState(null);
   const [descriptionEnabled, setDescriptionEnabled] = useState(true);
 
   const [jobOffer, setJobOffer] = useState(null);
@@ -278,18 +272,16 @@ const ViewJobOffer = () => {
               </p>
               {jobOffer?.description || !isEditing ? (
                 <>
-                  <MdEditor
-                    style={{ height: "500px" }}
-                    renderHTML={text => mdParser.render(text)}
-                    onChange={handleEditorChange}
-                    defaultValue={
+                  <TextEditor
+                    content={
                       jobOffer?.description ||
-                      "La **descrizione** di quest'offerta di lavoro che stai creando.\n\nProva ad essere il più esaustivo possibile!"
+                      "La descrizione di quest'offerta di lavoro che stai creando.\n\nProva ad essere il più esaustivo possibile!"
                     }
-                    allowPasteImage={false}
-                    imageAccept={false}
+                    setContent={setDescription}
+                    setText={setDescriptionText}
                     readOnly={!descriptionEnabled || disabled}
                   />
+
                   {isEditing && (
                     <div className="mt-5 w-full flex justify-center">
                       <EditButton
