@@ -20,26 +20,6 @@ const ViewJobOffer = () => {
   const { agency } = useSelector(selectAgency);
   const dispatch = useDispatch();
 
-  function handleEditorChange({ text }) {
-    setDescription(text);
-
-    const l = text.trim().length;
-    if (l < 50) {
-      return dispatch(
-        setMessage({
-          color: "red",
-          text: "La descrizione deve essere lunga almeno 50 caratteri"
-        })
-      );
-    } else if (l > 3000) {
-      return dispatch(
-        setMessage({
-          color: "red",
-          text: `Hai raggiunto la lunghezza massima di 3000 caratteri (${l})`
-        })
-      );
-    }
-  }
   const [description, setDescription] = useState(null);
   const [descriptionText, setDescriptionText] = useState(null);
   const [descriptionEnabled, setDescriptionEnabled] = useState(true);

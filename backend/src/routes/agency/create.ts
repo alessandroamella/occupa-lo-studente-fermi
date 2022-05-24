@@ -78,8 +78,6 @@ router.post("/", checkSchema(schema), async (req: Request, res: Response) => {
         logoUrl,
         bannerUrl,
         captcha
-        // approvalStatus,
-        // jobOffers
     } = req.body;
 
     // Check CAPTCHA
@@ -141,7 +139,8 @@ router.post("/", checkSchema(schema), async (req: Request, res: Response) => {
         logoUrl,
         bannerUrl,
         approvalStatus: "waiting",
-        jobOffers: []
+        jobOffers: [],
+        jobApplications: []
     });
 
     let agency;

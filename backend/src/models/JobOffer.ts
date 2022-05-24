@@ -27,6 +27,7 @@ import { AgencyClass } from "./Agency";
  *          - expiryDate
  *          - mustHaveDiploma
  *          - numberOfPositions
+ *          - views
  *        properties:
  *          agency:
  *            type: string
@@ -56,6 +57,10 @@ import { AgencyClass } from "./Agency";
  *            min: 1
  *            max: 10
  *            description: Number of this position available. Defaults to 1
+ *          views:
+ *            type: integer
+ *            min: 0
+ *            description: How many times this job offer has been seen
  */
 
 @index({ title: "text", description: "text" })
@@ -91,6 +96,9 @@ export class JobOfferClass {
 
     @prop({ required: true, default: 1, min: 1, max: 10 })
     public numberOfPositions!: number;
+
+    @prop({ required: true, default: 0, min: 0 })
+    public views!: number;
 }
 
 export type JobOfferDoc = DocumentType<JobOfferClass>;

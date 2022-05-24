@@ -13,13 +13,23 @@ const InputDescription = ({ label }) => (
   <label className="block text-gray-700 text-sm font-bold mb-1">{label}</label>
 );
 
-const Input = ({ label, ...rest }) => (
+const Input = ({ label, showImg, value, ...rest }) => (
   <div className="mb-4 md:mx-2">
     <InputDescription label={label} />
-    <input
-      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-blue-300 focus:bg-gray-50 transition-colors"
-      {...rest}
-    />
+    <div className="flex items-center">
+      {showImg && value && (
+        <img
+          className="w-12 max-h-12 object-contain mr-1"
+          src={value}
+          alt="Input img"
+        />
+      )}
+      <input
+        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-blue-300 focus:bg-gray-50 transition-colors"
+        value={value}
+        {...rest}
+      />
+    </div>
   </div>
 );
 
@@ -48,8 +58,6 @@ const AgencySignup = () => {
 
   // Ensure form is loaded
   useEffect(() => setDisabled(false), []);
-
-  useEffect(() => console.log(agencyDescription), [agencyDescription]);
 
   async function submitForm(event) {
     event.preventDefault();
@@ -292,6 +300,7 @@ const AgencySignup = () => {
               />
               <Input
                 label="URL logo"
+                showImg
                 type="text"
                 pattern="https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)"
                 onChange={e => setLogoUrl(e.target.value)}
@@ -302,6 +311,7 @@ const AgencySignup = () => {
               />
               <Input
                 label="URL banner"
+                showImg
                 type="text"
                 pattern="https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)"
                 onChange={e => setBannerUrl(e.target.value)}

@@ -30,6 +30,7 @@ const AgencyDashboard = () => {
   const dispatch = useDispatch();
 
   const jobOffersRef = useRef(null);
+  const jobApplicationsRef = useRef(null);
 
   const [agencyDescription, setAgencyDescription] = useState(null);
   const [agencyDescriptionText, setAgencyDescriptionText] = useState("");
@@ -218,6 +219,8 @@ const AgencyDashboard = () => {
   useEffect(() => {
     if (searchParams.get("view") === "joboffers") {
       jobOffersRef.current.scrollIntoView();
+    } else if (searchParams.get("view") === "jobapplications") {
+      jobApplicationsRef.current.scrollIntoView();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -361,7 +364,7 @@ const AgencyDashboard = () => {
               )}
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 items-start">
+            <div className="grid grid-cols-1 md:grid-cols-2 items-start mt-5">
               <div className="flex flex-col justify-center items-center w-full">
                 <h3 className="flex mb-3 font-semibold text-3xl">Posizione</h3>
                 {address ? (
@@ -515,8 +518,6 @@ const AgencyDashboard = () => {
               </div>
             </div>
 
-            {/* ELIMINA */}
-
             <div ref={jobOffersRef} className="mt-10 flex flex-col md:px-5">
               <h3 className="mt-3 flex items-center mb-3 font-semibold justify-center text-3xl">
                 Offerte di lavoro
@@ -534,12 +535,35 @@ const AgencyDashboard = () => {
               {agency?.jobOffers.map((j, i) => (
                 <JobOfferCard clickable key={j?._id || i} jobOffer={j} />
               ))}
-              {agency?.jobOffers.length === 0 && (
+              {!agency?.jobOffers.length && (
                 <p className="flex items-center justify-center my-3 text-xl">
                   <span className="mr-1">
                     {agency?.approvalStatus === "approved"
                       ? "Non hai ancora pubblicato nessun'offerta di lavoro"
                       : "La segreteria deve approvare la tua azienda prima che tu possa creare offerte di lavoro"}
+                  </span>
+                  <EmojiFrown />
+                </p>
+              )}
+            </div>
+
+            <div
+              ref={jobApplicationsRef}
+              className="mt-10 flex flex-col md:px-5"
+            >
+              <h3 className="mt-3 flex items-center mb-3 font-semibold justify-center text-3xl">
+                Candidature
+              </h3>
+
+              {agency?.jobApplications.map((j, i) => (
+                <JobOfferCard clickable key={j?._id || i} jobOffer={j} />
+              ))}
+              {!agency?.jobApplications.length && (
+                <p className="flex items-center justify-center my-3 text-xl">
+                  <span className="mr-1">
+                    {agency?.approvalStatus === "approved"
+                      ? "Non hai ancora ricevuto nessuna candidatura"
+                      : "La segreteria deve approvare la tua azienda prima che tu possa ricevere candidature"}
                   </span>
                   <EmojiFrown />
                 </p>

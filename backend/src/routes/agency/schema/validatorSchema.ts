@@ -187,6 +187,13 @@ export const validatorSchema: Schema = {
         isArray: {
             errorMessage: "Job offers must be array"
         }
+    },
+    jobApplications: {
+        in: "body",
+        errorMessage: "Job applications not specified",
+        isArray: {
+            errorMessage: "Job applications must be array"
+        }
     }
 };
 

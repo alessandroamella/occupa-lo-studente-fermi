@@ -12,6 +12,7 @@ import {
     prop
 } from "@typegoose/typegoose";
 
+import { JobApplicationClass } from "./JobApplication";
 import { JobOfferClass } from "./JobOffer";
 
 /**
@@ -35,6 +36,7 @@ import { JobOfferClass } from "./JobOffer";
  *          - vatCode
  *          - approvalStatus
  *          - jobOffers
+ *          - jobApplications
  *        properties:
  *          responsibleFirstName:
  *            type: string
@@ -108,6 +110,11 @@ import { JobOfferClass } from "./JobOffer";
  *            description: ObjectIds of the job offers for this agency
  *            items:
  *              type: string
+ *          jobApplications:
+ *            type: array
+ *            description: ObjectIds of the job applications for this agency
+ *            items:
+ *              type: string
  */
 
 @index({
@@ -177,6 +184,9 @@ export class AgencyClass {
 
     @prop({ required: true, ref: "JobOfferClass" })
     public jobOffers!: Ref<JobOfferClass>[];
+
+    @prop({ required: true, ref: "JobApplicationClass" })
+    public jobApplications!: Ref<JobApplicationClass>[];
 
     private async _changeApprovedStatus(
         this: AgencyDoc,

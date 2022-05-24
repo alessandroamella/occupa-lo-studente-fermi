@@ -1,14 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import Container from "react-bootstrap/Container";
-import { GeoAlt } from "react-bootstrap-icons";
+import { ChevronDoubleRight, GeoAlt } from "react-bootstrap-icons";
 import Placeholder from "react-bootstrap/Placeholder";
 import { format } from "date-fns";
 import RequireStudentLogin from "./RequireStudentLogin";
 import TextEditor from "../textEditor";
+import JobApplicationModal from "./JobApplicationModal";
 
 const ViewFullAgency = ({ agency }) => {
+  const [showSendCurriculum, setShowSendCurriculum] = useState(false);
+
   return (
     <RequireStudentLogin>
+      <JobApplicationModal
+        show={showSendCurriculum}
+        setShow={setShowSendCurriculum}
+      />
       <Container bg="dark" variant="dark" className="mb-4">
         <div className="rounded-xl overflow-hidden border w-full">
           <img
@@ -114,6 +121,17 @@ const ViewFullAgency = ({ agency }) => {
                     </div>
                   </div>
                 </div>
+              </div>
+
+              <div className="flex justify-center w-full mt-8">
+                <button
+                  // disabled={disabled}
+                  className="font-semibold uppercase tracking-tight text-xl flex justify-center bg-purple-500 text-white m-3 p-5 items-center hover:bg-purple-600 transition-all hover:scale-105 cursor-pointer rounded-md border"
+                  onClick={() => setShowSendCurriculum(true)}
+                >
+                  <span className="mr-1">Invia curriculum</span>
+                  <ChevronDoubleRight />
+                </button>
               </div>
             </div>
           </div>

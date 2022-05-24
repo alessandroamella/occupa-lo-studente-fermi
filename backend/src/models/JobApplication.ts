@@ -9,18 +9,22 @@ import {
     prop
 } from "@typegoose/typegoose";
 
-import { JobApplicationClass } from "./JobApplication";
+import { AgencyClass } from "./Agency";
+import { JobOfferClass } from "./JobOffer";
+import { StudentClass } from "./Student";
 
 /**
  * @openapi
  *
  *  components:
  *    schemas:
- *      Student:
+ *      JobApplication:
  *        type: object
- *        description: Student data as fetched from SPID authentication
+ *        description: JobApplication data as fetched from SPID authentication
  *        required:
- *          - googleId
+ *          - fromStudent
+ *          - forAgency
+ *          - forJobOffer
  *          - firstName
  *          - lastName
  *          - fiscalNumber
@@ -30,11 +34,16 @@ import { JobApplicationClass } from "./JobApplication";
  *          - fieldOfStudy
  *          - hasDrivingLicense
  *          - canTravel
- *          - jobApplications
  *        properties:
- *          googleId:
+ *          fromStudent:
  *            type: string
- *            description: Google ID for OAuth 2.0 authentication
+ *            description: ObjectId of the student who sent the job application
+ *          forJobOffer:
+ *            type: string
+ *            description: ObjectId of the agency for this job application
+ *          forAgency:
+ *            type: string
+ *            description: ObjectId of the job offer for this job application
  *          firstName:
  *            type: string
  *            description: Name
@@ -46,7 +55,7 @@ import { JobApplicationClass } from "./JobApplication";
  *            description: Fiscal number
  *          curriculum:
  *            type: string
- *            description: Student curriculum with markdown
+ *            description: JobApplication curriculum with markdown
  *          email:
  *            type: string
  *            format: email
@@ -70,17 +79,20 @@ import { JobApplicationClass } from "./JobApplication";
  *          canTravel:
  *            type: boolean
  *            description: Whether the student can travel independently
- *          jobApplications:
- *            type: array
- *            description: ObjectIds of the job applications from this student
- *            items:
- *              type: string
  */
 
-@modelOptions({ schemaOptions: { collection: "Student", timestamps: true } })
-export class StudentClass {
-    @prop({ required: true })
-    public googleId!: string;
+@modelOptions({
+    schemaOptions: { collection: "JobApplication", timestamps: true }
+})
+export class JobApplicationClass {
+    @prop({ required: true, ref: "StudentClass" })
+    public fromStudent!: Ref<StudentClass>;
+
+    @prop({ required: true, ref: "AgencyClass" })
+    public forAgency!: Ref<AgencyClass>;
+
+    @prop({ required: false, ref: "JobOfferClass" })
+    public forJobOffer?: Ref<JobOfferClass>;
 
     @prop({ required: true })
     public firstName!: string;
@@ -117,33 +129,8 @@ export class StudentClass {
 
     @prop({ required: true, default: false })
     public canTravel!: boolean;
-
-    @prop({ required: true, ref: "JobApplicationClass" })
-    public jobApplications!: Ref<JobApplicationClass>[];
 }
 
-export type StudentDoc = DocumentType<StudentClass>;
+export type JobApplicationDoc = DocumentType<JobApplicationClass>;
 
-export const Student = getModelForClass(StudentClass);
-
-export interface CreateStudentData {
-    googleId: string;
-    firstName: string;
-    lastName: string;
-    fiscalNumber: string;
-    curriculum?: string;
-    email: string;
-    pictureUrl: string;
-    phoneNumber: string;
-    fieldOfStudy: "it" | "electronics" | "chemistry";
-    hasDrivingLicense: boolean;
-    canTravel: boolean;
-}
-export type StudentTempData = Omit<
-    CreateStudentData,
-    | "fiscalNumber"
-    | "curriculum"
-    | "phoneNumber"
-    | "hasDrivingLicense"
-    | "canTravel"
->;
+export const JobApplication = getModelForClass(JobApplicationClass);
