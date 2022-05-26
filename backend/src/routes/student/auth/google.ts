@@ -14,7 +14,7 @@ const router = Router();
  * @openapi
  * /api/student/auth/google:
  *  get:
- *    summary: Gets Google URL for authentication
+ *    summary: Get Google URL for authentication
  *    tags:
  *      - student
  *    responses:

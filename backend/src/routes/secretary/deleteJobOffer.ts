@@ -10,7 +10,7 @@ import { logger } from "@shared";
  * @openapi
  * /api/secretary/joboffer/{jobOfferId}:
  *  delete:
- *    summary: Deletes a jobOffer for an agency
+ *    summary: Delete a jobOffer for an agency
  *    parameters:
  *      - in: query
  *        name: username

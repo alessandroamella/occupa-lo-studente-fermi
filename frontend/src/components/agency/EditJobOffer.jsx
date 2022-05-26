@@ -21,7 +21,7 @@ const ViewJobOffer = () => {
   const dispatch = useDispatch();
 
   const [description, setDescription] = useState(null);
-  const [descriptionText, setDescriptionText] = useState(null);
+  const [, setDescriptionText] = useState(null);
   const [descriptionEnabled, setDescriptionEnabled] = useState(true);
 
   const [jobOffer, setJobOffer] = useState(null);
@@ -374,7 +374,7 @@ const ViewJobOffer = () => {
               <div className="flex justify-center">
                 <button
                   disabled={disabled}
-                  className="font-semibold tracking-tight text-xl flex justify-center bg-purple-500 text-white m-3 mb-5 p-5 items-center hover:bg-purple-600 transition-all hover:scale-105 cursor-pointer rounded-md border"
+                  className="font-semibold tracking-tight text-xl flex justify-center bg-purple-500 text-white m-3 mb-5 p-5 items-center hover:bg-purple-600 transition-all hover:scale-105 cursor-pointer rounded-md border focus:outline-none"
                   onClick={editField}
                 >
                   <span className="ml-2">Crea offerta di lavoro</span>

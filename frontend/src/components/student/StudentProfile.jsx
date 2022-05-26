@@ -1,21 +1,36 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { Outlet } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Placeholder from "react-bootstrap/Placeholder";
 import RequireStudentLogin from "./RequireStudentLogin";
-import { Check, Envelope, Telephone, X } from "react-bootstrap-icons";
+import {
+  Check,
+  EmojiFrown,
+  Envelope,
+  Telephone,
+  X
+} from "react-bootstrap-icons";
 import { format } from "date-fns";
+import JobApplicationCard from "./JobApplicationCard";
+import JobApplicationModal from "./JobApplicationModal";
 
 const selectStudent = state => state.student;
 
 const StudentProfile = () => {
   const { student } = useSelector(selectStudent);
 
+  const [currentJobApplication, setCurrentJobApplication] = useState(null);
+
   console.log({ student });
 
   return (
     <RequireStudentLogin>
+      <JobApplicationModal
+        show={currentJobApplication}
+        setShow={setCurrentJobApplication}
+        readOnly
+      />
       <Container bg="dark" variant="dark" className="mt-12 mb-4">
         <div>
           <h1 className="text-5xl font-semibold  mb-2 tracking-tighter">
@@ -82,45 +97,70 @@ const StudentProfile = () => {
             </div>
           </div>
 
-          <h2 className="text-3xl mt-5 mb-3 font-semibold tracking-tighter">
-            I tuoi dati
-          </h2>
+          <div>
+            <h2 className="text-3xl mt-5 mb-3 font-semibold tracking-tighter">
+              I tuoi dati
+            </h2>
 
-          <div className="text-gray-700 w-full md:px-5">
-            <div className="mb-3 grid grid-cols-2">
-              <p>Nome</p>
-              <p>{student?.firstName}</p>
-            </div>
+            <div className="text-gray-700 w-full md:px-5">
+              <div className="mb-3 grid grid-cols-2">
+                <p>Nome</p>
+                <p>{student?.firstName}</p>
+              </div>
 
-            <div className="mb-3 grid grid-cols-2">
-              <p>Cognome</p>
-              <p>{student?.lastName}</p>
-            </div>
+              <div className="mb-3 grid grid-cols-2">
+                <p>Cognome</p>
+                <p>{student?.lastName}</p>
+              </div>
 
-            <div className="mb-3 grid grid-cols-2">
-              <p>Codice fiscale</p>
-              <p>{student?.fiscalNumber}</p>
-            </div>
+              <div className="mb-3 grid grid-cols-2">
+                <p>Codice fiscale</p>
+                <p>{student?.fiscalNumber}</p>
+              </div>
 
-            <div className="mb-3 grid grid-cols-2">
-              <p>Spostamenti</p>
-              <div>
-                <p className="flex items-center">
-                  {student?.hasDrivingLicense ? <Check /> : <X />} patente
-                </p>
-                <p className="flex items-center">
-                  {student?.canTravel ? <Check /> : <X />} viaggiare in
-                  autonomia
+              <div className="mb-3 grid grid-cols-2">
+                <p>Spostamenti</p>
+                <div>
+                  <p className="flex items-center">
+                    {student?.hasDrivingLicense ? <Check /> : <X />} patente
+                  </p>
+                  <p className="flex items-center">
+                    {student?.canTravel ? <Check /> : <X />} viaggiare in
+                    autonomia
+                  </p>
+                </div>
+              </div>
+
+              <div className="mb-3 grid grid-cols-2">
+                <p>Data di iscrizione</p>
+                <p>
+                  {student?.createdAt &&
+                    format(new Date(student.createdAt), "dd/MM/yyyy")}
                 </p>
               </div>
             </div>
+          </div>
 
-            <div className="mb-3 grid grid-cols-2">
-              <p>Data di iscrizione</p>
-              <p>
-                {student?.createdAt &&
-                  format(new Date(student.createdAt), "dd/MM/yyyy")}
-              </p>
+          <div>
+            <h2 className="mt-14 text-3xl mb-3 font-semibold tracking-tighter">
+              Le tue candidature
+            </h2>
+
+            <div className="text-gray-700 w-full md:px-5">
+              {!student?.jobApplications.length && (
+                <p className="flex items-center">
+                  <span className="mr-1">Nessuna candidatura</span>{" "}
+                  <EmojiFrown />
+                </p>
+              )}
+              {student?.jobApplications.map(j => (
+                <JobApplicationCard
+                  key={j._id}
+                  jobApplication={j}
+                  setCurrentJobApplication={setCurrentJobApplication}
+                  clickable
+                />
+              ))}
             </div>
           </div>
         </div>

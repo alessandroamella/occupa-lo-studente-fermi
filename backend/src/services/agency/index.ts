@@ -4,7 +4,14 @@ import { JobOfferService } from "services/jobOffer";
 
 import { Envs } from "@config";
 
-import { Agency, AgencyClass, AgencyDoc, JobOffer, JobOfferDoc } from "@models";
+import {
+    Agency,
+    AgencyClass,
+    AgencyDoc,
+    JobApplication,
+    JobOffer,
+    JobOfferDoc
+} from "@models";
 import { logger } from "@shared";
 import { DocumentType } from "@typegoose/typegoose";
 
@@ -18,9 +25,9 @@ export class AgencyService {
         })) as LeanDocument<JobOfferDoc[]>;
         let updated = false;
         for (const j of jobOffers) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             if (
                 agency.jobOffers
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     .map((e: any) => (e as AgencyDoc)._id.toString())
                     .includes(j._id.toString())
             )
@@ -30,6 +37,7 @@ export class AgencyService {
             );
             logger.warn(
                 "arr: " +
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     agency.jobOffers.map((e: any) =>
                         (e as AgencyDoc)._id.toString()
                     )
@@ -65,12 +73,15 @@ export class AgencyService {
     public static async find(params: {
         fields: FilterQuery<AgencyDoc | null>;
         populateJobOffers?: boolean;
+        populateJobApplications?: boolean;
         showHashedPassword?: boolean;
         skip?: number;
         limit?: number;
         showPersonalData?: boolean;
         lean?: boolean;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         projection?: any;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         sortBy?: any;
     }): Promise<AgencyDoc[]> {
         logger.debug("Finding all agencies...");
@@ -89,6 +100,9 @@ export class AgencyService {
         }
         if (params.populateJobOffers) {
             query.populate("jobOffers");
+        }
+        if (params.populateJobApplications) {
+            query.populate("jobApplications");
         }
         if (params.lean) {
             query.lean();
@@ -116,6 +130,16 @@ export class AgencyService {
             }: ${agency.jobOffers.join(", ")}`
         );
         await JobOffer.deleteMany({ _id: { $in: agency.jobOffers } });
+
+        logger.debug(
+            `Deleting agency jobApplications: ${agency.jobApplications.join(
+                ", "
+            )}`
+        );
+        await JobApplication.deleteMany({
+            _id: { $in: agency.jobApplications }
+        });
+
         logger.debug(`Deleting agency ${agency._id}`);
         await agency.deleteOne();
     }

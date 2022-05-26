@@ -70,7 +70,8 @@ export const validatorSchema: Schema = {
         errorMessage: "Must have diploma not specified",
         isBoolean: {
             errorMessage: "Must have diploma must be a boolean"
-        }
+        },
+        toBoolean: {}
     },
     numberOfPositions: {
         in: "body",

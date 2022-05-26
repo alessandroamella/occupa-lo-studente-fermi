@@ -86,14 +86,16 @@ export const studentValidatorSchema: Schema = {
         errorMessage: "Has driving license not specified",
         isBoolean: {
             errorMessage: "Has driving license must be a boolean"
-        }
+        },
+        toBoolean: {}
     },
     canTravel: {
         in: "body",
         errorMessage: "Can travel not specified",
         isBoolean: {
             errorMessage: "Can travel must be a boolean"
-        }
+        },
+        toBoolean: {}
     }
 };
 

@@ -24,7 +24,6 @@ import { StudentClass } from "./Student";
  *        required:
  *          - fromStudent
  *          - forAgency
- *          - forJobOffer
  *          - firstName
  *          - lastName
  *          - fiscalNumber
@@ -44,18 +43,27 @@ import { StudentClass } from "./Student";
  *          forAgency:
  *            type: string
  *            description: ObjectId of the job offer for this job application
+ *          agencyName:
+ *            type: string
+ *            description: Name of the agency
+ *          jobOfferTitle:
+ *            type: string
+ *            description: Title of the job offer
  *          firstName:
  *            type: string
- *            description: Name
+ *            description: Name of the student
  *          lastName:
  *            type: string
- *            description: Surname
+ *            description: Surname of the student
  *          fiscalNumber:
  *            type: string
- *            description: Fiscal number
+ *            description: Fiscal number of the student
  *          curriculum:
  *            type: string
  *            description: JobApplication curriculum with markdown
+ *          message:
+ *            type: string
+ *            description: Additional message for the JobApplication (with markdown)
  *          email:
  *            type: string
  *            format: email
@@ -65,14 +73,14 @@ import { StudentClass } from "./Student";
  *            description: URL of the profile picture
  *          phoneNumber:
  *            type: string
- *            description: Phone number validated with phone.js
+ *            description: Student phone number
  *          fieldOfStudy:
  *            type: string
  *            enum:
  *              - it
  *              - electronics
  *              - chemistry
- *            description: Field of study of this student
+ *            description: Field of study of the student
  *          hasDrivingLicense:
  *            type: boolean
  *            description: Whether the student has a driving license
@@ -95,6 +103,12 @@ export class JobApplicationClass {
     public forJobOffer?: Ref<JobOfferClass>;
 
     @prop({ required: true })
+    public agencyName!: string;
+
+    @prop({ required: false })
+    public jobOfferTitle!: string;
+
+    @prop({ required: true })
     public firstName!: string;
 
     @prop({ required: true })
@@ -105,6 +119,9 @@ export class JobApplicationClass {
 
     @prop({ required: false })
     public curriculum?: string;
+
+    @prop({ required: false, minlength: 1, maxlength: 3000 })
+    public message?: string;
 
     @prop({ required: true, validate: [IsEmail.validate, "Invalid email"] })
     public email!: string;

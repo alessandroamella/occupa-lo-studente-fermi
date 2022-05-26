@@ -525,7 +525,7 @@ const AgencyDashboard = () => {
               {agency?.approvalStatus === "approved" && (
                 <Link
                   to="/agency/joboffer"
-                  className="font-semibold tracking-tight text-xl flex justify-center bg-purple-500 text-white m-3 mb-5 p-5 items-center hover:bg-purple-600 transition-all hover:scale-105 cursor-pointer rounded-md border"
+                  className="font-semibold tracking-tight text-xl flex justify-center bg-purple-500 text-white m-3 mb-5 p-5 items-center hover:bg-purple-600 transition-all hover:scale-105 cursor-pointer rounded-md border focus:outline-none"
                 >
                   <PlusCircleDotted />{" "}
                   <span className="ml-2">Nuova offerta di lavoro</span>

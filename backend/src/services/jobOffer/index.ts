@@ -1,6 +1,6 @@
 import { FilterQuery, LeanDocument, Types } from "mongoose";
 
-import { JobOffer, JobOfferClass, JobOfferDoc } from "@models";
+import { JobApplication, JobOffer, JobOfferClass, JobOfferDoc } from "@models";
 import { logger } from "@shared";
 import { DocumentType, isDocument, mongoose } from "@typegoose/typegoose";
 
@@ -107,6 +107,12 @@ export class JobOfferService {
 
         logger.debug(
             `Updated jobOffer ${jobOffer.agency._id} with removed jobOffer ${jobOffer._id}`
+        );
+
+        logger.debug(`Updating jobApplications for jobOffer ${jobOffer._id}`);
+        await JobApplication.updateMany(
+            { forJobOffer: jobOffer._id },
+            { $unset: { forJobOffer: 1 } }
         );
 
         logger.debug(`Deleting job offer with _id ${jobOffer._id}...`);

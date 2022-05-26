@@ -2,6 +2,7 @@ import { Router } from "express";
 
 import createRoute from "./create";
 import deleteRoute from "./delete";
+import jobApplicationRoutes from "./jobapplication";
 import loginRoute from "./login";
 import logoutRoute from "./logout";
 import showRoute from "./show";
@@ -95,5 +96,6 @@ router.use("/", updateRoute);
 router.use("/", deleteRoute);
 router.use("/login", loginRoute);
 router.use("/logout", logoutRoute);
+router.use("/jobapplication", jobApplicationRoutes);
 
 export default router;

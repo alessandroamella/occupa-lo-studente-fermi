@@ -9,7 +9,7 @@ import { logger } from "@shared";
  * @openapi
  * /api/student:
  *  delete:
- *    summary: Deletes current student from request object (if signed in)
+ *    summary: Delete current student from request object (if signed in)
  *    tags:
  *      - student
  *    responses:

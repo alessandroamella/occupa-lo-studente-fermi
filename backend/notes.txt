@@ -16,4 +16,3 @@ METTI PATENTE JOBOFFER
 Aggiungi visualizzazioni offerta di lavoro
 Aggiungi possibilita' di candidarsi
 Aggiungi nome cognome ideazione
-Aggiungi Quill.js

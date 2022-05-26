@@ -14,7 +14,7 @@ import { logger } from "@shared";
  * @openapi
  * /api/secretary/agency/{agencyId}:
  *  delete:
- *    summary: Deletes an agency along with all its jobOffers
+ *    summary: Delete an agency along with all its jobOffers
  *    parameters:
  *      - in: query
  *        name: username

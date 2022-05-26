@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Check, Envelope, Telephone, X } from "react-bootstrap-icons";
 import Modal from "react-bootstrap/Modal";
 import Placeholder from "react-bootstrap/Placeholder";
@@ -7,17 +7,34 @@ import TextEditor from "../textEditor";
 
 const selectStudent = state => state.student;
 
-const JobApplicationModal = ({ show, setShow }) => {
+const JobApplicationModal = ({ readOnly, show, setShow, sendCurriculumFn }) => {
   const { student } = useSelector(selectStudent);
 
+  const [disabled, setDisabled] = useState(false);
+  const [message, setMessage] = useState(
+    "Inserisci un messaggio per l'azienda..."
+  );
+
+  async function sendCurriculum() {
+    setDisabled(true);
+    const data = await sendCurriculumFn(message);
+
+    setDisabled(false);
+    setShow(null);
+
+    if (!data) return;
+
+    setMessage("Inserisci un messaggio per l'azienda...");
+  }
+
   return (
-    <Modal size="lg" show={show}>
+    <Modal size="lg" show={show} onHide={() => setShow(null)}>
       <Modal.Header closeButton>
         <Modal.Title>Il tuo profilo</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <div className="my-5">
-          <div className="flex justify-center flex-col md:flex-row">
+          <div className="flex justify-center flex-col md:flex-row items-center">
             {student ? (
               <img
                 src={student?.pictureUrl?.replace("=s96-c", "=s1024-c")}
@@ -119,16 +136,41 @@ const JobApplicationModal = ({ show, setShow }) => {
             {student?.curriculum ? (
               <TextEditor readOnly content={student.curriculum} />
             ) : (
-              <h2 className="text-red-500 font-medium">
-                Nessun curriculum da inviare
+              <h2 className="text-red-600 font-medium">
+                {readOnly
+                  ? "Non hai inviato alcun curriculum"
+                  : "Non hai un curriculum salvato"}
               </h2>
+            )}
+          </div>
+
+          <h2 className="text-3xl mt-5 mb-3 font-semibold tracking-tighter">
+            Informazioni aggiuntive
+          </h2>
+
+          <div className="text-gray-700 w-full md:px-5">
+            {/* DEBUG se no message stampa tipo non hai aggiunto un msg */}
+            {readOnly && !show?.message ? (
+              <h2 className="text-red-600 font-medium">
+                Non hai inviato alcun messaggio aggiuntivo
+              </h2>
+            ) : (
+              <TextEditor
+                content={readOnly ? show?.message : message}
+                setContent={!readOnly && setMessage}
+                readOnly={readOnly || disabled}
+              />
             )}
           </div>
         </div>
       </Modal.Body>
       <Modal.Footer>
-        <button onClick={() => setShow(false)}>Chiudi</button>
-        <button>Invia</button>
+        <button disabled={disabled} onClick={() => setShow(null)}>
+          Chiudi
+        </button>
+        <button disabled={disabled} onClick={sendCurriculum}>
+          Invia candidatura
+        </button>
       </Modal.Footer>
     </Modal>
   );

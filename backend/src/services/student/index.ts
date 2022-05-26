@@ -3,7 +3,12 @@ import { FilterQuery } from "mongoose";
 
 import { Envs } from "@config";
 
-import { CreateStudentData, Student, StudentDoc } from "@models";
+import {
+    CreateStudentData,
+    JobApplication,
+    Student,
+    StudentDoc
+} from "@models";
 import { logger } from "@shared";
 
 export class StudentService {
@@ -21,12 +26,24 @@ export class StudentService {
     }
 
     public static async findOne(
-        fields: FilterQuery<StudentDoc | null>
+        fields: FilterQuery<StudentDoc | null>,
+        populateJobApplications = true
     ): Promise<StudentDoc | null> {
-        return await Student.findOne(fields).exec();
+        const q = Student.findOne(fields);
+        if (populateJobApplications) q.populate("jobApplications");
+        return await q.exec();
     }
 
     public static async delete(student: StudentDoc) {
+        logger.debug(
+            `Deleting student jobApplications: ${student.jobApplications.join(
+                ", "
+            )}`
+        );
+        await JobApplication.deleteMany({
+            _id: { $in: student.jobApplications }
+        });
+
         logger.debug(`Deleting student ${student._id}`);
         await student.deleteOne();
     }

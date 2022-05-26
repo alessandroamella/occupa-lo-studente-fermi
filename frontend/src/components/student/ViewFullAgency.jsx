@@ -3,18 +3,76 @@ import Container from "react-bootstrap/Container";
 import { ChevronDoubleRight, GeoAlt } from "react-bootstrap-icons";
 import Placeholder from "react-bootstrap/Placeholder";
 import { format } from "date-fns";
+import axios from "axios";
+import { useDispatch } from "react-redux";
 import RequireStudentLogin from "./RequireStudentLogin";
 import TextEditor from "../textEditor";
 import JobApplicationModal from "./JobApplicationModal";
+import { setMessage } from "../../slices/alertSlice";
+import { setStudent } from "../../slices/studentAuthSlice";
+import { useSearchParams } from "react-router-dom";
 
 const ViewFullAgency = ({ agency }) => {
+  const dispatch = useDispatch();
+  const [searchParams] = useSearchParams();
+
   const [showSendCurriculum, setShowSendCurriculum] = useState(false);
+
+  async function sendCurriculum(message) {
+    try {
+      if (!agency?._id) {
+        return dispatch(
+          setMessage({
+            title: "Errore nell'invio",
+            message: "Azienda visualizzata non caricata"
+          })
+        );
+      }
+
+      const body = {
+        forAgency: agency._id
+      };
+
+      const forJobOffer = searchParams.get("joboffer");
+
+      if (message) body.message = message;
+      if (forJobOffer) body.forJobOffer = forJobOffer;
+
+      console.log({ body, agency });
+
+      const { data } = await axios.post("/api/student/jobapplication", body);
+
+      dispatch(
+        setMessage({
+          color: "green",
+          title: "Candidatura inviata con successo!",
+          text: "Puoi visualizzarla nella pagina del tuo profilo"
+        })
+      );
+
+      // Update student by re-fetching it
+      const student = (await axios.get("/api/student/show")).data;
+      dispatch(setStudent(student));
+
+      return data;
+    } catch (err) {
+      dispatch(
+        setMessage({
+          color: "error",
+          title: "Errore nell'invio",
+          text: err?.response?.data?.err || "Errore sconosciuto"
+        })
+      );
+      return null;
+    }
+  }
 
   return (
     <RequireStudentLogin>
       <JobApplicationModal
         show={showSendCurriculum}
         setShow={setShowSendCurriculum}
+        sendCurriculumFn={sendCurriculum}
       />
       <Container bg="dark" variant="dark" className="mb-4">
         <div className="rounded-xl overflow-hidden border w-full">
@@ -126,7 +184,7 @@ const ViewFullAgency = ({ agency }) => {
               <div className="flex justify-center w-full mt-8">
                 <button
                   // disabled={disabled}
-                  className="font-semibold uppercase tracking-tight text-xl flex justify-center bg-purple-500 text-white m-3 p-5 items-center hover:bg-purple-600 transition-all hover:scale-105 cursor-pointer rounded-md border"
+                  className="font-semibold uppercase tracking-tight text-xl flex justify-center bg-purple-500 text-white m-3 p-5 items-center hover:bg-purple-600 transition-all hover:scale-105 cursor-pointer rounded-md border focus:outline-none"
                   onClick={() => setShowSendCurriculum(true)}
                 >
                   <span className="mr-1">Invia curriculum</span>
