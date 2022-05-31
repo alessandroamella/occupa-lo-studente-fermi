@@ -1,10 +1,9 @@
-import bcrypt from "bcrypt";
 import { Request, Response, Router } from "express";
 import { checkSchema, validationResult } from "express-validator";
 
 import { isLoggedIn } from "@middlewares";
 import { ResErr } from "@routes";
-import { AgencyService } from "@services";
+import { StudentService } from "@services";
 import { logger } from "@shared";
 import { mongoose } from "@typegoose/typegoose";
 
@@ -12,26 +11,20 @@ import schema from "./schema/updateSchema";
 
 /**
  * @openapi
- * /api/agency:
+ * /api/student:
  *  put:
- *    summary: Update the currently logged in agency
+ *    summary: Update the currently logged in student
  *    security:
  *      - studentAuth: []
  *    tags:
- *      - agency
- *    requestBody:
- *      required: true
- *      content:
- *        application/json:
- *          schema:
- *            $ref: '#/components/schemas/AgencyReq'
+ *      - student
  *    responses:
  *      '200':
- *        description: Agency
+ *        description: Student
  *        content:
  *          application/json:
  *            schema:
- *              $ref: '#/components/schemas/Agency'
+ *              $ref: '#/components/schemas/Student'
  *      '400':
  *        description: Data validation failed
  *        content:
@@ -54,11 +47,9 @@ import schema from "./schema/updateSchema";
 
 const router = Router();
 
-// DEBUG change for AgencyReq not Agency
-
 router.put(
     "/",
-    isLoggedIn.isAgencyLoggedIn,
+    isLoggedIn.isStudentLoggedIn,
     checkSchema(schema),
     async (req: Request, res: Response) => {
         const errors = validationResult(req);
@@ -69,71 +60,48 @@ router.put(
                     .map(e => e.msg)
                     .join(", ")
             });
-        } else if (!req.agency) {
-            logger.error("req.agency false in update route");
-            return res.status(500).json({ err: "Error while loading agency" });
+        } else if (!req.student) {
+            logger.error("req.student false in update route");
+            return res.status(500).json({ err: "Error while loading student" });
         }
 
         const {
-            responsibleFirstName,
-            responsibleLastName,
-            responsibleFiscalNumber,
-            websiteUrl,
-            email,
-            password,
+            curriculum,
             phoneNumber,
-            agencyName,
-            agencyDescription,
-            agencyAddress,
-            vatCode,
-            logoUrl,
-            bannerUrl
+            fieldOfStudy,
+            hasDrivingLicense,
+            canTravel
         } = req.body;
 
         for (const prop in {
-            responsibleFirstName,
-            responsibleLastName,
-            responsibleFiscalNumber,
-            websiteUrl,
-            email,
-            password,
+            curriculum,
             phoneNumber,
-            agencyName,
-            agencyDescription,
-            agencyAddress,
-            vatCode,
-            logoUrl,
-            bannerUrl
+            fieldOfStudy,
+            hasDrivingLicense,
+            canTravel
         }) {
             if (req.body[prop] !== undefined && req.body[prop] !== null) {
-                if (prop === "password") {
-                    const salt = await bcrypt.genSalt(10);
-                    const hashedPassword = await bcrypt.hash(password, salt);
-
-                    req.agency.hashedPassword = hashedPassword;
-                }
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                else (req.agency as any)[prop] = req.body[prop];
+                (req.student as any)[prop] = req.body[prop];
             }
         }
 
         try {
-            await AgencyService.update(req.agency);
-            await req.agency.populate("jobOffers");
+            await StudentService.update(req.student);
         } catch (err) {
             if (err instanceof mongoose.Error.ValidationError) {
-                logger.debug("Agency update validation error");
+                logger.debug("Student update validation error");
                 logger.debug(err.message);
                 return res.status(400).json({ err: err.message } as ResErr);
             }
-            logger.error("Error while updating agency " + req.agency._id);
+            logger.error("Error while updating student " + req.student._id);
             logger.error(err);
             return res
                 .status(500)
-                .json({ err: "Error while updating agency" } as ResErr);
+                .json({ err: "Error while updating student" } as ResErr);
         }
 
-        return res.json(req.agency.toObject());
+        return res.json(req.student.toObject());
     }
 );
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Outlet,
   useNavigate,
@@ -13,21 +13,29 @@ import {
   Envelope,
   GeoAlt,
   Telephone,
-  ArrowRight
+  ArrowRight,
+  ChevronDoubleRight
 } from "react-bootstrap-icons";
 import Placeholder from "react-bootstrap/Placeholder";
 import { format } from "date-fns";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { setMessage } from "../../slices/alertSlice";
 import RequireStudentLogin from "./RequireStudentLogin";
 import ViewFullAgency from "./ViewFullAgency";
 import BackButton from "../BackButton";
 import TextEditor from "../textEditor";
+import JobApplicationModal from "./JobApplicationModal";
+import { setStudent } from "../../slices/studentAuthSlice";
+
+const selectStudent = state => state.student;
 
 const ViewJobOffer = () => {
+  const { student } = useSelector(selectStudent);
+
   const [agency, setAgency] = useState(null);
   const [jobOffer, setJobOffer] = useState(null);
+  const [showSendCurriculum, setShowSendCurriculum] = useState(false);
 
   const dispatch = useDispatch();
   const params = useParams();
@@ -36,6 +44,8 @@ const ViewJobOffer = () => {
 
   const jobOfferId = searchParams.get("joboffer");
   const showFullAgency = searchParams.get("showagency");
+
+  const jobOffersRef = useRef(null);
 
   useEffect(() => {
     async function fetchAgency() {
@@ -91,8 +101,72 @@ const ViewJobOffer = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [agency, jobOfferId]);
 
+  // On page load, scroll to job offer if specified
+  useEffect(() => {
+    if (!jobOfferId || !jobOffersRef?.current) return;
+
+    // Animation, scroll after some time
+    setTimeout(() => {
+      jobOffersRef.current.scrollIntoView();
+    }, 500);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [jobOffersRef?.current, jobOffersRef]);
+
+  async function sendCurriculum(message) {
+    try {
+      if (!agency?._id) {
+        return dispatch(
+          setMessage({
+            title: "Errore nell'invio",
+            message: "Azienda visualizzata non caricata"
+          })
+        );
+      }
+
+      const body = {
+        forAgency: agency._id
+      };
+
+      if (message) body.message = message;
+      if (showSendCurriculum && jobOfferId) body.forJobOffer = jobOfferId;
+
+      console.log({ body, agency });
+
+      const { data } = await axios.post("/api/student/jobapplication", body);
+
+      dispatch(
+        setMessage({
+          color: "green",
+          title: "Candidatura inviata con successo!",
+          text: "Puoi visualizzarla nella pagina del tuo profilo"
+        })
+      );
+
+      // Update student by re-fetching it
+      const student = (await axios.get("/api/student")).data;
+      dispatch(setStudent(student));
+
+      return data;
+    } catch (err) {
+      dispatch(
+        setMessage({
+          color: "error",
+          title: "Errore nell'invio",
+          text: err?.response?.data?.err || "Errore sconosciuto"
+        })
+      );
+      return null;
+    }
+  }
+
   return (
     <RequireStudentLogin>
+      <JobApplicationModal
+        student={student}
+        show={showSendCurriculum}
+        setShow={setShowSendCurriculum}
+        sendCurriculumFn={sendCurriculum}
+      />
       <Container bg="dark" variant="dark" className="mt-8 mb-4">
         <div className="mb-4">
           <BackButton path="/student" />
@@ -118,7 +192,8 @@ const ViewJobOffer = () => {
                         readOnly
                         content={
                           agency.agencyDescription.length > 100
-                            ? agency.agencyDescription.substring(0, 100) + "..."
+                            ? agency.agencyDescription.substring(0, 100) +
+                              "a..."
                             : agency.agencyDescription
                         }
                       />
@@ -158,14 +233,14 @@ const ViewJobOffer = () => {
                   }}
                   className="ml-auto flex items-center p-2 border rounded-xl hover:bg-gray-100 active:bg-gray-200 transition-colors"
                 >
-                  <span className="mx-1">Altro</span>
+                  <span className="mx-1">Espandi</span>
                   <ArrowRight />
                 </button>
               </div>
             </div>
           </div>
         ) : agency ? (
-          <ViewFullAgency agency={agency} />
+          <ViewFullAgency agency={agency} sendCurriculumFn={sendCurriculum} />
         ) : (
           <Spinner animation="border" role="status">
             <span className="visually-hidden">Caricamento...</span>
@@ -176,6 +251,7 @@ const ViewJobOffer = () => {
           activeKey={
             jobOfferId || (agency?.jobOffers.length ? agency.jobOffers[0] : "0")
           }
+          ref={jobOffersRef}
         >
           {agency?.jobOffers.map(j => (
             <Accordion.Item eventKey={j._id} key={j._id}>
@@ -277,6 +353,14 @@ const ViewJobOffer = () => {
                       </h3>
 
                       <div className="flex flex-col md:flex-row items-center">
+                        <button
+                          // disabled={disabled}
+                          className="font-semibold uppercase tracking-tight text-xl flex justify-center bg-purple-500 text-white m-3 p-5 items-center hover:bg-purple-600 transition-all hover:scale-105 cursor-pointer rounded-2xl border focus:outline-none"
+                          onClick={() => setShowSendCurriculum(true)}
+                        >
+                          <span className="mr-1">Invia curriculum</span>
+                          <ChevronDoubleRight />
+                        </button>
                         <a
                           className="mb-2 md:mb-0 flex items-center p-3 rounded-2xl transition-colors bg-purple-500 hover:bg-purple-600 text-white"
                           href={`tel:${agency?.phoneNumber}`}

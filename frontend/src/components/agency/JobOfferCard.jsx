@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import PurpleRightArrow from "../PurpleRightArrow";
+import TextEditor from "../textEditor";
 
 const Separator = () => {
   return <div className="hidden md:block mx-2">-</div>;
@@ -38,9 +39,11 @@ const JobOfferCard = ({ jobOffer, clickable, className, ...rest }) => {
         <h3 className="font-semibold tracking-tight text-xl">
           {jobOffer.title}
         </h3>
-        <p className="overflow-hidden text-ellipsis whitespace-nowrap">
-          {jobOffer.description}
-        </p>
+        <div className="overflow-hidden text-ellipsis whitespace-nowrap">
+          {jobOffer.description && (
+            <TextEditor readOnly short content={jobOffer.description} />
+          )}
+        </div>
 
         <div className="mt-2 text-gray-500 flex flex-col items-center md:flex-row justify-start">
           <p>
@@ -53,14 +56,20 @@ const JobOfferCard = ({ jobOffer, clickable, className, ...rest }) => {
           </p>
           <Separator />
           <p className="hidden md:block mx-2">
-            Indirizzo di{" "}
-            <span className="font-medium">
-              {jobOffer?.fieldOfStudy === "it"
-                ? "informatica"
-                : jobOffer.fieldOfStudy === "electronics"
-                ? "elettronica"
-                : "chimica"}
-            </span>
+            {jobOffer.fieldOfStudy && jobOffer.fieldOfStudy !== "any" ? (
+              <span>
+                Indirizzo di{" "}
+                <span className="font-medium">
+                  {jobOffer?.fieldOfStudy === "it"
+                    ? "informatica"
+                    : jobOffer.fieldOfStudy === "electronics"
+                    ? "elettronica"
+                    : "chimica"}
+                </span>
+              </span>
+            ) : (
+              <span>Qualunque indirizzo</span>
+            )}
           </p>
           <Separator />
           <p className="hidden md:block mx-2">

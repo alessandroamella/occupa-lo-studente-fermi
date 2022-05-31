@@ -179,7 +179,7 @@ const StudentHome = () => {
           {jobOffers && loaded && (
             <div className="flex flex-col md:border-r-2">
               {jobOffers.map(j => (
-                <>
+                <React.Fragment key={j._id}>
                   <div
                     key={j._id}
                     className="border-b hidden md:block"
@@ -211,7 +211,7 @@ const StudentHome = () => {
                       jobOffer={j}
                     />
                   </div>
-                </>
+                </React.Fragment>
               ))}
             </div>
           )}
@@ -304,16 +304,18 @@ const StudentHome = () => {
                           <Placeholder animation="glow" xs={8} />
                         )}
                       </h3>
-                      <a
+                      {/* <a
                         href={currentAgency?.websiteUrl || "#"}
                         target="_blank"
                         rel="noreferrer"
                         className="text-gray-600 hover:text-gray-800 transition-colors"
-                      >
+                      > */}
+                      <p className="text-gray-600 hover:text-gray-800 transition-colors">
                         {currentAgency?.websiteUrl || (
                           <Placeholder xs={6} animation="glow" />
                         )}
-                      </a>
+                      </p>
+                      {/* </a> */}
                       <div className="mt-2 markdown mb-2 w-full overflow-hidden whitespace-nowrap text-ellipsis">
                         {currentAgency?.agencyDescription ? (
                           <TextEditor
@@ -349,7 +351,10 @@ const StudentHome = () => {
                     style={{ lineClamp: 5 }}
                   >
                     {currentJobOffer?.description && (
-                      <TextEditor content={currentJobOffer.description} />
+                      <TextEditor
+                        readOnly
+                        content={currentJobOffer.description}
+                      />
                     )}
                   </div>
 
@@ -418,13 +423,13 @@ const StudentHome = () => {
                             />
                           )}
                           <Card.Subtitle>
-                            <a
+                            {/* <a
                               href={e.websiteUrl}
                               target="_blank"
                               rel="noopener noreferrer"
-                            >
-                              {e.websiteUrl}
-                            </a>
+                            > */}
+                            {e.websiteUrl}
+                            {/* </a> */}
                           </Card.Subtitle>
                           {/* <Card.Text className="mb-2 text-muted"> */}
                           <div className="mb-2 text-muted">

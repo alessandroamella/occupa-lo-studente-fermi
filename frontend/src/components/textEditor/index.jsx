@@ -130,10 +130,17 @@ const MenuBar = ({ editor }) => {
   );
 };
 
-const TextEditor = ({ readOnly, content, setContent, setText }) => {
+const TextEditor = ({
+  placeholder,
+  readOnly,
+  short,
+  content,
+  setContent,
+  setText
+}) => {
   const editor = useEditor({
     extensions: [StarterKit],
-    content,
+    content: readOnly && short ? content?.slice(0, 100) + "..." || "" : content,
     onUpdate: ({ editor }) => {
       if (setContent && !readOnly) setContent(editor.getHTML());
       if (setText && !readOnly) setText(editor.getText());
@@ -145,6 +152,7 @@ const TextEditor = ({ readOnly, content, setContent, setText }) => {
   const div = textEditorRef.current?.editorContentRef.current.children;
   useEffect(() => {
     if (!div?.length) return;
+
     div[0].setAttribute("contenteditable", !readOnly);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [readOnly, div?.length]);
@@ -160,6 +168,7 @@ const TextEditor = ({ readOnly, content, setContent, setText }) => {
         readOnly={!!readOnly}
         editor={editor}
         contentEditable={!readOnly}
+        placeholder={placeholder}
         ref={textEditorRef}
       />
     </div>

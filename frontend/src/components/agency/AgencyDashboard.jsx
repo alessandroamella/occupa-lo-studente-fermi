@@ -22,12 +22,16 @@ import { setAgency } from "../../slices/agencyAuthSlice";
 import JobOfferCard from "./JobOfferCard";
 import { format } from "date-fns";
 import TextEditor from "../textEditor";
+import JobApplicationCard from "../student/JobApplicationCard";
+import JobApplicationModal from "../student/JobApplicationModal";
 
 const selectAgency = state => state.agency;
 
 const AgencyDashboard = () => {
   const { agency } = useSelector(selectAgency);
   const dispatch = useDispatch();
+
+  const [currentJobApplication, setCurrentJobApplication] = useState(null);
 
   const jobOffersRef = useRef(null);
   const jobApplicationsRef = useRef(null);
@@ -225,8 +229,22 @@ const AgencyDashboard = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  async function deleteJobApplication(_id) {
+    await axios.delete("/api/agency/jobapplication/" + _id);
+
+    // Update agency by re-fetching it
+    const agency = (await axios.get("/api/agency")).data;
+    dispatch(setAgency(agency));
+  }
+
   return (
     <RequireAgencyLogin>
+      <JobApplicationModal
+        show={currentJobApplication}
+        setShow={setCurrentJobApplication}
+        deleteFn={currentJobApplication ? deleteJobApplication : null}
+        readOnly
+      />
       <Container bg="dark" variant="dark" className="mt-8 mb-4">
         <div className="rounded-xl overflow-hidden border w-full">
           <img
@@ -556,7 +574,12 @@ const AgencyDashboard = () => {
               </h3>
 
               {agency?.jobApplications.map((j, i) => (
-                <JobOfferCard clickable key={j?._id || i} jobOffer={j} />
+                <JobApplicationCard
+                  key={j._id}
+                  jobApplication={j}
+                  setCurrentJobApplication={setCurrentJobApplication}
+                  clickable
+                />
               ))}
               {!agency?.jobApplications.length && (
                 <p className="flex items-center justify-center my-3 text-xl">

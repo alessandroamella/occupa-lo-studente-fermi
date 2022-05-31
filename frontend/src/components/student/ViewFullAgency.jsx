@@ -1,78 +1,32 @@
 import React, { useState } from "react";
 import Container from "react-bootstrap/Container";
-import { ChevronDoubleRight, GeoAlt } from "react-bootstrap-icons";
+import { ChevronDoubleRight, GeoAlt, Link45deg } from "react-bootstrap-icons";
 import Placeholder from "react-bootstrap/Placeholder";
 import { format } from "date-fns";
-import axios from "axios";
-import { useDispatch } from "react-redux";
 import RequireStudentLogin from "./RequireStudentLogin";
 import TextEditor from "../textEditor";
 import JobApplicationModal from "./JobApplicationModal";
-import { setMessage } from "../../slices/alertSlice";
-import { setStudent } from "../../slices/studentAuthSlice";
-import { useSearchParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
-const ViewFullAgency = ({ agency }) => {
-  const dispatch = useDispatch();
-  const [searchParams] = useSearchParams();
+const selectStudent = state => state.student;
 
+const ViewFullAgency = ({ sendCurriculumFn, agency }) => {
   const [showSendCurriculum, setShowSendCurriculum] = useState(false);
 
-  async function sendCurriculum(message) {
-    try {
-      if (!agency?._id) {
-        return dispatch(
-          setMessage({
-            title: "Errore nell'invio",
-            message: "Azienda visualizzata non caricata"
-          })
-        );
-      }
+  const { student } = useSelector(selectStudent);
 
-      const body = {
-        forAgency: agency._id
-      };
-
-      const forJobOffer = searchParams.get("joboffer");
-
-      if (message) body.message = message;
-      if (forJobOffer) body.forJobOffer = forJobOffer;
-
-      console.log({ body, agency });
-
-      const { data } = await axios.post("/api/student/jobapplication", body);
-
-      dispatch(
-        setMessage({
-          color: "green",
-          title: "Candidatura inviata con successo!",
-          text: "Puoi visualizzarla nella pagina del tuo profilo"
-        })
-      );
-
-      // Update student by re-fetching it
-      const student = (await axios.get("/api/student/show")).data;
-      dispatch(setStudent(student));
-
-      return data;
-    } catch (err) {
-      dispatch(
-        setMessage({
-          color: "error",
-          title: "Errore nell'invio",
-          text: err?.response?.data?.err || "Errore sconosciuto"
-        })
-      );
-      return null;
-    }
-  }
+  const numJobApplications = student?.jobApplications.filter(
+    j => j.forAgency === agency._id
+  ).length;
 
   return (
     <RequireStudentLogin>
       <JobApplicationModal
+        student={student}
         show={showSendCurriculum}
         setShow={setShowSendCurriculum}
-        sendCurriculumFn={sendCurriculum}
+        sendCurriculumFn={sendCurriculumFn}
       />
       <Container bg="dark" variant="dark" className="mb-4">
         <div className="rounded-xl overflow-hidden border w-full">
@@ -184,13 +138,32 @@ const ViewFullAgency = ({ agency }) => {
               <div className="flex justify-center w-full mt-8">
                 <button
                   // disabled={disabled}
-                  className="font-semibold uppercase tracking-tight text-xl flex justify-center bg-purple-500 text-white m-3 p-5 items-center hover:bg-purple-600 transition-all hover:scale-105 cursor-pointer rounded-md border focus:outline-none"
+                  className="font-semibold uppercase tracking-tight text-xl flex justify-center bg-purple-500 text-white m-3 p-5 items-center hover:bg-purple-600 transition-all hover:scale-105 cursor-pointer rounded-2xl border focus:outline-none"
                   onClick={() => setShowSendCurriculum(true)}
                 >
                   <span className="mr-1">Invia curriculum</span>
                   <ChevronDoubleRight />
                 </button>
               </div>
+              {numJobApplications && (
+                <div className="flex items-center justify-center">
+                  <p className="text-2xl mr-2 mb-1 tracking-tighter font-semibold">
+                    Nota
+                  </p>
+
+                  <Link
+                    to="/student/profile"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline decoration-dotted"
+                  >
+                    <Link45deg className="inline" />
+                    Hai già inviato <strong>{numJobApplications}</strong>{" "}
+                    candidatur{numJobApplications === 1 ? "a" : "e"} a{" "}
+                    <strong>{agency.agencyName}</strong>
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
         </div>

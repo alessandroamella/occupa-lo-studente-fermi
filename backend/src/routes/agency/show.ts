@@ -33,21 +33,31 @@ const router = Router();
 
 router.get("/", isLoggedIn.isAgencyLoggedIn, async (req, res) => {
     try {
+        if (!req.agency) throw new Error("Agency not popuulated");
+
         // Populate job offers
-        await req.agency?.populate("jobOffers");
-        if (!isDocumentArray(req.agency?.jobOffers)) {
+        await req.agency.populate("jobOffers");
+        await req.agency.populate("jobApplications");
+        if (!isDocumentArray(req.agency.jobOffers)) {
             throw new Error(
-                "jobOffers not populated: " + req.agency?.jobOffers?.toString()
+                "jobOffers not populated: " + req.agency.jobOffers?.toString()
             );
         }
-        req.agency?.jobOffers.sort(
+        req.agency.jobOffers.sort(
             (a, b) =>
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 (b as any)?.updatedAt?.getTime() -
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 (a as any)?.updatedAt?.getTime()
         );
-        res.json(req.agency?.toObject());
+        req.agency.jobApplications.sort(
+            (a, b) =>
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                (b as any)?.updatedAt?.getTime() -
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                (a as any)?.updatedAt?.getTime()
+        );
+        res.json(req.agency.toObject());
     } catch (err) {
         logger.error("Error while sending logged in agency");
         logger.error(err);

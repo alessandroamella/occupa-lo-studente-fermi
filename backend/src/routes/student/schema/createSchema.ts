@@ -50,6 +50,10 @@ export const studentValidatorSchema: Schema = {
         optional: true,
         isString: {
             errorMessage: "Curriculum must be a string"
+        },
+        isLength: {
+            errorMessage: "Curriculum must be between 10-5000 characters long",
+            options: { min: 50, max: 5000 }
         }
     },
     phoneNumber: {

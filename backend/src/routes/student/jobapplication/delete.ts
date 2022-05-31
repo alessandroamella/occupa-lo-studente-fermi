@@ -72,10 +72,10 @@ router.delete(
                     `jobApplication ${_id} validated but not found`
                 );
         } catch (err) {
-            logger.error("Error while finding jobApplication in delete route");
-            logger.error(err);
+            logger.debug("Error while finding jobApplication in delete route");
+            logger.debug(err);
             return res
-                .status(500)
+                .status(400)
                 .json({ err: "Error while finding job application" } as ResErr);
         }
 

@@ -7,10 +7,12 @@ import deleteRoute from "./delete";
 import jobApplicationRoutes from "./jobapplication";
 import jobOffersRoute from "./joboffers";
 import showRoute from "./show";
+import updateRoute from "./update";
 
 const router = Router();
 
 router.use("/", showRoute);
+router.use("/", updateRoute);
 router.use("/", deleteRoute);
 router.use("/agency", agencyRoute);
 router.use("/agencies", agenciesRoute);

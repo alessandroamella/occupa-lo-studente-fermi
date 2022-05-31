@@ -1,11 +1,15 @@
 import { Request, Response, Router } from "express";
 import { checkSchema, validationResult } from "express-validator";
 import { isValidObjectId } from "mongoose";
+import Mail from "nodemailer/lib/mailer";
+import { agencyNewJobApplication } from "services/email/emails";
+
+import { Envs } from "@config";
 
 import { isLoggedIn } from "@middlewares";
 import { JobApplication, JobOfferDoc } from "@models";
 import { ResErr } from "@routes";
-import { AgencyService, JobApplicationService } from "@services";
+import { AgencyService, EmailService, JobApplicationService } from "@services";
 import { logger } from "@shared";
 import { mongoose } from "@typegoose/typegoose";
 
@@ -174,6 +178,7 @@ router.post(
             fromStudent: req.student._id,
             forAgency,
             forJobOffer,
+            jobOfferTitle: undefined,
             agencyName: agency.agencyName,
             firstName,
             lastName,
@@ -190,7 +195,7 @@ router.post(
 
         if (jobOffer) {
             jobApplicationDoc.jobOfferTitle = jobOffer.title;
-        }
+        } else delete jobApplicationDoc.jobOfferTitle;
 
         try {
             await JobApplicationService.create(jobApplicationDoc);
@@ -209,7 +214,22 @@ router.post(
 
         logger.info(`Created new jobApplication "${jobApplicationDoc._id}"`);
 
-        // DEBUG send confirmation email
+        const agencyEmail: Mail.Options = {
+            from: `"Occupa lo Studente" ${Envs.env.SEND_EMAIL_FROM}`,
+            to: agency.email,
+            subject: `Nuova candidatura per "${agency.agencyName}" su Occupa lo studente`,
+            html: agencyNewJobApplication(agency, req.student, jobOffer)
+        };
+
+        try {
+            await EmailService.sendMail(agencyEmail);
+            logger.info(
+                `Email sent to agency for new job application "${jobApplicationDoc._id}"`
+            );
+        } catch (err) {
+            logger.error("Error while sending email");
+            logger.error(err);
+        }
 
         return res.json(jobApplicationDoc.toObject());
     }

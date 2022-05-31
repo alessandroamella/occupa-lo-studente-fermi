@@ -115,7 +115,7 @@ router.put(
             mustHaveDiploma,
             numberOfPositions
         }) {
-            if (req.body[prop]) {
+            if (req.body[prop] !== undefined && req.body[prop] !== null) {
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 (jobOffer as any)[prop] = req.body[prop];
                 logger.debug(

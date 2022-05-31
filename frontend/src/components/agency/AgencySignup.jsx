@@ -62,6 +62,8 @@ const AgencySignup = () => {
   async function submitForm(event) {
     event.preventDefault();
 
+    if (!window.confirm("Vuoi inviare quest'offerta di lavoro?")) return;
+
     const l = agencyDescriptionText.length;
     if (l < 16 || l > 3000) {
       return dispatch(

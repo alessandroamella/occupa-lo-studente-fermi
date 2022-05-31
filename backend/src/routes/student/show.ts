@@ -4,7 +4,7 @@ import { isLoggedIn } from "@middlewares";
 
 /**
  * @openapi
- * /api/student/show:
+ * /api/student:
  *  get:
  *    summary: Get current student from request object (if signed in)
  *    tags:

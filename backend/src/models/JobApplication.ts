@@ -106,7 +106,7 @@ export class JobApplicationClass {
     public agencyName!: string;
 
     @prop({ required: false })
-    public jobOfferTitle!: string;
+    public jobOfferTitle?: string;
 
     @prop({ required: true })
     public firstName!: string;
