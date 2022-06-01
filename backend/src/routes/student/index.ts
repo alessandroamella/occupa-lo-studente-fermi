@@ -5,7 +5,7 @@ import agencyRoute from "./agency";
 import authRoutes from "./auth";
 import deleteRoute from "./delete";
 import jobApplicationRoutes from "./jobapplication";
-import jobOffersRoute from "./joboffers";
+import jobOffersRoute from "./joboffer";
 import showRoute from "./show";
 import updateRoute from "./update";
 

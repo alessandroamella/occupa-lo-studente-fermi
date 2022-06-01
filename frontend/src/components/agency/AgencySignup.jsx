@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
 import axios from "axios";
@@ -52,12 +52,7 @@ const AgencySignup = () => {
   const [vatCode, setVatCode] = useState(""); // "string",
   const [logoUrl, setLogoUrl] = useState(""); // "string"
   const [bannerUrl, setBannerUrl] = useState(""); // "string"
-
-  // const [value, setValue] = React.useState({ firstName, lastName, email });
-  const [disabled, setDisabled] = React.useState(true);
-
-  // Ensure form is loaded
-  useEffect(() => setDisabled(false), []);
+  const [disabled, setDisabled] = useState(false);
 
   async function submitForm(event) {
     event.preventDefault();

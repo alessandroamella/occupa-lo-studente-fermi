@@ -31,8 +31,6 @@ const AgencyDashboard = () => {
   const { agency } = useSelector(selectAgency);
   const dispatch = useDispatch();
 
-  const [currentJobApplication, setCurrentJobApplication] = useState(null);
-
   const jobOffersRef = useRef(null);
   const jobApplicationsRef = useRef(null);
 
@@ -57,6 +55,7 @@ const AgencyDashboard = () => {
 
   const [hasChangedPassword, setHasChangedPassword] = useState(false);
   const [disabled, setDisabled] = useState(true);
+
   // const [email, setEmail] = useState(null);
 
   async function editField(body) {
@@ -217,14 +216,24 @@ const AgencyDashboard = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(agency)]);
 
-  // eslint-disable-next-line no-unused-vars
   const [searchParams, setSearchParams] = useSearchParams();
+
+  const jobApplicationParam = searchParams.get("jobapplication");
+  const currentJobApplication =
+    (jobApplicationParam &&
+      agency?.jobApplications.find(j => j._id === jobApplicationParam)) ||
+    null;
+  const setCurrentJobApplication = j => {
+    if (j) searchParams.set("jobapplication", j._id);
+    else searchParams.delete("jobapplication");
+    setSearchParams(searchParams);
+  };
 
   useEffect(() => {
     if (searchParams.get("view") === "joboffers") {
-      jobOffersRef.current.scrollIntoView();
+      jobOffersRef.current?.scrollIntoView();
     } else if (searchParams.get("view") === "jobapplications") {
-      jobApplicationsRef.current.scrollIntoView();
+      jobApplicationsRef.current?.scrollIntoView();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -537,7 +546,7 @@ const AgencyDashboard = () => {
             </div>
 
             <div ref={jobOffersRef} className="mt-10 flex flex-col md:px-5">
-              <h3 className="mt-3 flex items-center mb-3 font-semibold justify-center text-3xl">
+              <h3 className="mt-3 flex items-center font-semibold justify-center text-3xl">
                 Offerte di lavoro
               </h3>
               {agency?.approvalStatus === "approved" && (
@@ -569,7 +578,7 @@ const AgencyDashboard = () => {
               ref={jobApplicationsRef}
               className="mt-10 flex flex-col md:px-5"
             >
-              <h3 className="mt-3 flex items-center mb-3 font-semibold justify-center text-3xl">
+              <h3 className="flex items-center font-semibold justify-center text-3xl">
                 Candidature
               </h3>
 

@@ -68,7 +68,8 @@ services:
             # DEBUG viene usata la mia email come debug
             - SECRETARY_EMAIL=alessandro.amella@fermi.mo.it
             # DEBUG fornita da Google per testing
-            - GOOGLE_RECAPTCHA_SECRET_KEY=6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe
+            # - GOOGLE_RECAPTCHA_V2_SECRET_KEY=6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe
+            # - GOOGLE_RECAPTCHA_V3_SECRET_KEY=6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe
     frontend:
         depends_on:
             - backend

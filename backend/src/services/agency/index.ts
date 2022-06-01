@@ -1,6 +1,5 @@
 import jwt from "jsonwebtoken";
 import { FilterQuery, LeanDocument } from "mongoose";
-import { JobOfferService } from "services/jobOffer";
 
 import { Envs } from "@config";
 
@@ -12,6 +11,7 @@ import {
     JobOffer,
     JobOfferDoc
 } from "@models";
+import { JobOfferService } from "@services";
 import { logger } from "@shared";
 import { DocumentType } from "@typegoose/typegoose";
 

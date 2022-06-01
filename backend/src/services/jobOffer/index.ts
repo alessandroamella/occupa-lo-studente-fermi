@@ -153,7 +153,7 @@ export class JobOfferService {
             .sort(
                 params.searchQuery
                     ? { score: { $meta: "textScore" } }
-                    : { updatedAt: -1 }
+                    : { views: -1 }
             )
             .exec();
     }

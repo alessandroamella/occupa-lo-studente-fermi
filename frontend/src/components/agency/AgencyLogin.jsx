@@ -51,9 +51,9 @@ const AgencySignup = () => {
     }
 
     console.log(agency);
+    setDisabled(false);
     dispatch(setAgency(agency));
     navigate("/agency/dashboard");
-    setDisabled(false);
     return false;
   }
 

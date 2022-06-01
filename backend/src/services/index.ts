@@ -4,3 +4,4 @@ export * from "./jobOffer";
 export * from "./jobApplication";
 export * from "./secretary";
 export * from "./email";
+export * from "./captcha";

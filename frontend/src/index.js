@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Provider } from "react-redux";
-
+import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 import ReactGA from "react-ga4";
 
 import "./index.css";
@@ -21,6 +21,7 @@ import StudentBase from "./components/student/StudentBase";
 import StudentHome from "./components/student/StudentHome";
 import StudentLogin from "./components/student/StudentLogin";
 import StudentSignup from "./components/student/StudentSignup";
+import ViewAgencyJobOffer from "./components/student/ViewAgencyJobOffer";
 import SecretaryBase from "./components/secretary/SecretaryBase";
 import SecretaryHomepage from "./components/secretary/SecretaryHomepage";
 import AgencyBase from "./components/agency/AgencyBase";
@@ -31,7 +32,6 @@ import AgencyDashboard from "./components/agency/AgencyDashboard";
 import StudentProfile from "./components/student/StudentProfile";
 import EditJobOffer from "./components/agency/EditJobOffer";
 import Base from "./components/Base";
-import ViewAgencyJobOffer from "./components/student/ViewAgencyJobOffer";
 
 ReactGA.initialize("G-LT3ETY1REP");
 ReactGA.send("pageview");
@@ -55,7 +55,18 @@ ReactDOM.render(
                 <Route path="signup" element={<StudentSignup />} />
                 <Route path="login" element={<StudentLogin />} />
                 <Route path="profile" element={<StudentProfile />} />
-                <Route path="agency/:id" element={<ViewAgencyJobOffer />} />
+                <Route
+                  path="agency/:id"
+                  element={
+                    <GoogleReCaptchaProvider
+                      reCaptchaKey="6LccjjYgAAAAANIPybcFIuYsaUG8KDWLMOEAcDVA"
+                      language="it"
+                      useEnterprise={false}
+                    >
+                      <ViewAgencyJobOffer />
+                    </GoogleReCaptchaProvider>
+                  }
+                />
               </Route>
               <Route path="agency" element={<AgencyBase />}>
                 <Route path="" element={<AgencyHome />} />

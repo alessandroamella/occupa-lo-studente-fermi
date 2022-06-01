@@ -20,6 +20,7 @@ import Placeholder from "react-bootstrap/Placeholder";
 import { format } from "date-fns";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { setMessage } from "../../slices/alertSlice";
 import RequireStudentLogin from "./RequireStudentLogin";
 import ViewFullAgency from "./ViewFullAgency";
@@ -37,6 +38,8 @@ const ViewJobOffer = () => {
   const [jobOffer, setJobOffer] = useState(null);
   const [showSendCurriculum, setShowSendCurriculum] = useState(false);
 
+  const { executeRecaptcha } = useGoogleReCaptcha();
+
   const dispatch = useDispatch();
   const params = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -46,6 +49,30 @@ const ViewJobOffer = () => {
   const showFullAgency = searchParams.get("showagency");
 
   const jobOffersRef = useRef(null);
+
+  // Add view to jobOffer on page load
+  useEffect(() => {
+    if (!jobOfferId) return;
+
+    async function addView() {
+      if (!executeRecaptcha) {
+        return;
+      }
+
+      const token = await executeRecaptcha("addview");
+
+      try {
+        await axios.post("/api/student/joboffers/view", {
+          jobOffer: jobOfferId,
+          captcha: token
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    }
+
+    addView();
+  }, [jobOfferId, executeRecaptcha]);
 
   useEffect(() => {
     async function fetchAgency() {
@@ -66,6 +93,7 @@ const ViewJobOffer = () => {
         return;
       }
     }
+
     fetchAgency();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

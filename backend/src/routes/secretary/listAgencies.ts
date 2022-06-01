@@ -52,7 +52,6 @@ import { logger } from "@shared";
 const router = Router();
 
 router.get("/", secretaryAuth, async (req, res) => {
-    // DEBUG check authentication
     try {
         const agencies = await AgencyService.find({
             fields: {},

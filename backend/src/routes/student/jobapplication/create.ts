@@ -2,14 +2,18 @@ import { Request, Response, Router } from "express";
 import { checkSchema, validationResult } from "express-validator";
 import { isValidObjectId } from "mongoose";
 import Mail from "nodemailer/lib/mailer";
-import { agencyNewJobApplication } from "services/email/emails";
 
 import { Envs } from "@config";
 
 import { isLoggedIn } from "@middlewares";
 import { JobApplication, JobOfferDoc } from "@models";
 import { ResErr } from "@routes";
-import { AgencyService, EmailService, JobApplicationService } from "@services";
+import {
+    AgencyService,
+    EmailService,
+    JobApplicationService,
+    agencyNewJobApplication
+} from "@services";
 import { logger } from "@shared";
 import { mongoose } from "@typegoose/typegoose";
 
@@ -218,7 +222,12 @@ router.post(
             from: `"Occupa lo Studente" ${Envs.env.SEND_EMAIL_FROM}`,
             to: agency.email,
             subject: `Nuova candidatura per "${agency.agencyName}" su Occupa lo studente`,
-            html: agencyNewJobApplication(agency, req.student, jobOffer)
+            html: agencyNewJobApplication(
+                agency,
+                req.student,
+                jobApplicationDoc,
+                jobOffer
+            )
         };
 
         try {

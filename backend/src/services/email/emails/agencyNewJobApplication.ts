@@ -1,9 +1,10 @@
-import { AgencyDoc, JobOfferDoc, StudentDoc } from "@models";
+import { AgencyDoc, JobApplicationDoc, JobOfferDoc, StudentDoc } from "@models";
 
 export function agencyNewJobApplication(
     agency: AgencyDoc,
     student: StudentDoc,
-    jobOffer?: JobOfferDoc
+    jobApplication: JobApplicationDoc,
+    jobOffer?: JobOfferDoc,
 ) {
     return `
     <!DOCTYPE html>
@@ -105,7 +106,7 @@ export function agencyNewJobApplication(
                 -webkit-appearance: none;
                 text-decoration: none;
                 "
-                href="https://occupalostudente.bitrey.it/agency/dashboard?view=jobapplications"
+                href="https://occupalostudente.bitrey.it/agency/dashboard?view=jobapplications&jobapplication=${jobApplication._id}"
                 target="_blank"
                 rel="noopener noreferrer"
             >

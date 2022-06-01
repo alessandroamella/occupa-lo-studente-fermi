@@ -94,26 +94,22 @@ const JobApplicationModal = ({
           {readOnly ? (
             <span>Candidatura per {show?.agencyName}</span>
           ) : (
-            <span>Il tuo profilo</span>
+            <span>Invia candidatura</span>
           )}
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <div className="my-5">
           <div className="flex justify-center flex-col md:flex-row items-center">
-            {(readOnly ? student : show) ? (
-              <img
-                src={(readOnly ? student : show)?.pictureUrl?.replace(
-                  "=s96-c",
-                  "=s1024-c"
-                )}
-                loading="lazy"
-                alt="Profile pic"
-                className="w-44 rounded-full aspect-square shadow-lg"
-              />
-            ) : (
-              <Placeholder as={"img"} animation="glow" />
-            )}
+            <img
+              src={((readOnly && student) || show)?.pictureUrl?.replace(
+                "=s96-c",
+                "=s1024-c"
+              )}
+              loading="lazy"
+              alt="Profile pic"
+              className="w-44 rounded-full aspect-square shadow-lg"
+            />
             <div className="md:ml-12">
               {/* Nome e cognome */}
               <h1 className="mt-2 font-semibold tracking-tighter text-2xl">
@@ -180,7 +176,11 @@ const JobApplicationModal = ({
                 <div className="mb-3 grid grid-cols-2">
                   <p>Azienda</p>
                   <Link
-                    to={`/student/agency/${show.forAgency}?showagency=true`}
+                    to={
+                      student
+                        ? `/student/agency/${show.forAgency}?showagency=true`
+                        : "/agency"
+                    }
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center underline decoration-dotted"
@@ -194,7 +194,11 @@ const JobApplicationModal = ({
                   <div className="mb-3 grid grid-cols-2">
                     <p>Offerta di lavoro</p>
                     <Link
-                      to={`/student/agency/${show.forAgency}?showagency=true&joboffer=${show.forJobOffer}`}
+                      to={
+                        student
+                          ? `/student/agency/${show.forAgency}?showagency=true&joboffer=${show.forJobOffer}`
+                          : `/agency/joboffer?id=${show.forJobOffer}`
+                      }
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center underline decoration-dotted"
@@ -209,7 +213,7 @@ const JobApplicationModal = ({
           )}
 
           <h2 className="text-3xl mt-5 mb-3 font-semibold tracking-tighter">
-            I tuoi dati
+            Dati studente
           </h2>
 
           <div className="text-gray-700 w-full md:px-5">
@@ -248,7 +252,7 @@ const JobApplicationModal = ({
           </div>
 
           <h2 className="text-3xl mt-5 mb-3 font-semibold tracking-tighter">
-            Il tuo curriculum
+            Curriculum
           </h2>
 
           <div className="text-gray-700 w-full md:px-5">
@@ -326,7 +330,7 @@ const JobApplicationModal = ({
           <button
             disabled={disabled}
             onClick={sendCurriculum}
-            className="flex bg-purple-500 text-white p-2 border-none items-center hover:bg-purple-600 transition-colors cursor-pointer rounded-md border focus:outline-none"
+            className="flex bg-purple-500 text-white p-2 border-none items-center hover:bg-purple-600 transition-colors cursor-pointer rounded-md border focus:outline-none disabled:cursor-not-allowed disabled:bg-purple-400"
           >
             <SendFill />
             <span className="ml-1">Invia candidatura</span>

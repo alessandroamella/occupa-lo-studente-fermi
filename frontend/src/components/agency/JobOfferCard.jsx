@@ -47,6 +47,11 @@ const JobOfferCard = ({ jobOffer, clickable, className, ...rest }) => {
 
         <div className="mt-2 text-gray-500 flex flex-col items-center md:flex-row justify-start">
           <p>
+            <span className="font-medium">{jobOffer?.views}</span>{" "}
+            visualizzazion{getPlural()}
+          </p>
+          <Separator />
+          <p>
             <span className="font-medium">{jobOffer?.numberOfPositions}</span>{" "}
             posizion{getPlural()} disponibil{getPlural()}
           </p>

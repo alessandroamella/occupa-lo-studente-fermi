@@ -53,6 +53,10 @@ const StudentJobOfferCard = ({ agency, jobOffer, active, ...rest }) => {
               locale: it
             })}
           </p>
+          <p className="text-sm">
+            {jobOffer.views || "0"} visualizzazion
+            {jobOffer.views === 1 ? "e" : "i"}
+          </p>
         </div>
       </div>
       <div className="ml-auto mr-3">

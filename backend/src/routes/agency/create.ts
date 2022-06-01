@@ -2,14 +2,18 @@ import bcrypt from "bcrypt";
 import { Request, Response, Router } from "express";
 import { checkSchema, validationResult } from "express-validator";
 import Mail from "nodemailer/lib/mailer";
-import CaptchaService from "services/captcha";
-import { agencyRegistration, secretaryNewAgency } from "services/email/emails";
 
 import { Envs } from "@config";
 
 import { Agency } from "@models";
 import { ResErr } from "@routes";
-import { AgencyService, EmailService } from "@services";
+import { CaptchaService } from "@services";
+import {
+    AgencyService,
+    EmailService,
+    agencyRegistration,
+    secretaryNewAgency
+} from "@services";
 import { logger } from "@shared";
 import { mongoose } from "@typegoose/typegoose";
 
@@ -86,11 +90,11 @@ router.post("/", checkSchema(schema), async (req: Request, res: Response) => {
     //     logger.warn("Create agency skipping CAPTCHA verification");
     // } else {
     try {
-        const valid = await CaptchaService.verify(captcha);
-        if (!valid) throw new ReferenceError();
+        const { success } = await CaptchaService.verify(captcha);
+        if (!success) throw new ReferenceError();
     } catch (err) {
         if (err instanceof ReferenceError) {
-            logger.info("CAPTCHA failed for creating agency " + agencyName);
+            logger.debug("CAPTCHA failed for creating agency " + agencyName);
             return res.status(401).json({ err: "Invalid ReCAPTCHA" } as ResErr);
         }
         logger.error("Error while verifying ReCAPTCHA");

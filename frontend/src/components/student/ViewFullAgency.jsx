@@ -16,9 +16,9 @@ const ViewFullAgency = ({ sendCurriculumFn, agency }) => {
 
   const { student } = useSelector(selectStudent);
 
-  const numJobApplications = student?.jobApplications.filter(
+  const jobApplications = student?.jobApplications.filter(
     j => j.forAgency === agency._id
-  ).length;
+  );
 
   return (
     <RequireStudentLogin>
@@ -145,25 +145,30 @@ const ViewFullAgency = ({ sendCurriculumFn, agency }) => {
                   <ChevronDoubleRight />
                 </button>
               </div>
-              {numJobApplications && (
+              {jobApplications.length ? (
                 <div className="flex items-center justify-center">
                   <p className="text-2xl mr-2 mb-1 tracking-tighter font-semibold">
                     Nota
                   </p>
 
                   <Link
-                    to="/student/profile"
+                    to={
+                      "/student/profile?jobapplication=" +
+                      jobApplications[0]?._id
+                    }
                     target="_blank"
                     rel="noopener noreferrer"
                     className="underline decoration-dotted"
                   >
                     <Link45deg className="inline" />
-                    Hai già inviato <strong>{numJobApplications}</strong>{" "}
-                    candidatur{numJobApplications === 1 ? "a" : "e"} a{" "}
+                    Hai già inviato <strong>
+                      {jobApplications.length}
+                    </strong>{" "}
+                    candidatur{jobApplications.length === 1 ? "a" : "e"} a{" "}
                     <strong>{agency.agencyName}</strong>
                   </Link>
                 </div>
-              )}
+              ) : null}
             </div>
           </div>
         </div>

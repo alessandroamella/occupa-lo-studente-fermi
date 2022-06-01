@@ -6,19 +6,24 @@ import { logger } from "@shared";
 
 interface CaptchaResponse {
     success: boolean;
+    score?: number;
+    action?: string;
     challenge_ts: string; // timestamp of the challenge load (ISO format yyyy-MM-dd'T'HH:mm:ssZZ)
     hostname: string; // the hostname of the site where the reCAPTCHA was solved
     "error-codes"?: string[]; // optional
 }
 
-class CaptchaService {
+export class CaptchaService {
     /**
      * Checks whether Google ReCAPTCHA token is valid
      * Throws an error if an error occurs during the API call
      * @param  {string} token ReCAPTCHA token generated from the client
      * @returns {boolean} whether it's valid or not
      */
-    public static async verify(token: string): Promise<boolean> {
+    public static async verify(
+        token: string,
+        v3 = false
+    ): Promise<CaptchaResponse> {
         let data: CaptchaResponse;
 
         try {
@@ -27,7 +32,11 @@ class CaptchaService {
                 {},
                 {
                     params: {
-                        secret: Envs.env.GOOGLE_RECAPTCHA_SECRET_KEY,
+                        secret: Envs.env[
+                            v3
+                                ? "GOOGLE_RECAPTCHA_V3_SECRET_KEY"
+                                : "GOOGLE_RECAPTCHA_V2_SECRET_KEY"
+                        ],
                         response: token
                     }
                 }
@@ -43,7 +52,7 @@ class CaptchaService {
                     (err as string)
             );
         }
-        return data.success;
+        return data;
     }
 }
 

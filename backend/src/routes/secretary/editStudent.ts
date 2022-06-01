@@ -81,7 +81,6 @@ router.put(
 
         const { _id } = req.params;
 
-        // DEBUG check authentication
         try {
             const student = await StudentService.findOne({ _id });
             if (!student) {

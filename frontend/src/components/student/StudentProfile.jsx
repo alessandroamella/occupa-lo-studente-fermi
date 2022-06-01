@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useSearchParams } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Placeholder from "react-bootstrap/Placeholder";
 import axios from "axios";
@@ -25,7 +25,18 @@ const StudentProfile = () => {
   const { student } = useSelector(selectStudent);
   const dispatch = useDispatch();
 
-  const [currentJobApplication, setCurrentJobApplication] = useState(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const jobApplicationParam = searchParams.get("jobapplication");
+  const currentJobApplication =
+    (jobApplicationParam &&
+      student?.jobApplications.find(j => j._id === jobApplicationParam)) ||
+    null;
+  const setCurrentJobApplication = j => {
+    if (j) searchParams.set("jobapplication", j._id);
+    else searchParams.delete("jobapplication");
+    setSearchParams(searchParams);
+  };
 
   const [curriculum, setCurriculum] = useState(null);
   const [curriculumText, setCurriculumText] = useState(null);

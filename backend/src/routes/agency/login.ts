@@ -59,7 +59,13 @@ router.post("/", checkSchema(schema), async (req: Request, res: Response) => {
 
     let agency;
     try {
-        agency = await AgencyService.findOne({ email }, false, true);
+        const agencies = await AgencyService.find({
+            fields: { email },
+            populateJobOffers: true,
+            populateJobApplications: true,
+            showHashedPassword: true
+        });
+        if (agencies.length > 0) agency = agencies[0];
     } catch (err) {
         logger.error("Error while finding agency");
         logger.error(err);

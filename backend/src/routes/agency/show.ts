@@ -43,19 +43,13 @@ router.get("/", isLoggedIn.isAgencyLoggedIn, async (req, res) => {
                 "jobOffers not populated: " + req.agency.jobOffers?.toString()
             );
         }
-        req.agency.jobOffers.sort(
-            (a, b) =>
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                (b as any)?.updatedAt?.getTime() -
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                (a as any)?.updatedAt?.getTime()
-        );
+        req.agency.jobOffers.sort((a, b) => b?.views - a?.views);
         req.agency.jobApplications.sort(
             (a, b) =>
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                (b as any)?.updatedAt?.getTime() -
+                (b as any)?.createdAt?.getTime() -
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                (a as any)?.updatedAt?.getTime()
+                (a as any)?.createdAt?.getTime()
         );
         res.json(req.agency.toObject());
     } catch (err) {

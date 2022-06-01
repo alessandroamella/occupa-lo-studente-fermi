@@ -27,7 +27,8 @@ export const requiredEnvs = [
     "MAIL_PASSWORD",
     "SEND_EMAIL_FROM",
     "POSITION_STACK_API_KEY",
-    "GOOGLE_RECAPTCHA_SECRET_KEY"
+    "GOOGLE_RECAPTCHA_V2_SECRET_KEY",
+    "GOOGLE_RECAPTCHA_V3_SECRET_KEY"
 ] as const;
 
 type EnvName = typeof requiredEnvs[number];

@@ -2,13 +2,17 @@ import { Router } from "express";
 import { param, query, validationResult } from "express-validator";
 import moment from "moment";
 import Mail from "nodemailer/lib/mailer";
-import { agencyApproved, agencyRejected } from "services/email/emails";
 
 import { Envs } from "@config";
 
 import { secretaryAuth } from "@middlewares";
 import { ResErr } from "@routes";
-import { AgencyService, EmailService } from "@services";
+import {
+    AgencyService,
+    EmailService,
+    agencyApproved,
+    agencyRejected
+} from "@services";
 import { logger } from "@shared";
 
 /**

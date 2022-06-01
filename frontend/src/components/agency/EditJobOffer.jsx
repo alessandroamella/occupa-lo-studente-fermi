@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Outlet, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, Outlet, useNavigate, useSearchParams } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import { useDispatch, useSelector } from "react-redux";
 import Dropdown from "react-bootstrap/Dropdown";
 import Placeholder from "react-bootstrap/Placeholder";
 import Form from "react-bootstrap/Form";
-import { Trash } from "react-bootstrap-icons";
+import { Link45deg, Trash } from "react-bootstrap-icons";
 import axios from "axios";
 import RequireAgencyLogin from "./RequireAgencyLogin";
 import EditButton from "../EditButton";
@@ -198,6 +198,10 @@ const ViewJobOffer = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [!agency]);
 
+  const jobApplications = agency?.jobApplications.filter(
+    j => j.forJobOffer === jobOffer?._id
+  );
+
   return (
     <RequireAgencyLogin>
       <Container bg="dark" variant="dark" className="mt-8 mb-4">
@@ -208,6 +212,45 @@ const ViewJobOffer = () => {
           <div className="p-3 md:p-6">
             <div className="md:px-3 w-full mb-5">
               <div className="mt-3 mb-5">
+                {isEditing && (
+                  <div className="mb-8 grid grid-cols-1 md:grid-cols-2">
+                    <div>
+                      <p className="text-gray-700 font-semibold">Candidature</p>
+
+                      <Link
+                        to={`/agency/dashboard?view=jobapplications${
+                          jobApplications?.length
+                            ? `&jobapplication=${jobApplications[0]?._id}`
+                            : ""
+                        }`}
+                        className="flex items-center decoration-dotted underline"
+                      >
+                        <Link45deg /> Hai ricevuto
+                        <strong className="px-1">
+                          {jobApplications?.length}
+                        </strong>
+                        candidatur
+                        {jobApplications?.length === 1 ? "a " : "e "}
+                        per questa offerta di lavoro
+                      </Link>
+                    </div>
+
+                    <div>
+                      <p className="text-gray-700 font-semibold">
+                        Visualizzazioni
+                      </p>
+
+                      <p>
+                        Questa offerta di lavoro è stata vista
+                        <strong className="px-1">
+                          {jobOffer?.views || "0"}
+                        </strong>
+                        volt
+                        {jobOffer?.views?.length === 1 ? "a " : "e "}
+                      </p>
+                    </div>
+                  </div>
+                )}
                 <p className="text-gray-700 font-semibold">Titolo</p>
                 {editTitle ? (
                   <div className="flex flex-col md:flex-row items-center">

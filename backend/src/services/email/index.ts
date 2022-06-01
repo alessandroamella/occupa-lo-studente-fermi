@@ -53,4 +53,6 @@ export class EmailService {
     }
 }
 
+export * from "./emails";
+
 export default EmailService;
