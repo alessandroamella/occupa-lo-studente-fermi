@@ -136,16 +136,24 @@ const TextEditor = ({
   short,
   content,
   setContent,
-  setText
+  setText,
+  initialContent
 }) => {
-  const editor = useEditor({
-    extensions: [StarterKit],
-    content: readOnly && short ? content?.slice(0, 100) + "..." || "" : content,
-    onUpdate: ({ editor }) => {
-      if (setContent && !readOnly) setContent(editor.getHTML());
-      if (setText && !readOnly) setText(editor.getText());
-    }
-  });
+  const editor = useEditor(
+    {
+      extensions: [StarterKit],
+      content:
+        readOnly && short
+          ? (initialContent || content)?.slice(0, 100) + "..." || ""
+          : initialContent || content,
+      onUpdate: ({ editor }) => {
+        if (setContent && !readOnly) setContent(editor.getHTML());
+        if (setText && !readOnly) setText(editor.getText());
+        console.log(editor);
+      }
+    },
+    [initialContent]
+  );
 
   // Disable if readOnly
   const textEditorRef = useRef(null);
@@ -164,7 +172,14 @@ const TextEditor = ({
       } rounded text-editor`}
     >
       {!readOnly && <MenuBar editor={editor} />}
+
       <EditorContent
+        onFocus={e =>
+          e.currentTarget.setSelectionRange(
+            e.currentTarget.value.length,
+            e.currentTarget.value.length
+          )
+        }
         readOnly={!!readOnly}
         editor={editor}
         contentEditable={!readOnly}

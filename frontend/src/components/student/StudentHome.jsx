@@ -320,7 +320,7 @@ const StudentHome = () => {
                         {currentAgency?.agencyDescription ? (
                           <TextEditor
                             readOnly
-                            content={
+                            initialContent={
                               currentAgency.agencyDescription.length > 100
                                 ? currentAgency.agencyDescription.substring(
                                     0,
@@ -353,7 +353,7 @@ const StudentHome = () => {
                     {currentJobOffer?.description && (
                       <TextEditor
                         readOnly
-                        content={currentJobOffer.description}
+                        initialContent={currentJobOffer.description}
                       />
                     )}
                   </div>
@@ -435,7 +435,7 @@ const StudentHome = () => {
                           <div className="mb-2 text-muted">
                             <TextEditor
                               readOnly
-                              content={
+                              initialContent={
                                 e.agencyDescription.length > 100
                                   ? e.agencyDescription.substring(0, 100) +
                                     "..."

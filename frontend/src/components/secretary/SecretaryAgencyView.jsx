@@ -22,7 +22,7 @@ const SecretaryAgencyView = ({ agency, children }) => {
 
       <p className="font-medium text-lg">Descrizione</p>
       <div className="mb-2">
-        {<TextEditor content={agency.agencyDescription} readOnly />}
+        {<TextEditor initialContent={agency.agencyDescription} readOnly />}
       </div>
 
       <p className="font-medium text-lg">Indirizzo</p>

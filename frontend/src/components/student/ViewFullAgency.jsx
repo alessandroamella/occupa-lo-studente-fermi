@@ -60,7 +60,10 @@ const ViewFullAgency = ({ sendCurriculumFn, agency }) => {
             <div className="md:p-5">
               <div className="mb-5">
                 {agency?.agencyDescription ? (
-                  <TextEditor content={agency.agencyDescription} readOnly />
+                  <TextEditor
+                    initialContent={agency.agencyDescription}
+                    readOnly
+                  />
                 ) : (
                   <Placeholder className="w-96 h-96" />
                 )}

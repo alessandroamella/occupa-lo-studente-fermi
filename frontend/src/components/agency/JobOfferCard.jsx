@@ -41,7 +41,7 @@ const JobOfferCard = ({ jobOffer, clickable, className, ...rest }) => {
         </h3>
         <div className="overflow-hidden text-ellipsis whitespace-nowrap">
           {jobOffer.description && (
-            <TextEditor readOnly short content={jobOffer.description} />
+            <TextEditor readOnly short initialContent={jobOffer.description} />
           )}
         </div>
 

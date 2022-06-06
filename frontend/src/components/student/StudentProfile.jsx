@@ -61,7 +61,6 @@ const StudentProfile = () => {
       );
     }
 
-    console.log("setto", field, "a", !student[field]);
     await editStudent(field, !student[field]);
   }
 

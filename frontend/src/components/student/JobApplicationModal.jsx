@@ -259,7 +259,7 @@ const JobApplicationModal = ({
             {(readOnly ? show : student)?.curriculum ? (
               <TextEditor
                 readOnly
-                content={(readOnly ? show : student).curriculum}
+                initialContent={(readOnly ? show : student).curriculum}
               />
             ) : (
               <h2 className="text-red-600 font-medium">

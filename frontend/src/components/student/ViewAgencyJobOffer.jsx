@@ -218,7 +218,7 @@ const ViewJobOffer = () => {
                     {agency?.agencyDescription ? (
                       <TextEditor
                         readOnly
-                        content={
+                        initialContent={
                           agency.agencyDescription.length > 100
                             ? agency.agencyDescription.substring(0, 100) +
                               "a..."
@@ -303,7 +303,7 @@ const ViewJobOffer = () => {
                     </div>
 
                     <div className="markdown">
-                      <TextEditor readOnly content={j.description} />
+                      <TextEditor readOnly initialContent={j.description} />
                     </div>
 
                     <div className="px-5 md:px-20 lg:px-36 mt-10 grid grid-cols-2">
